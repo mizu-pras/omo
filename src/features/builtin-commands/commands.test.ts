@@ -78,7 +78,7 @@ describe("loadBuiltinCommands", () => {
     const commands = loadBuiltinCommands()
 
     //#then
-    expect(commands["start-work"].agent).toBe("atlas")
+    expect(commands["start-work"].agent).toBe("aji-saka")
   })
 
   test("should preassign Sisyphus as the native agent for start-work when command config checks registered agents", () => {
@@ -88,18 +88,18 @@ describe("loadBuiltinCommands", () => {
     const commands = loadBuiltinCommands(undefined, { useRegisteredAgents: true })
 
     //#then
-    expect(commands["start-work"].agent).toBe("sisyphus")
+    expect(commands["start-work"].agent).toBe("ismaya")
   })
 
   test("should preassign Atlas as the native agent for start-work when Atlas is registered", () => {
     //#given
-    registerAgentName("atlas")
+    registerAgentName("aji-saka")
 
     //#when
     const commands = loadBuiltinCommands(undefined, { useRegisteredAgents: true })
 
     //#then
-    expect(commands["start-work"].agent).toBe("atlas")
+    expect(commands["start-work"].agent).toBe("aji-saka")
   })
 })
 

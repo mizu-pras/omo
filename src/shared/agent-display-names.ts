@@ -1,7 +1,9 @@
+import { AGENT_NAME_MAP } from "./migration/agent-names"
+
 /**
  * Agent config keys to display names mapping.
- * Config keys are lowercase (e.g., "sisyphus", "atlas").
- * Display names include suffixes for UI/logs (e.g., "Sisyphus - Ultraworker").
+ * Config keys are lowercase (e.g., "ismaya", "aji-saka").
+ * Display names are the approved UI/log labels (e.g., "Sang Hyang Ismaya").
  *
  * IMPORTANT: Display names MUST NOT contain parentheses or other characters
  * that are invalid in HTTP header values per RFC 7230. OpenCode passes the
@@ -10,27 +12,39 @@
  * type selector dropdown. Use ` - ` (space-dash-space) instead of `(...)`.
  */
 export const AGENT_DISPLAY_NAMES: Record<string, string> = {
-  sisyphus: "Sisyphus - Ultraworker",
-  hephaestus: "Hephaestus - Deep Agent",
-  prometheus: "Prometheus - Plan Builder",
-  atlas: "Atlas - Plan Executor",
-  "sisyphus-junior": "Sisyphus-Junior",
-  metis: "Metis - Plan Consultant",
-  momus: "Momus - Plan Critic",
+  ismaya: "Sang Hyang Ismaya",
+  togog: "Togog",
+  "dewi-sri": "Dewi Sri",
+  "aji-saka": "Aji Saka",
+  cenil: "Cenil",
+  jayabaya: "Jayabaya",
+  sabdapalon: "Sabdapalon",
+  "ratu-kidul": "Kanjeng Ratu Kidul",
+  pujangga: "Ki Pujangga",
+  nayagenggong: "Nayagenggong",
+  surya: "Batara Surya",
+  "council-member": "council-member",
+  // Legacy aliases
+  sisyphus: "Sang Hyang Ismaya",
+  hephaestus: "Togog",
+  prometheus: "Dewi Sri",
+  atlas: "Aji Saka",
+  "sisyphus-junior": "Cenil",
+  metis: "Jayabaya",
+  momus: "Sabdapalon",
+  oracle: "Kanjeng Ratu Kidul",
+  librarian: "Ki Pujangga",
+  explore: "Nayagenggong",
+  "multimodal-looker": "Batara Surya",
   athena: "Athena - Council",
   "athena-junior": "Athena-Junior - Council",
-  oracle: "oracle",
-  librarian: "librarian",
-  explore: "explore",
-  "multimodal-looker": "multimodal-looker",
-  "council-member": "council-member",
 }
 
 const AGENT_LIST_SORT_PREFIXES: Record<string, string> = {
-  sisyphus: "\u200B",
-  hephaestus: "\u200B\u200B",
-  prometheus: "\u200B\u200B\u200B",
-  atlas: "\u200B\u200B\u200B\u200B",
+  ismaya: "\u200B",
+  togog: "\u200B\u200B",
+  "dewi-sri": "\u200B\u200B\u200B",
+  "aji-saka": "\u200B\u200B\u200B\u200B",
 }
 
 export function stripAgentListSortPrefix(agentName: string): string {
@@ -62,7 +76,7 @@ export function getAgentDisplayName(configKey: string): string {
  * ZWSP prefixes leak into the /agent API response and break prompt_async consumers.
  * Use getAgentDisplayName() instead. The `order` field injected by
  * reorderAgentsByPriority() handles sort ordering without invisible characters.
- * See: https://github.com/code-yeongyu/oh-my-openagent/issues/3238
+ * See: https://github.com/mizu-pras/omo/issues/3238
  */
 export function getAgentListDisplayName(configKey: string): string {
   const displayName = getAgentDisplayName(configKey)
@@ -71,34 +85,64 @@ export function getAgentListDisplayName(configKey: string): string {
   return prefix ? `${prefix}${displayName}` : displayName
 }
 
-const REVERSE_DISPLAY_NAMES: Record<string, string> = Object.fromEntries(
-  Object.entries(AGENT_DISPLAY_NAMES).map(([key, displayName]) => [displayName.toLowerCase(), key]),
-)
+function isLegacyDisplayNameKey(configKey: string): boolean {
+  return AGENT_NAME_MAP[configKey] !== undefined || AGENT_NAME_MAP[configKey.toLowerCase()] !== undefined
+}
+
+function canonicalizeAgentConfigKey(configKey: string): string {
+  return AGENT_NAME_MAP[configKey] ?? AGENT_NAME_MAP[configKey.toLowerCase()] ?? configKey
+}
+
+const REVERSE_DISPLAY_NAMES: Record<string, string> = {}
+
+for (const [configKey, displayName] of Object.entries(AGENT_DISPLAY_NAMES)) {
+  if (isLegacyDisplayNameKey(configKey)) {
+    continue
+  }
+
+  const normalizedDisplayName = displayName.toLowerCase()
+  if (REVERSE_DISPLAY_NAMES[normalizedDisplayName] === undefined) {
+    REVERSE_DISPLAY_NAMES[normalizedDisplayName] = configKey
+  }
+}
+
+for (const [configKey, displayName] of Object.entries(AGENT_DISPLAY_NAMES)) {
+  const normalizedDisplayName = displayName.toLowerCase()
+  if (REVERSE_DISPLAY_NAMES[normalizedDisplayName] === undefined) {
+    REVERSE_DISPLAY_NAMES[normalizedDisplayName] = configKey
+  }
+}
 
 // Legacy parenthesized display names for backward compatibility.
 // Old configs/sessions may reference these names; resolve them to config keys.
 const LEGACY_DISPLAY_NAMES: Record<string, string> = {
-  "sisyphus (ultraworker)": "sisyphus",
-  "hephaestus (deep agent)": "hephaestus",
-  "prometheus (plan builder)": "prometheus",
-  "atlas (plan executor)": "atlas",
-  "metis (plan consultant)": "metis",
-  "momus (plan critic)": "momus",
+  "sisyphus - ultraworker": "ismaya",
+  "sisyphus (ultraworker)": "ismaya",
+  "hephaestus - deep agent": "togog",
+  "hephaestus (deep agent)": "togog",
+  "prometheus - plan builder": "dewi-sri",
+  "prometheus (plan builder)": "dewi-sri",
+  "atlas - plan executor": "aji-saka",
+  "atlas (plan executor)": "aji-saka",
+  "metis - plan consultant": "jayabaya",
+  "metis (plan consultant)": "jayabaya",
+  "momus - plan critic": "sabdapalon",
+  "momus (plan critic)": "sabdapalon",
   "athena (council)": "athena",
   "athena-junior (council)": "athena-junior",
 }
 
 /**
  * Resolve an agent name (display name or config key) to its lowercase config key.
- * "Atlas - Plan Executor" -> "atlas", "Atlas (Plan Executor)" -> "atlas", "atlas" -> "atlas"
+  * "Aji Saka" -> "aji-saka", "Atlas - Plan Executor" -> "aji-saka", "aji-saka" -> "aji-saka"
  */
 export function getAgentConfigKey(agentName: string): string {
   const lower = stripAgentListSortPrefix(agentName).toLowerCase()
   const reversed = REVERSE_DISPLAY_NAMES[lower]
-  if (reversed !== undefined) return reversed
+  if (reversed !== undefined) return canonicalizeAgentConfigKey(reversed)
   const legacy = LEGACY_DISPLAY_NAMES[lower]
-  if (legacy !== undefined) return legacy
-  if (AGENT_DISPLAY_NAMES[lower] !== undefined) return lower
+  if (legacy !== undefined) return canonicalizeAgentConfigKey(legacy)
+  if (AGENT_DISPLAY_NAMES[lower] !== undefined) return canonicalizeAgentConfigKey(lower)
   return lower
 }
 
@@ -121,14 +165,14 @@ export function normalizeAgentForPrompt(agentName: string | undefined): string |
   const lower = trimmed.toLowerCase()
   const reversed = REVERSE_DISPLAY_NAMES[lower]
   if (reversed !== undefined) {
-    return AGENT_DISPLAY_NAMES[reversed] ?? trimmed
+    return AGENT_DISPLAY_NAMES[canonicalizeAgentConfigKey(reversed)] ?? trimmed
   }
   const legacy = LEGACY_DISPLAY_NAMES[lower]
   if (legacy !== undefined) {
-    return AGENT_DISPLAY_NAMES[legacy] ?? trimmed
+    return AGENT_DISPLAY_NAMES[canonicalizeAgentConfigKey(legacy)] ?? trimmed
   }
   if (AGENT_DISPLAY_NAMES[lower] !== undefined) {
-    return AGENT_DISPLAY_NAMES[lower]
+    return AGENT_DISPLAY_NAMES[canonicalizeAgentConfigKey(lower)]
   }
 
   return trimmed
@@ -147,14 +191,14 @@ export function normalizeAgentForPromptKey(agentName: string | undefined): strin
   const lower = trimmed.toLowerCase()
   const reversed = REVERSE_DISPLAY_NAMES[lower]
   if (reversed !== undefined) {
-    return reversed
+    return canonicalizeAgentConfigKey(reversed)
   }
   const legacy = LEGACY_DISPLAY_NAMES[lower]
   if (legacy !== undefined) {
-    return legacy
+    return canonicalizeAgentConfigKey(legacy)
   }
   if (AGENT_DISPLAY_NAMES[lower] !== undefined) {
-    return lower
+    return canonicalizeAgentConfigKey(lower)
   }
 
   return trimmed

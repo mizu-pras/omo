@@ -17,7 +17,7 @@ describe("buildPlanDemoteConfig", () => {
   test("extracts all model settings from prometheus config", () => {
     //#given
     const prometheusConfig = {
-      name: "prometheus",
+      name: "dewi-sri",
       model: "anthropic/claude-opus-4-6",
       variant: "max",
       mode: "all",

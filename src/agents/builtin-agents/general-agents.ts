@@ -50,10 +50,10 @@ export function collectPendingBuiltinAgents(input: {
   for (const [name, source] of Object.entries(agentSources)) {
     const agentName = name as BuiltinAgentName
 
-    if (agentName === "sisyphus") continue
-    if (agentName === "hephaestus") continue
-    if (agentName === "atlas") continue
-    if (agentName === "sisyphus-junior") continue
+    if (agentName === "ismaya") continue
+    if (agentName === "togog") continue
+    if (agentName === "aji-saka") continue
+    if (agentName === "cenil") continue
     if (disabledAgents.some((name) => name.toLowerCase() === agentName.toLowerCase())) continue
 
     const override = agentOverrides[agentName]
@@ -99,7 +99,7 @@ export function collectPendingBuiltinAgents(input: {
       config = { ...config, variant: resolvedVariant }
     }
 
-    if (agentName === "librarian") {
+    if (agentName === "pujangga") {
       config = applyEnvironmentContext(config, directory, { disableOmoEnv })
     }
 

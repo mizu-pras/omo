@@ -34,11 +34,11 @@ interface EventInput {
  * so reminding them to delegate to themselves is counterproductive.
  */
 const ORCHESTRATOR_AGENTS = new Set([
-  "sisyphus",
-  "sisyphus-junior",
-  "atlas",
-  "hephaestus",
-  "prometheus",
+  "ismaya",
+  "cenil",
+  "aji-saka",
+  "togog",
+  "dewi-sri",
 ]);
 
 function isOrchestratorAgent(agentName: string): boolean {

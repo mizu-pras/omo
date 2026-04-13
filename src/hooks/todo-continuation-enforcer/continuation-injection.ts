@@ -131,6 +131,7 @@ export async function injectContinuation(args: {
 
   const promptAgent = normalizeAgentForPromptKey(agentName)
   const launchAgent = resolveRegisteredAgentName(agentName)
+  const injectionAgent = promptAgent ?? normalizeAgentForPromptKey(launchAgent)
 
   if (promptAgent && skipAgents.some(s => getAgentConfigKey(s) === getAgentConfigKey(promptAgent))) {
     log(`[${HOOK_NAME}] Skipped: agent in skipAgents list`, { sessionID, agent: agentName })
@@ -172,7 +173,7 @@ ${todoList}`
   try {
     log(`[${HOOK_NAME}] Injecting continuation`, {
       sessionID,
-      agent: launchAgent ?? promptAgent,
+      agent: injectionAgent,
       model,
       incompleteCount: freshIncompleteCount,
     })
@@ -187,7 +188,7 @@ ${todoList}`
     await ctx.client.session.promptAsync({
       path: { id: sessionID },
       body: {
-        agent: launchAgent ?? promptAgent,
+        agent: injectionAgent,
         ...(launchModel ? { model: launchModel } : {}),
         ...(launchVariant ? { variant: launchVariant } : {}),
         ...(inheritedTools ? { tools: inheritedTools } : {}),

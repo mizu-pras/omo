@@ -1,5 +1,5 @@
 import type { CategoryConfig } from "../config/schema";
-import { PROMETHEUS_PERMISSION, getPrometheusPrompt } from "../agents/prometheus";
+import { PROMETHEUS_PERMISSION, getPrometheusPrompt } from "../agents/dewi-sri";
 import { resolvePromptAppend } from "../agents/builtin-agents/resolve-file-uri";
 import { AGENT_MODEL_REQUIREMENTS } from "../shared/model-requirements";
 import type { FallbackEntry } from "../shared/model-requirements";
@@ -48,7 +48,7 @@ export async function buildPrometheusAgentConfig(params: {
     ? resolveCategoryConfig(params.pluginPrometheusOverride.category, params.userCategories)
     : undefined;
 
-  const requirement = AGENT_MODEL_REQUIREMENTS["prometheus"];
+  const requirement = AGENT_MODEL_REQUIREMENTS["dewi-sri"];
   const connectedProviders = readConnectedProvidersCache();
   const availableModels = await fetchAvailableModels(undefined, {
     connectedProviders: connectedProviders ?? undefined,
@@ -100,7 +100,7 @@ export async function buildPrometheusAgentConfig(params: {
     mode: "all",
     prompt: getPrometheusPrompt(resolvedModel, params.disabledTools),
     permission: PROMETHEUS_PERMISSION,
-    description: `${(params.configAgentPlan?.description as string) ?? "Plan agent"} (Prometheus - OhMyOpenCode)`,
+    description: `${(params.configAgentPlan?.description as string) ?? "Plan agent"} (Dewi-Sri - ParaHyang)`,
     color: (params.configAgentPlan?.color as string) ?? "#FF5722",
     ...(temperatureToUse !== undefined ? { temperature: temperatureToUse } : {}),
     ...(topPToUse !== undefined ? { top_p: topPToUse } : {}),

@@ -1,4 +1,4 @@
-import type { OhMyOpenCodeConfig } from "../config";
+import type { ParaHyangConfig } from "../config";
 import type { PluginContext } from "./types";
 
 import {
@@ -115,7 +115,7 @@ function applyUserConfiguredFallbackChain(
   sessionID: string,
   agentName: string,
   currentProviderID: string,
-  pluginConfig: OhMyOpenCodeConfig,
+  pluginConfig: ParaHyangConfig,
 ): void {
   const agentKey = getAgentConfigKey(agentName);
   const rawFallbackModels = getRawFallbackModels(sessionID, agentKey, pluginConfig);
@@ -135,7 +135,7 @@ function isCompactionAgent(agent: string): boolean {
 type EventInput = Parameters<NonNullable<NonNullable<CreatedHooks["writeExistingFileGuard"]>["event"]>>[0];
 export function createEventHandler(args: {
   ctx: PluginContext;
-  pluginConfig: OhMyOpenCodeConfig;
+  pluginConfig: ParaHyangConfig;
   firstMessageVariantGate: FirstMessageVariantGate;
   managers: Managers;
   hooks: CreatedHooks;
@@ -261,7 +261,7 @@ export function createEventHandler(args: {
     await runEventHookSafely("compactionContextInjector", hooks.compactionContextInjector?.event, input);
     await runEventHookSafely("compactionTodoPreserver", hooks.compactionTodoPreserver?.event, input);
     await runEventHookSafely("writeExistingFileGuard", hooks.writeExistingFileGuard?.event, input);
-    await runEventHookSafely("atlasHook", hooks.atlasHook?.handler, input);
+    await runEventHookSafely("ajiSakaHook", hooks.ajiSakaHook?.handler, input);
     await runEventHookSafely("autoSlashCommand", hooks.autoSlashCommand?.event, input);
   };
 
@@ -501,11 +501,11 @@ export function createEventHandler(args: {
               let agentName = agent ?? getSessionAgent(sessionID);
               if (!agentName && sessionID === getMainSessionID()) {
                 if (errorMessage.includes("claude-opus") || errorMessage.includes("opus")) {
-                  agentName = "sisyphus";
+                  agentName = "ismaya";
                 } else if (errorMessage.includes("gpt-5")) {
-                  agentName = "hephaestus";
+                  agentName = "togog";
                 } else {
-                  agentName = "sisyphus";
+                  agentName = "ismaya";
                 }
               }
 
@@ -565,11 +565,11 @@ export function createEventHandler(args: {
             let agentName = getSessionAgent(sessionID);
             if (!agentName && sessionID === getMainSessionID()) {
               if (retryMessage.includes("claude-opus") || retryMessage.includes("opus")) {
-                agentName = "sisyphus";
+                agentName = "ismaya";
               } else if (retryMessage.includes("gpt-5")) {
-                agentName = "hephaestus";
+                agentName = "togog";
               } else {
-                agentName = "sisyphus";
+                agentName = "ismaya";
               }
             }
 
@@ -649,11 +649,11 @@ export function createEventHandler(args: {
 
           if (!agentName && sessionID === getMainSessionID()) {
             if (errorMessage.includes("claude-opus") || errorMessage.includes("opus")) {
-              agentName = "sisyphus";
+              agentName = "ismaya";
             } else if (errorMessage.includes("gpt-5")) {
-              agentName = "hephaestus";
+              agentName = "togog";
             } else {
-              agentName = "sisyphus";
+              agentName = "ismaya";
             }
           }
 

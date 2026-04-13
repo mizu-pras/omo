@@ -6,18 +6,18 @@ import { getAgentDisplayName, getAgentListDisplayName } from "../shared/agent-di
 describe("reorderAgentsByPriority", () => {
   test("moves core agents to canonical order and injects runtime order fields", () => {
     // given
-    const sisyphus = getAgentListDisplayName("sisyphus")
-    const hephaestus = getAgentListDisplayName("hephaestus")
-    const prometheus = getAgentListDisplayName("prometheus")
-    const atlas = getAgentListDisplayName("atlas")
-    const oracle = getAgentDisplayName("oracle")
+    const sisyphus = getAgentListDisplayName("ismaya")
+    const hephaestus = getAgentListDisplayName("togog")
+    const prometheus = getAgentListDisplayName("dewi-sri")
+    const atlas = getAgentListDisplayName("aji-saka")
+    const oracle = getAgentDisplayName("ratu-kidul")
 
     const agents: Record<string, unknown> = {
-      [oracle]: { name: "oracle", mode: "subagent" },
-      [atlas]: { name: "atlas", mode: "primary" },
-      [prometheus]: { name: "prometheus", mode: "all" },
-      [hephaestus]: { name: "hephaestus", mode: "primary" },
-      [sisyphus]: { name: "sisyphus", mode: "primary" },
+      [oracle]: { name: "ratu-kidul", mode: "subagent" },
+      [atlas]: { name: "aji-saka", mode: "primary" },
+      [prometheus]: { name: "dewi-sri", mode: "all" },
+      [hephaestus]: { name: "togog", mode: "primary" },
+      [sisyphus]: { name: "ismaya", mode: "primary" },
     }
 
     // when
@@ -32,35 +32,35 @@ describe("reorderAgentsByPriority", () => {
       oracle,
     ])
     expect(result[sisyphus]).toEqual({
-      name: "sisyphus",
+      name: "ismaya",
       mode: "primary",
       order: 1,
     })
     expect(result[hephaestus]).toEqual({
-      name: "hephaestus",
+      name: "togog",
       mode: "primary",
       order: 2,
     })
     expect(result[prometheus]).toEqual({
-      name: "prometheus",
+      name: "dewi-sri",
       mode: "all",
       order: 3,
     })
     expect(result[atlas]).toEqual({
-      name: "atlas",
+      name: "aji-saka",
       mode: "primary",
       order: 4,
     })
     expect(result[oracle]).toEqual({
-      name: "oracle",
+      name: "ratu-kidul",
       mode: "subagent",
     })
   })
 
   test("leaves non-object agent configs untouched while still reordering keys", () => {
     // given
-    const sisyphus = getAgentListDisplayName("sisyphus")
-    const atlas = getAgentListDisplayName("atlas")
+    const sisyphus = getAgentListDisplayName("ismaya")
+    const atlas = getAgentListDisplayName("aji-saka")
 
     const agents: Record<string, unknown> = {
       [atlas]: "atlas-config",

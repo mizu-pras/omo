@@ -1,15 +1,20 @@
 import { existsSync, readFileSync, renameSync, rmSync } from "node:fs"
-import { join, dirname, basename } from "node:path"
+import { basename } from "node:path"
 
 import { log } from "./logger"
-import { CONFIG_BASENAME, LEGACY_CONFIG_BASENAME } from "./plugin-identity"
+import {
+  CONFIG_BASENAME,
+  LEGACY_CONFIG_BASENAME,
+  SECONDARY_LEGACY_CONFIG_BASENAME,
+} from "./plugin-identity"
+import { getCanonicalConfigPath, isLegacyConfigBasename } from "./plugin-config-path"
 import { writeFileAtomically } from "./write-file-atomically"
 
-function buildCanonicalPath(legacyPath: string): string {
-  const dir = dirname(legacyPath)
-  const ext = basename(legacyPath).includes(".jsonc") ? ".jsonc" : ".json"
-  return join(dir, `${CONFIG_BASENAME}${ext}`)
-}
+const SUPPORTED_CONFIG_GENERATIONS = [
+  CONFIG_BASENAME,
+  LEGACY_CONFIG_BASENAME,
+  SECONDARY_LEGACY_CONFIG_BASENAME,
+] as const
 
 function archiveLegacyConfigFile(legacyPath: string): boolean {
   const backupPath = `${legacyPath}.bak`
@@ -44,10 +49,21 @@ function archiveLegacyConfigFile(legacyPath: string): boolean {
 
 export function migrateLegacyConfigFile(legacyPath: string): boolean {
   if (!existsSync(legacyPath)) return false
-  if (!basename(legacyPath).startsWith(LEGACY_CONFIG_BASENAME)) return false
 
-  const canonicalPath = buildCanonicalPath(legacyPath)
-  if (existsSync(canonicalPath)) return false
+  const base = basename(legacyPath)
+  if (!isLegacyConfigBasename(base)) return false
+
+  const canonicalPath = getCanonicalConfigPath(legacyPath)
+  if (existsSync(canonicalPath)) {
+    const archivedLegacyConfig = archiveLegacyConfigFile(legacyPath)
+    log("[migrateLegacyConfigFile] Canonical config already exists. Archived legacy alias when possible.", {
+      canonicalPath,
+      legacyPath,
+      archivedLegacyConfig,
+      supportedConfigGenerations: SUPPORTED_CONFIG_GENERATIONS,
+    })
+    return archivedLegacyConfig
+  }
 
   try {
     const content = readFileSync(legacyPath, "utf-8")
@@ -57,6 +73,7 @@ export function migrateLegacyConfigFile(legacyPath: string): boolean {
       from: legacyPath,
       to: canonicalPath,
       archivedLegacyConfig,
+      supportedConfigGenerations: SUPPORTED_CONFIG_GENERATIONS,
     })
     return archivedLegacyConfig
   } catch (error) {

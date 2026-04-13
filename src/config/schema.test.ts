@@ -10,7 +10,7 @@ import {
   ExperimentalConfigSchema,
   GitMasterConfigSchema,
   HookNameSchema,
-  OhMyOpenCodeConfigSchema,
+  ParaHyangConfigSchema,
 } from "./schema"
 
 describe("disabled_mcps schema", () => {
@@ -21,7 +21,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
@@ -37,7 +37,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
@@ -53,7 +53,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
@@ -69,7 +69,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
@@ -85,7 +85,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(false)
@@ -96,7 +96,7 @@ describe("disabled_mcps schema", () => {
     const config = {}
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
@@ -112,7 +112,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(false)
@@ -131,7 +131,7 @@ describe("disabled_mcps schema", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
@@ -147,7 +147,7 @@ describe("disabled_mcps schema", () => {
   })
 })
 
-describe("OhMyOpenCodeConfigSchema - model_capabilities", () => {
+describe("ParaHyangConfigSchema - model_capabilities", () => {
   test("accepts valid model capabilities config", () => {
     const input = {
       model_capabilities: {
@@ -158,7 +158,7 @@ describe("OhMyOpenCodeConfigSchema - model_capabilities", () => {
       },
     }
 
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     expect(result.success).toBe(true)
     if (result.success) {
@@ -167,7 +167,7 @@ describe("OhMyOpenCodeConfigSchema - model_capabilities", () => {
   })
 
   test("rejects invalid model capabilities config", () => {
-    const result = OhMyOpenCodeConfigSchema.safeParse({
+    const result = ParaHyangConfigSchema.safeParse({
       model_capabilities: {
         refresh_timeout_ms: -1,
         source_url: "not-a-url",
@@ -471,12 +471,12 @@ describe("HookNameSchema", () => {
   })
 })
 
-describe("Sisyphus-Junior agent override", () => {
-  test("schema accepts agents['Sisyphus-Junior'] and retains the key after parsing", () => {
+describe("canonical agent override keys", () => {
+  test("schema accepts cenil and retains the key after parsing", () => {
     // given
     const config = {
       agents: {
-        "sisyphus-junior": {
+        cenil: {
           model: "openai/gpt-5.4",
           temperature: 0.2,
         },
@@ -484,44 +484,44 @@ describe("Sisyphus-Junior agent override", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
     if (result.success) {
-      expect(result.data.agents?.["sisyphus-junior"]).toBeDefined()
-      expect(result.data.agents?.["sisyphus-junior"]?.model).toBe("openai/gpt-5.4")
-      expect(result.data.agents?.["sisyphus-junior"]?.temperature).toBe(0.2)
+      expect(result.data.agents?.cenil).toBeDefined()
+      expect(result.data.agents?.cenil?.model).toBe("openai/gpt-5.4")
+      expect(result.data.agents?.cenil?.temperature).toBe(0.2)
     }
   })
 
-  test("schema accepts sisyphus-junior with prompt_append", () => {
+  test("schema accepts cenil with prompt_append", () => {
     // given
     const config = {
       agents: {
-        "sisyphus-junior": {
-          prompt_append: "Additional instructions for sisyphus-junior",
+        cenil: {
+          prompt_append: "Additional instructions for cenil",
         },
       },
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
     if (result.success) {
-      expect(result.data.agents?.["sisyphus-junior"]?.prompt_append).toBe(
-        "Additional instructions for sisyphus-junior"
+      expect(result.data.agents?.cenil?.prompt_append).toBe(
+        "Additional instructions for cenil"
       )
     }
   })
 
-  test("schema accepts sisyphus-junior with tools override", () => {
+  test("schema accepts cenil with tools override", () => {
     // given
     const config = {
       agents: {
-        "sisyphus-junior": {
+        cenil: {
           tools: {
             read: true,
             write: false,
@@ -531,67 +531,67 @@ describe("Sisyphus-Junior agent override", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
     if (result.success) {
-      expect(result.data.agents?.["sisyphus-junior"]?.tools).toEqual({
+      expect(result.data.agents?.cenil?.tools).toEqual({
         read: true,
         write: false,
       })
     }
   })
 
-  test("schema accepts lowercase agent names (sisyphus, atlas, prometheus)", () => {
+  test("schema accepts canonical lowercase agent names (ismaya, aji-saka, dewi-sri)", () => {
     // given
     const config = {
       agents: {
-        sisyphus: {
+        ismaya: {
           temperature: 0.1,
         },
-        atlas: {
+        "aji-saka": {
           temperature: 0.2,
         },
-        prometheus: {
+        "dewi-sri": {
           temperature: 0.3,
         },
       },
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
     if (result.success) {
-      expect(result.data.agents?.sisyphus?.temperature).toBe(0.1)
-      expect(result.data.agents?.atlas?.temperature).toBe(0.2)
-      expect(result.data.agents?.prometheus?.temperature).toBe(0.3)
+      expect(result.data.agents?.ismaya?.temperature).toBe(0.1)
+      expect(result.data.agents?.["aji-saka"]?.temperature).toBe(0.2)
+      expect(result.data.agents?.["dewi-sri"]?.temperature).toBe(0.3)
     }
   })
 
-  test("schema accepts lowercase metis and momus agent names", () => {
+  test("schema accepts canonical lowercase jayabaya and sabdapalon agent names", () => {
     // given
     const config = {
       agents: {
-        metis: {
+        jayabaya: {
           category: "ultrabrain",
         },
-        momus: {
+        sabdapalon: {
           category: "quick",
         },
       },
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     // then
     expect(result.success).toBe(true)
     if (result.success) {
-      expect(result.data.agents?.metis?.category).toBe("ultrabrain")
-      expect(result.data.agents?.momus?.category).toBe("quick")
+      expect(result.data.agents?.jayabaya?.category).toBe("ultrabrain")
+      expect(result.data.agents?.sabdapalon?.category).toBe("quick")
     }
   })
 })
@@ -680,7 +680,7 @@ describe("BrowserAutomationConfigSchema", () => {
   })
 })
 
-describe("OhMyOpenCodeConfigSchema - browser_automation_engine", () => {
+describe("ParaHyangConfigSchema - browser_automation_engine", () => {
   test("accepts browser_automation_engine config", () => {
     // given
     const input = {
@@ -690,7 +690,7 @@ describe("OhMyOpenCodeConfigSchema - browser_automation_engine", () => {
     }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     // then
     expect(result.success).toBe(true)
@@ -702,7 +702,7 @@ describe("OhMyOpenCodeConfigSchema - browser_automation_engine", () => {
     const input = {}
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     // then
     expect(result.success).toBe(true)
@@ -714,7 +714,7 @@ describe("OhMyOpenCodeConfigSchema - browser_automation_engine", () => {
     const input = { browser_automation_engine: { provider: "playwright-cli" } }
 
     // when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     // then
     expect(result.success).toBe(true)
@@ -722,13 +722,13 @@ describe("OhMyOpenCodeConfigSchema - browser_automation_engine", () => {
   })
 })
 
-describe("OhMyOpenCodeConfigSchema - hashline_edit", () => {
+describe("ParaHyangConfigSchema - hashline_edit", () => {
   test("accepts hashline_edit as true", () => {
     //#given
     const input = { hashline_edit: true }
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     //#then
     expect(result.success).toBe(true)
@@ -740,7 +740,7 @@ describe("OhMyOpenCodeConfigSchema - hashline_edit", () => {
     const input = { hashline_edit: false }
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     //#then
     expect(result.success).toBe(true)
@@ -752,7 +752,7 @@ describe("OhMyOpenCodeConfigSchema - hashline_edit", () => {
     const input = { auto_update: true }
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     //#then
     expect(result.success).toBe(true)
@@ -764,7 +764,7 @@ describe("OhMyOpenCodeConfigSchema - hashline_edit", () => {
     const input = { hashline_edit: "true" }
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(input)
+    const result = ParaHyangConfigSchema.safeParse(input)
 
     //#then
     expect(result.success).toBe(false)
@@ -969,13 +969,13 @@ describe("GitMasterConfigSchema", () => {
   })
 })
 
-describe("OhMyOpenCodeConfigSchema - git_master defaults (#2040)", () => {
+describe("ParaHyangConfigSchema - git_master defaults (#2040)", () => {
   test("git_master defaults are applied when section is missing from config", () => {
     //#given
     const config = {}
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     //#then
     expect(result.success).toBe(true)
@@ -997,7 +997,7 @@ describe("OhMyOpenCodeConfigSchema - git_master defaults (#2040)", () => {
     }
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     //#then
     expect(result.success).toBe(true)
@@ -1018,7 +1018,7 @@ describe("skills schema", () => {
     }
 
     //#when
-    const result = OhMyOpenCodeConfigSchema.safeParse(config)
+    const result = ParaHyangConfigSchema.safeParse(config)
 
     //#then
     expect(result.success).toBe(true)

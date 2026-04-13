@@ -23,7 +23,7 @@ export type { GeneratedOmoConfig } from "./model-fallback-types"
 const ZAI_MODEL = "zai-coding-plan/glm-4.7"
 
 const ULTIMATE_FALLBACK = "opencode/gpt-5-nano"
-const SCHEMA_URL = "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json"
+const SCHEMA_URL = "https://raw.githubusercontent.com/mizu-pras/omo/dev/assets/para-hyang.schema.json"
 
 function toFallbackModelObject(entry: FallbackEntry, provider: string): FallbackModelObject {
   return {
@@ -111,7 +111,7 @@ export function generateModelConfig(config: InstallConfig): GeneratedOmoConfig {
       $schema: SCHEMA_URL,
       agents: Object.fromEntries(
         Object.entries(CLI_AGENT_MODEL_REQUIREMENTS)
-          .filter(([role, req]) => !(role === "sisyphus" && req.requiresAnyModel))
+          .filter(([role, req]) => !(role === "ismaya" && req.requiresAnyModel))
           .map(([role]) => [role, { model: ULTIMATE_FALLBACK }])
       ),
       categories: Object.fromEntries(
@@ -124,7 +124,7 @@ export function generateModelConfig(config: InstallConfig): GeneratedOmoConfig {
   const categories: Record<string, CategoryConfig> = {}
 
   for (const [role, req] of Object.entries(CLI_AGENT_MODEL_REQUIREMENTS)) {
-    if (role === "librarian") {
+    if (role === "pujangga") {
       let agentConfig: AgentConfig | undefined
       if (avail.opencodeGo) {
         agentConfig = { model: "opencode-go/minimax-m2.7" }
@@ -137,7 +137,7 @@ export function generateModelConfig(config: InstallConfig): GeneratedOmoConfig {
       continue
     }
 
-    if (role === "explore") {
+    if (role === "nayagenggong") {
       let agentConfig: AgentConfig
       if (avail.native.claude) {
         agentConfig = { model: "anthropic/claude-haiku-4-5" }
@@ -154,7 +154,7 @@ export function generateModelConfig(config: InstallConfig): GeneratedOmoConfig {
       continue
     }
 
-    if (role === "sisyphus") {
+    if (role === "ismaya") {
       const fallbackChain = getSisyphusFallbackChain()
       if (req.requiresAnyModel && !isAnyFallbackEntryAvailable(fallbackChain, avail)) {
         continue

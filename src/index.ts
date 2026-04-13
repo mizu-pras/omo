@@ -21,9 +21,9 @@ import { lspManager } from "./tools/lsp/client"
 
 let activePluginDispose: PluginDispose | null = null
 
-const OhMyOpenCodePlugin: Plugin = async (ctx) => {
+const ParaHyangPlugin: Plugin = async (ctx) => {
   initConfigContext("opencode", null)
-  log("[OhMyOpenCodePlugin] ENTRY - plugin loading", {
+  log("[ParaHyangPlugin] ENTRY - plugin loading", {
     directory: ctx.directory,
   })
   logLegacyPluginStartupWarning()
@@ -99,7 +99,7 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
   activePluginDispose = dispose
 
   return {
-    name: "oh-my-openagent",
+    name: "para-hyang",
     ...pluginInterface,
 
     "experimental.session.compacting": async (
@@ -119,10 +119,10 @@ const OhMyOpenCodePlugin: Plugin = async (ctx) => {
   }
 }
 
-export default OhMyOpenCodePlugin
+export default ParaHyangPlugin
 
 export type {
-  OhMyOpenCodeConfig,
+  ParaHyangConfig,
   AgentName,
   AgentOverrideConfig,
   AgentOverrides,

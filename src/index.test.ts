@@ -140,9 +140,9 @@ describe("look_at tool conditional registration", () => {
     // when checking if agent is enabled
     // then should return false (disabled)
     it("returns false when multimodal-looker is disabled (exact case)", () => {
-      const disabledAgents: string[] = ["multimodal-looker"]
+      const disabledAgents: string[] = ["surya"]
       const isEnabled = !disabledAgents.some(
-        (agent) => agent.toLowerCase() === "multimodal-looker"
+        (agent) => agent.toLowerCase() === "surya"
       )
       expect(isEnabled).toBe(false)
     })
@@ -151,9 +151,9 @@ describe("look_at tool conditional registration", () => {
     // when checking if agent is enabled
     // then should return false (case-insensitive match)
     it("returns false when multimodal-looker is disabled (case-insensitive)", () => {
-      const disabledAgents: string[] = ["Multimodal-Looker"]
+      const disabledAgents: string[] = ["Surya"]
       const isEnabled = !disabledAgents.some(
-        (agent) => agent.toLowerCase() === "multimodal-looker"
+        (agent) => agent.toLowerCase() === "surya"
       )
       expect(isEnabled).toBe(false)
     })
@@ -162,9 +162,9 @@ describe("look_at tool conditional registration", () => {
     // when checking if agent is enabled
     // then should return true (enabled)
     it("returns true when multimodal-looker is not disabled", () => {
-      const disabledAgents: string[] = ["oracle", "librarian"]
+      const disabledAgents: string[] = ["ratu-kidul", "librarian"]
       const isEnabled = !disabledAgents.some(
-        (agent) => agent.toLowerCase() === "multimodal-looker"
+        (agent) => agent.toLowerCase() === "surya"
       )
       expect(isEnabled).toBe(true)
     })
@@ -175,7 +175,7 @@ describe("look_at tool conditional registration", () => {
     it("returns true when disabled_agents is empty", () => {
       const disabledAgents: string[] = []
       const isEnabled = !disabledAgents.some(
-        (agent) => agent.toLowerCase() === "multimodal-looker"
+        (agent) => agent.toLowerCase() === "surya"
       )
       expect(isEnabled).toBe(true)
     })
@@ -187,7 +187,7 @@ describe("look_at tool conditional registration", () => {
       const disabledAgents: string[] | undefined = undefined
       const list: string[] = disabledAgents ?? []
       const isEnabled = !list.some(
-        (agent) => agent.toLowerCase() === "multimodal-looker"
+        (agent) => agent.toLowerCase() === "surya"
       )
       expect(isEnabled).toBe(true)
     })
@@ -257,82 +257,79 @@ const mockCreatePluginInterface = mock(() => ({}))
 const mockInitializeOpenClaw = mock(async () => {})
 const mockStartTmuxCheck = mock(() => {})
 
-mock.module("./cli/config-manager/config-context", () => ({
-  initConfigContext: mockInitConfigContext,
-}))
+async function importParaHyangPlugin() {
+  mock.module("./plugin-config", async () => {
+    const actual = await import(`./plugin-config?actual=${Math.random()}`)
+    return {
+      ...actual,
+      loadPluginConfig: mockLoadPluginConfig,
+    }
+  })
 
-mock.module("./shared/external-plugin-detector", () => ({
-  detectExternalSkillPlugin: mockDetectExternalSkillPlugin,
-  getSkillPluginConflictWarning: mockGetSkillPluginConflictWarning,
-}))
+  mock.module("./create-runtime-tmux-config", () => ({
+    createRuntimeTmuxConfig: mockCreateRuntimeTmuxConfig,
+    isTmuxIntegrationEnabled: mockIsTmuxIntegrationEnabled,
+    isInteractiveBashEnabled: mockIsInteractiveBashEnabled,
+  }))
 
-mock.module("./shared", () => ({
-  injectServerAuthIntoClient: mockInjectServerAuthIntoClient,
-  log: mock(() => {}),
-  logLegacyPluginStartupWarning: mockLogLegacyPluginStartupWarning,
-}))
+  mock.module("./create-managers", () => ({
+    createManagers: mockCreateManagers,
+  }))
 
-mock.module("./plugin-config", () => ({
-  loadPluginConfig: mockLoadPluginConfig,
-}))
+  mock.module("./create-tools", () => ({
+    createTools: mockCreateTools,
+  }))
 
-mock.module("./create-runtime-tmux-config", () => ({
-  createRuntimeTmuxConfig: mockCreateRuntimeTmuxConfig,
-  isTmuxIntegrationEnabled: mockIsTmuxIntegrationEnabled,
-  isInteractiveBashEnabled: mockIsInteractiveBashEnabled,
-}))
+  mock.module("./create-hooks", async () => {
+    const actual = await import(`./create-hooks?actual=${Math.random()}`)
+    return {
+      ...actual,
+      createHooks: mockCreateHooks,
+    }
+  })
 
-mock.module("./create-managers", () => ({
-  createManagers: mockCreateManagers,
-}))
+  mock.module("./plugin-dispose", () => ({
+    createPluginDispose: mockCreatePluginDispose,
+  }))
 
-mock.module("./create-tools", () => ({
-  createTools: mockCreateTools,
-}))
+  mock.module("./plugin-interface", () => ({
+    createPluginInterface: mockCreatePluginInterface,
+  }))
 
-mock.module("./create-hooks", () => ({
-  createHooks: mockCreateHooks,
-}))
+  mock.module("./plugin-state", () => ({
+    createModelCacheState: mock(() => ({})),
+  }))
 
-mock.module("./plugin-dispose", () => ({
-  createPluginDispose: mockCreatePluginDispose,
-}))
+  mock.module("./shared/first-message-variant", () => ({
+    createFirstMessageVariantGate: mock(() => ({
+      shouldOverride: () => false,
+      markApplied: () => {},
+      markSessionCreated: () => {},
+      clear: () => {},
+    })),
+  }))
 
-mock.module("./plugin-interface", () => ({
-  createPluginInterface: mockCreatePluginInterface,
-}))
+  mock.module("./openclaw", () => ({
+    initializeOpenClaw: mockInitializeOpenClaw,
+  }))
 
-mock.module("./plugin-state", () => ({
-  createModelCacheState: mock(() => ({})),
-}))
+  mock.module("./tools/interactive-bash", () => ({
+    interactive_bash: {},
+    startBackgroundCheck: mockStartTmuxCheck,
+  }))
 
-mock.module("./shared/first-message-variant", () => ({
-  createFirstMessageVariantGate: mock(() => ({
-    shouldOverride: () => false,
-    markApplied: () => {},
-    markSessionCreated: () => {},
-    clear: () => {},
-  })),
-}))
+  mock.module("./tools/lsp/client", () => ({
+    lspManager: {
+      cleanupTempDirectoryClients: async () => {},
+    },
+  }))
 
-mock.module("./openclaw", () => ({
-  initializeOpenClaw: mockInitializeOpenClaw,
-}))
+  const imported = await import(`./index?test=${Math.random()}`)
+  mock.restore()
+  return imported.default
+}
 
-mock.module("./tools/interactive-bash", () => ({
-  interactive_bash: {},
-  startBackgroundCheck: mockStartTmuxCheck,
-}))
-
-mock.module("./tools/lsp/client", () => ({
-  lspManager: {
-    cleanupTempDirectoryClients: async () => {},
-  },
-}))
-
-const { default: OhMyOpenCodePlugin } = await import("./index")
-
-describe("OhMyOpenCodePlugin", () => {
+describe("ParaHyangPlugin", () => {
   beforeEach(() => {
     mockInitConfigContext.mockClear()
     mockDetectExternalSkillPlugin.mockClear()
@@ -358,6 +355,7 @@ describe("OhMyOpenCodePlugin", () => {
 
   it("starts openclaw during plugin bootstrap when openclaw config exists", async () => {
     // given
+    const ParaHyangPlugin = await importParaHyangPlugin()
     const openclawConfig = {
       enabled: true,
       gateways: {},
@@ -371,10 +369,10 @@ describe("OhMyOpenCodePlugin", () => {
     })
 
     // when
-    await OhMyOpenCodePlugin({
+    await ParaHyangPlugin({
       directory: "/tmp/project",
       client: {},
-    } as Parameters<typeof OhMyOpenCodePlugin>[0])
+    } as Parameters<typeof ParaHyangPlugin>[0])
 
     // then
     expect(mockInitializeOpenClaw).toHaveBeenCalledTimes(1)
@@ -383,13 +381,14 @@ describe("OhMyOpenCodePlugin", () => {
 
   it("does not start openclaw when openclaw config is absent", async () => {
     // given
+    const ParaHyangPlugin = await importParaHyangPlugin()
     mockLoadPluginConfig.mockReturnValue({})
 
     // when
-    await OhMyOpenCodePlugin({
+    await ParaHyangPlugin({
       directory: "/tmp/project",
       client: {},
-    } as Parameters<typeof OhMyOpenCodePlugin>[0])
+    } as Parameters<typeof ParaHyangPlugin>[0])
 
     // then
     expect(mockInitializeOpenClaw).not.toHaveBeenCalled()

@@ -21,11 +21,11 @@ describe("createPluginInterface - command.execute.before", () => {
 
   beforeEach(() => {
     testDir = join(tmpdir(), `plugin-interface-start-work-${randomUUID()}`)
-    mkdirSync(join(testDir, ".sisyphus", "plans"), { recursive: true })
-    writeFileSync(join(testDir, ".sisyphus", "plans", "worker-plan.md"), "# Plan\n- [ ] Task 1")
+    mkdirSync(join(testDir, ".ismaya", "plans"), { recursive: true })
+    writeFileSync(join(testDir, ".ismaya", "plans", "worker-plan.md"), "# Plan\n- [ ] Task 1")
     _resetForTesting()
-    registerAgentName("prometheus")
-    registerAgentName("sisyphus")
+    registerAgentName("dewi-sri")
+    registerAgentName("ismaya")
   })
 
   afterEach(() => {
@@ -35,7 +35,7 @@ describe("createPluginInterface - command.execute.before", () => {
 
   test("executes start-work side effects for native command execution", async () => {
     // given
-    updateSessionAgent("ses-command-before", "prometheus")
+    updateSessionAgent("ses-command-before", "dewi-sri")
     const pluginInterface = createPluginInterface({
       ctx: {
         directory: testDir,
@@ -76,13 +76,13 @@ describe("createPluginInterface - command.execute.before", () => {
     expect(pluginInterface["command.execute.before"]).toBeDefined()
     expect(output.parts[0]?.text).toContain("Auto-Selected Plan")
     expect(output.parts[0]?.text).toContain("boulder.json has been created")
-    expect(getSessionAgent("ses-command-before")).toBe("sisyphus")
-    expect(readBoulderState(testDir)?.agent).toBe("sisyphus")
+    expect(getSessionAgent("ses-command-before")).toBe("ismaya")
+    expect(readBoulderState(testDir)?.agent).toBe("ismaya")
   })
 
   test("does not run start-work side effects for other native commands with session context", async () => {
     // given
-    updateSessionAgent("ses-handoff", "prometheus")
+    updateSessionAgent("ses-handoff", "dewi-sri")
     const pluginInterface = createPluginInterface({
       ctx: {
         directory: testDir,
@@ -122,13 +122,13 @@ describe("createPluginInterface - command.execute.before", () => {
     // then
     expect(output.parts[0]?.text).toContain("HANDOFF CONTEXT")
     expect(readBoulderState(testDir)).toBeNull()
-    expect(getSessionAgent("ses-handoff")).toBe("prometheus")
+    expect(getSessionAgent("ses-handoff")).toBe("dewi-sri")
   })
 
   test("switches native start-work to Atlas when Atlas is registered in config", async () => {
     // given
-    registerAgentName("atlas")
-    updateSessionAgent("ses-command-atlas", "prometheus")
+    registerAgentName("aji-saka")
+    updateSessionAgent("ses-command-atlas", "dewi-sri")
     const pluginInterface = createPluginInterface({
       ctx: {
         directory: testDir,
@@ -160,15 +160,15 @@ describe("createPluginInterface - command.execute.before", () => {
     await pluginInterface["chat.message"]?.(
       {
         sessionID: "ses-command-atlas",
-        agent: "prometheus",
+        agent: "dewi-sri",
       } as never,
       output as never
     )
 
     // then
-    expect(output.message.agent).toBe("atlas")
-    expect(getSessionAgent("ses-command-atlas")).toBe("atlas")
-    expect(readBoulderState(testDir)?.agent).toBe("atlas")
+    expect(output.message.agent).toBe("aji-saka")
+    expect(getSessionAgent("ses-command-atlas")).toBe("aji-saka")
+    expect(readBoulderState(testDir)?.agent).toBe("aji-saka")
   })
 })
 
@@ -179,7 +179,7 @@ describe("createPluginInterface - ulw-loop native command smoke", () => {
     testDir = join(tmpdir(), `plugin-interface-ulw-loop-${randomUUID()}`)
     mkdirSync(testDir, { recursive: true })
     _resetForTesting()
-    registerAgentName("sisyphus")
+    registerAgentName("ismaya")
   })
 
   afterEach(() => {
@@ -237,7 +237,7 @@ describe("createPluginInterface - ulw-loop native command smoke", () => {
     await pluginInterface["chat.message"]?.(
       {
         sessionID: "ses-ulw-native",
-        agent: "sisyphus",
+        agent: "ismaya",
       } as never,
       output as never,
     )

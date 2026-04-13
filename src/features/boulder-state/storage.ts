@@ -171,7 +171,7 @@ export function upsertTaskSessionState(
 
 /**
  * Find Prometheus plan files for this project.
- * Prometheus stores plans at: {project}/.sisyphus/plans/{name}.md
+ * Prometheus stores plans at: {project}/.ismaya/plans/{name}.md
  */
 export function findPrometheusPlans(directory: string): string[] {
   const plansDir = join(directory, PROMETHEUS_PLANS_DIR)

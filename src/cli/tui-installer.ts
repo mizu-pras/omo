@@ -72,7 +72,7 @@ export async function runTuiInstaller(args: InstallArgs, version: string): Promi
 
   if (!config.hasClaude) {
     p.log.info(
-      `${color.bold("Note:")} Sisyphus agent performs best with Claude Opus 4.5+.\n` +
+      `${color.bold("Note:")} Sang Hyang Ismaya agent performs best with Claude Opus 4.5+.\n` +
         `Other models work but may have reduced orchestration quality.`,
     )
   }
@@ -95,7 +95,7 @@ export async function runTuiInstaller(args: InstallArgs, version: string): Promi
 
   p.log.message(`${color.yellow("★")} If you found this helpful, consider starring the repo!`)
   p.log.message(
-    `  ${color.dim("gh api --silent --method PUT /user/starred/code-yeongyu/oh-my-openagent >/dev/null 2>&1 || true")}`,
+    `  ${color.dim("gh api --silent --method PUT /user/starred/mizu-pras/omo >/dev/null 2>&1 || true")}`,
   )
 
   p.outro(color.green("oMoMoMoMo... Enjoy!"))

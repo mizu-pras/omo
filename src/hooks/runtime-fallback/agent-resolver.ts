@@ -1,19 +1,21 @@
 import { getSessionAgent } from "../../features/claude-code-session-state"
+import { getAgentConfigKey } from "../../shared/agent-display-names"
+import { AGENT_NAME_MAP } from "../../shared/migration/agent-names"
 
 export const AGENT_NAMES = [
-  "sisyphus",
-  "oracle",
-  "librarian",
-  "explore",
-  "prometheus",
-  "atlas",
-  "metis",
-  "momus",
-  "hephaestus",
-  "sisyphus-junior",
+  "ismaya",
+  "ratu-kidul",
+  "pujangga",
+  "nayagenggong",
+  "dewi-sri",
+  "aji-saka",
+  "jayabaya",
+  "sabdapalon",
+  "togog",
+  "cenil",
   "build",
   "plan",
-  "multimodal-looker",
+  "surya",
 ]
 
 export const agentPattern = new RegExp(
@@ -37,6 +39,11 @@ export function normalizeAgentName(agent: string | undefined): string | undefine
   const normalized = agent.toLowerCase().trim()
   if (AGENT_NAMES.includes(normalized)) {
     return normalized
+  }
+  const configKey = getAgentConfigKey(agent)
+  const canonical = AGENT_NAME_MAP[configKey] ?? AGENT_NAME_MAP[configKey.toLowerCase()] ?? configKey
+  if (AGENT_NAMES.includes(canonical)) {
+    return canonical
   }
   const match = normalized.match(agentPattern)
   if (match) {

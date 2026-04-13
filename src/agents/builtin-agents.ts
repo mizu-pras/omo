@@ -3,16 +3,16 @@ import type { BuiltinAgentName, AgentOverrides, AgentFactory, AgentPromptMetadat
 import type { CategoriesConfig, GitMasterConfig } from "../config/schema"
 import type { LoadedSkill } from "../features/opencode-skill-loader/types"
 import type { BrowserAutomationProvider } from "../config/schema"
-import { createSisyphusAgent } from "./sisyphus"
-import { createOracleAgent, ORACLE_PROMPT_METADATA } from "./oracle"
-import { createLibrarianAgent, LIBRARIAN_PROMPT_METADATA } from "./librarian"
-import { createExploreAgent, EXPLORE_PROMPT_METADATA } from "./explore"
-import { createMultimodalLookerAgent, MULTIMODAL_LOOKER_PROMPT_METADATA } from "./multimodal-looker"
-import { createMetisAgent, metisPromptMetadata } from "./metis"
-import { createAtlasAgent, atlasPromptMetadata } from "./atlas"
-import { createMomusAgent, momusPromptMetadata } from "./momus"
-import { createHephaestusAgent } from "./hephaestus"
-import { createSisyphusJuniorAgentWithOverrides } from "./sisyphus-junior"
+import { createSisyphusAgent } from "./ismaya"
+import { createOracleAgent, ORACLE_PROMPT_METADATA } from "./ratu-kidul"
+import { createLibrarianAgent, LIBRARIAN_PROMPT_METADATA } from "./pujangga"
+import { createExploreAgent, EXPLORE_PROMPT_METADATA } from "./nayagenggong"
+import { createMultimodalLookerAgent, MULTIMODAL_LOOKER_PROMPT_METADATA } from "./surya"
+import { createMetisAgent, metisPromptMetadata } from "./jayabaya"
+import { createAtlasAgent, atlasPromptMetadata } from "./aji-saka"
+import { createMomusAgent, momusPromptMetadata } from "./sabdapalon"
+import { createHephaestusAgent } from "./togog"
+import { createSisyphusJuniorAgentWithOverrides } from "./cenil"
 import type { AvailableCategory } from "./dynamic-agent-prompt-builder"
 import {
   fetchAvailableModels,
@@ -26,22 +26,71 @@ import { collectPendingBuiltinAgents } from "./builtin-agents/general-agents"
 import { maybeCreateSisyphusConfig } from "./builtin-agents/sisyphus-agent"
 import { maybeCreateHephaestusConfig } from "./builtin-agents/hephaestus-agent"
 import { maybeCreateAtlasConfig } from "./builtin-agents/atlas-agent"
+import { AGENT_NAME_MAP } from "../shared/migration/agent-names"
 
 type AgentSource = AgentFactory | AgentConfig
 
+const LEGACY_BUILTIN_AGENT_ALIASES: Record<string, string> = {
+	"sisyphus": "ismaya",
+	"hephaestus": "togog",
+	"oracle": "ratu-kidul",
+	"librarian": "pujangga",
+	"explore": "nayagenggong",
+	"multimodal-looker": "surya",
+	"metis": "jayabaya",
+	"momus": "sabdapalon",
+	"prometheus": "dewi-sri",
+	"atlas": "aji-saka",
+	"sisyphus-junior": "cenil",
+}
+
+function normalizeDisabledAgents(disabledAgents: string[]): string[] {
+	return disabledAgents.map((agent) => AGENT_NAME_MAP[agent] ?? AGENT_NAME_MAP[agent.toLowerCase()] ?? agent)
+}
+
+function normalizeAgentOverrides(agentOverrides: AgentOverrides): AgentOverrides {
+	const normalized: AgentOverrides = { ...agentOverrides }
+
+	for (const [key, value] of Object.entries(agentOverrides)) {
+		const canonicalKey = LEGACY_BUILTIN_AGENT_ALIASES[key.toLowerCase()]
+		if (!canonicalKey || normalized[canonicalKey as keyof AgentOverrides] !== undefined) {
+			continue
+		}
+		normalized[canonicalKey as keyof AgentOverrides] = value
+	}
+
+	return normalized
+}
+
+function attachLegacyAgentAliases(result: Record<string, AgentConfig>): Record<string, AgentConfig> {
+	for (const [legacyKey, canonicalKey] of Object.entries(LEGACY_BUILTIN_AGENT_ALIASES)) {
+		if (!(canonicalKey in result) || legacyKey in result) {
+			continue
+		}
+
+		Object.defineProperty(result, legacyKey, {
+			configurable: true,
+			enumerable: false,
+			get: () => result[canonicalKey],
+		})
+	}
+
+	return result
+}
+
 const agentSources: Record<BuiltinAgentName, AgentSource> = {
-  sisyphus: createSisyphusAgent,
-  hephaestus: createHephaestusAgent,
-  oracle: createOracleAgent,
-  librarian: createLibrarianAgent,
-  explore: createExploreAgent,
-  "multimodal-looker": createMultimodalLookerAgent,
-  metis: createMetisAgent,
-  momus: createMomusAgent,
-  // Note: Atlas is handled specially in createBuiltinAgents()
+  ismaya: createSisyphusAgent,
+  togog: createHephaestusAgent,
+  "ratu-kidul": createOracleAgent,
+  pujangga: createLibrarianAgent,
+  nayagenggong: createExploreAgent,
+  surya: createMultimodalLookerAgent,
+  jayabaya: createMetisAgent,
+  sabdapalon: createMomusAgent,
+  // Note: Aji-Saka is handled specially in createBuiltinAgents()
   // because it needs OrchestratorContext, not just a model string
-  atlas: createAtlasAgent as AgentFactory,
-  "sisyphus-junior": createSisyphusJuniorAgentWithOverrides as unknown as AgentFactory,
+  "aji-saka": createAtlasAgent as AgentFactory,
+  cenil: createSisyphusJuniorAgentWithOverrides as unknown as AgentFactory,
 }
 
 /**
@@ -49,13 +98,13 @@ const agentSources: Record<BuiltinAgentName, AgentSource> = {
  * (Delegation Table, Tool Selection, Key Triggers, etc.)
  */
 const agentMetadata: Partial<Record<BuiltinAgentName, AgentPromptMetadata>> = {
-  oracle: ORACLE_PROMPT_METADATA,
-  librarian: LIBRARIAN_PROMPT_METADATA,
-  explore: EXPLORE_PROMPT_METADATA,
-  "multimodal-looker": MULTIMODAL_LOOKER_PROMPT_METADATA,
-  metis: metisPromptMetadata,
-  momus: momusPromptMetadata,
-  atlas: atlasPromptMetadata,
+  "ratu-kidul": ORACLE_PROMPT_METADATA,
+  pujangga: LIBRARIAN_PROMPT_METADATA,
+  nayagenggong: EXPLORE_PROMPT_METADATA,
+  surya: MULTIMODAL_LOOKER_PROMPT_METADATA,
+  jayabaya: metisPromptMetadata,
+  sabdapalon: momusPromptMetadata,
+  "aji-saka": atlasPromptMetadata,
 }
 
 export async function createBuiltinAgents(
@@ -73,6 +122,8 @@ export async function createBuiltinAgents(
   useTaskSystem = false,
   disableOmoEnv = false
 ): Promise<Record<string, AgentConfig>> {
+	const normalizedDisabledAgents = normalizeDisabledAgents(disabledAgents)
+	const normalizedAgentOverrides = normalizeAgentOverrides(agentOverrides)
 
   const connectedProviders = readConnectedProvidersCache()
   const providerModelsConnected = connectedProviders
@@ -83,7 +134,7 @@ export async function createBuiltinAgents(
   )
   // IMPORTANT: Do NOT call OpenCode client APIs during plugin initialization.
   // This function is called from config handler, and calling client API causes deadlock.
-  // See: https://github.com/code-yeongyu/oh-my-openagent/issues/1301
+  // See: https://github.com/mizu-pras/omo/issues/1301
   const availableModels = await fetchAvailableModels(undefined, {
     connectedProviders: mergedConnectedProviders.length > 0 ? mergedConnectedProviders : undefined,
   })
@@ -105,8 +156,8 @@ export async function createBuiltinAgents(
   const { pendingAgentConfigs, availableAgents } = collectPendingBuiltinAgents({
     agentSources,
     agentMetadata,
-    disabledAgents,
-    agentOverrides,
+	    disabledAgents: normalizedDisabledAgents,
+	    agentOverrides: normalizedAgentOverrides,
     directory,
     systemDefaultModel,
     mergedCategories,
@@ -120,8 +171,8 @@ export async function createBuiltinAgents(
   })
 
   const sisyphusConfig = maybeCreateSisyphusConfig({
-    disabledAgents,
-    agentOverrides,
+	    disabledAgents: normalizedDisabledAgents,
+	    agentOverrides: normalizedAgentOverrides,
     uiSelectedModel,
     availableModels,
     systemDefaultModel,
@@ -136,12 +187,12 @@ export async function createBuiltinAgents(
     disableOmoEnv,
   })
   if (sisyphusConfig) {
-    result["sisyphus"] = sisyphusConfig
+    result["ismaya"] = sisyphusConfig
   }
 
   const hephaestusConfig = maybeCreateHephaestusConfig({
-    disabledAgents,
-    agentOverrides,
+	    disabledAgents: normalizedDisabledAgents,
+	    agentOverrides: normalizedAgentOverrides,
     availableModels,
     systemDefaultModel,
     isFirstRunNoCache,
@@ -154,7 +205,7 @@ export async function createBuiltinAgents(
     disableOmoEnv,
   })
   if (hephaestusConfig) {
-    result["hephaestus"] = hephaestusConfig
+    result["togog"] = hephaestusConfig
   }
 
   // Add pending agents after sisyphus and hephaestus to maintain order
@@ -163,8 +214,8 @@ export async function createBuiltinAgents(
   }
 
   const atlasConfig = maybeCreateAtlasConfig({
-    disabledAgents,
-    agentOverrides,
+	    disabledAgents: normalizedDisabledAgents,
+	    agentOverrides: normalizedAgentOverrides,
     uiSelectedModel,
     availableModels,
     systemDefaultModel,
@@ -175,8 +226,8 @@ export async function createBuiltinAgents(
     userCategories: categories,
   })
   if (atlasConfig) {
-    result["atlas"] = atlasConfig
+    result["aji-saka"] = atlasConfig
   }
 
-  return result
+	  return attachLegacyAgentAliases(result)
 }

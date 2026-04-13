@@ -22,24 +22,24 @@ export function logLegacyPluginStartupWarning(deps: LogLegacyPluginStartupWarnin
 
   const suggestedEntries = result.legacyEntries.map(toCanonicalEntry)
 
-  logFn("[OhMyOpenCodePlugin] Legacy plugin entry detected in OpenCode config", {
+  logFn("[ParaHyangPlugin] Legacy plugin entry detected in OpenCode config", {
     legacyEntries: result.legacyEntries,
     suggestedEntries,
     hasCanonicalEntry: result.hasCanonicalEntry,
   })
 
   console.warn(
-    `[oh-my-openagent] WARNING: Your opencode.json uses the legacy package name "${LEGACY_PLUGIN_NAME}".`
+    `[para-hyang] WARNING: Your opencode.json uses the legacy package name "${LEGACY_PLUGIN_NAME}".`
     + ` The package has been renamed to "${PLUGIN_NAME}".`
     + ` Attempting auto-migration...`,
   )
 
   const migrated = migrateLegacyPluginEntryFn(result.configPath!)
   if (migrated) {
-    console.warn(`[oh-my-openagent] Auto-migrated opencode.json: ${result.legacyEntries.join(", ")} -> ${suggestedEntries.join(", ")}`)
+    console.warn(`[para-hyang] Auto-migrated opencode.json: ${result.legacyEntries.join(", ")} -> ${suggestedEntries.join(", ")}`)
   } else {
     console.warn(
-      `[oh-my-openagent] Could not auto-migrate. Please manually update your opencode.json:`
+      `[para-hyang] Could not auto-migrate. Please manually update your opencode.json:`
       + ` ${result.legacyEntries.map((e, i) => `"${e}" -> "${suggestedEntries[i]}"`).join(", ")}`,
     )
   }

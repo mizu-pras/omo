@@ -6,6 +6,7 @@ import type { BackgroundManager, BackgroundTask } from "../../features/backgroun
 import type { ToolContext } from "@opencode-ai/plugin/tool"
 import type { BackgroundCancelClient, BackgroundOutputManager, BackgroundOutputClient } from "./tools"
 import { consumeToolMetadata, clearPendingStore } from "../../features/tool-metadata-store"
+import { getAgentDisplayName } from "../../shared/agent-display-names"
 
 const projectDir = "/Users/yeongyu/local-workspaces/oh-my-opencode"
 
@@ -59,7 +60,7 @@ describe("background_output full_session", () => {
 
     const task = createTask({
       id: "task-1",
-      agent: "explore",
+      agent: "nayagenggong",
       description: "Find how task output is rendered",
       status: "running",
     })
@@ -85,7 +86,7 @@ describe("background_output full_session", () => {
 
     const task = createTask({
       id: "task-1",
-      agent: "Sisyphus-Junior",
+      agent: getAgentDisplayName("cenil"),
       category: "quick",
       description: "Fix flaky test",
       status: "running",

@@ -129,6 +129,31 @@ describe("system loaded version", () => {
       expect(loadedVersion.loadedVersion).toBe("5.6.7")
     })
 
+    it("prefers para-hyang when canonical and legacy installs both exist", () => {
+      //#given
+      const configDir = createTemporaryDirectory("omo-config-")
+
+      process.env.OPENCODE_CONFIG_DIR = configDir
+
+      writeJson(join(configDir, "package.json"), {
+        dependencies: { [PACKAGE_NAME]: "7.8.9", "oh-my-openagent": "6.5.4" },
+      })
+      writeJson(join(configDir, "node_modules", PACKAGE_NAME, "package.json"), {
+        version: "7.8.9",
+      })
+      writeJson(join(configDir, "node_modules", "oh-my-openagent", "package.json"), {
+        version: "6.5.4",
+      })
+
+      //#when
+      const loadedVersion = getLoadedPluginVersion()
+
+      //#then
+      expect(loadedVersion.installedPackagePath).toBe(join(configDir, "node_modules", PACKAGE_NAME, "package.json"))
+      expect(loadedVersion.expectedVersion).toBe("7.8.9")
+      expect(loadedVersion.loadedVersion).toBe("7.8.9")
+    })
+
     it("resolves symlinked config directories before selecting install path", () => {
       //#given
       const realConfigDir = createTemporaryDirectory("omo-real-config-")

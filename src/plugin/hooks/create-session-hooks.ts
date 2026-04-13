@@ -1,4 +1,4 @@
-import type { OhMyOpenCodeConfig, HookName } from "../../config"
+import type { ParaHyangConfig, HookName } from "../../config"
 import type { ModelCacheState } from "../../plugin-state"
 import type { PluginContext } from "../types"
 
@@ -18,10 +18,10 @@ import {
   createDelegateTaskRetryHook,
   createTaskResumeInfoHook,
   createStartWorkHook,
-  createPrometheusMdOnlyHook,
-  createSisyphusJuniorNotepadHook,
-  createNoSisyphusGptHook,
-  createNoHephaestusNonGptHook,
+  createDewiSriMdOnlyHook,
+  createCenilNotepadHook,
+  createNoIsmayaGptHook,
+  createNoTogogNonGptHook,
   createQuestionLabelTruncatorHook,
   createPreemptiveCompactionHook,
   createRuntimeFallbackHook,
@@ -54,10 +54,10 @@ export type SessionHooks = {
   editErrorRecovery: ReturnType<typeof createEditErrorRecoveryHook> | null
   delegateTaskRetry: ReturnType<typeof createDelegateTaskRetryHook> | null
   startWork: ReturnType<typeof createStartWorkHook> | null
-  prometheusMdOnly: ReturnType<typeof createPrometheusMdOnlyHook> | null
-  sisyphusJuniorNotepad: ReturnType<typeof createSisyphusJuniorNotepadHook> | null
-  noSisyphusGpt: ReturnType<typeof createNoSisyphusGptHook> | null
-  noHephaestusNonGpt: ReturnType<typeof createNoHephaestusNonGptHook> | null
+  dewiSriMdOnly: ReturnType<typeof createDewiSriMdOnlyHook> | null
+  cenilNotepad: ReturnType<typeof createCenilNotepadHook> | null
+  noIsmayaGpt: ReturnType<typeof createNoIsmayaGptHook> | null
+  noTogogNonGpt: ReturnType<typeof createNoTogogNonGptHook> | null
   questionLabelTruncator: ReturnType<typeof createQuestionLabelTruncatorHook> | null
   taskResumeInfo: ReturnType<typeof createTaskResumeInfoHook> | null
   anthropicEffort: ReturnType<typeof createAnthropicEffortHook> | null
@@ -67,7 +67,7 @@ export type SessionHooks = {
 
 export function createSessionHooks(args: {
   ctx: PluginContext
-  pluginConfig: OhMyOpenCodeConfig
+  pluginConfig: ParaHyangConfig
   modelCacheState: ModelCacheState
   isHookEnabled: (hookName: HookName) => boolean
   safeHookEnabled: boolean
@@ -223,22 +223,22 @@ export function createSessionHooks(args: {
     ? safeHook("start-work", () => createStartWorkHook(ctx))
     : null
 
-  const prometheusMdOnly = isHookEnabled("prometheus-md-only")
-    ? safeHook("prometheus-md-only", () => createPrometheusMdOnlyHook(ctx))
+  const dewiSriMdOnly = isHookEnabled("dewi-sri-md-only")
+    ? safeHook("dewi-sri-md-only", () => createDewiSriMdOnlyHook(ctx))
     : null
 
-  const sisyphusJuniorNotepad = isHookEnabled("sisyphus-junior-notepad")
-    ? safeHook("sisyphus-junior-notepad", () => createSisyphusJuniorNotepadHook(ctx))
+  const cenilNotepad = isHookEnabled("cenil-notepad")
+    ? safeHook("cenil-notepad", () => createCenilNotepadHook(ctx))
     : null
 
-  const noSisyphusGpt = isHookEnabled("no-sisyphus-gpt")
-    ? safeHook("no-sisyphus-gpt", () => createNoSisyphusGptHook(ctx))
+  const noIsmayaGpt = isHookEnabled("no-ismaya-gpt")
+    ? safeHook("no-ismaya-gpt", () => createNoIsmayaGptHook(ctx))
     : null
 
-  const noHephaestusNonGpt = isHookEnabled("no-hephaestus-non-gpt")
-    ? safeHook("no-hephaestus-non-gpt", () =>
-      createNoHephaestusNonGptHook(ctx, {
-        allowNonGptModel: pluginConfig.agents?.hephaestus?.allow_non_gpt_model,
+  const noTogogNonGpt = isHookEnabled("no-togog-non-gpt")
+    ? safeHook("no-togog-non-gpt", () =>
+      createNoTogogNonGptHook(ctx, {
+        allowNonGptModel: pluginConfig.agents?.togog?.allow_non_gpt_model,
       }))
     : null
 
@@ -286,10 +286,10 @@ export function createSessionHooks(args: {
     editErrorRecovery,
     delegateTaskRetry,
     startWork,
-    prometheusMdOnly,
-    sisyphusJuniorNotepad,
-    noSisyphusGpt,
-    noHephaestusNonGpt,
+    dewiSriMdOnly,
+    cenilNotepad,
+    noIsmayaGpt,
+    noTogogNonGpt,
     questionLabelTruncator,
     taskResumeInfo,
     anthropicEffort,

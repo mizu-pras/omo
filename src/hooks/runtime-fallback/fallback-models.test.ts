@@ -38,7 +38,7 @@ describe("runtime-fallback fallback-models", () => {
     } as any
 
     //#when
-    const result = getFallbackModelsForSession("ses_runtime_fallback_agent", "oracle", pluginConfig)
+    const result = getFallbackModelsForSession("ses_runtime_fallback_agent", "ratu-kidul", pluginConfig)
 
     //#then
     expect(result).toEqual(["openai/gpt-5.2", "anthropic/claude-opus-4-6"])

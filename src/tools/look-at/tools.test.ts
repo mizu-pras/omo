@@ -164,7 +164,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -177,7 +177,7 @@ describe("look-at tool", () => {
         toolContext,
       )
       expect(result).toContain("Error")
-      expect(result).toContain("multimodal-looker")
+      expect(result).toContain("surya")
     })
 
     // given sync prompt succeeds
@@ -201,7 +201,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -214,7 +214,7 @@ describe("look-at tool", () => {
         toolContext,
       )
       expect(result).toContain("Error")
-      expect(result).toContain("multimodal-looker")
+      expect(result).toContain("surya")
     })
 
     // given session creation fails
@@ -238,7 +238,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -256,10 +256,10 @@ describe("look-at tool", () => {
   })
 
   describe("createLookAt model passthrough", () => {
-    // given multimodal-looker agent has resolved model info
+    // given surya agent has resolved model info
     // when LookAt tool executed
     // then model info should be passed to sync prompt
-    test("passes multimodal-looker model to sync prompt when available", async () => {
+    test("passes surya model to sync prompt when available", async () => {
       setVisionCapableModelsCache(new Map([["google/gemini-3-flash", { providerID: "google", modelID: "gemini-3-flash" }]]))
 
       let promptBody: any
@@ -269,7 +269,7 @@ describe("look-at tool", () => {
           agents: async () => ({
             data: [
               {
-                name: "multimodal-looker",
+                name: "surya",
                 mode: "subagent",
                 model: { providerID: "google", modelID: "gemini-3-flash" },
               },
@@ -299,7 +299,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -354,7 +354,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -403,7 +403,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -445,7 +445,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -459,7 +459,7 @@ describe("look-at tool", () => {
       )
 
       expect(result).toContain("Error")
-      expect(result).toContain("multimodal-looker")
+      expect(result).toContain("surya")
     })
   })
 
@@ -467,7 +467,7 @@ describe("look-at tool", () => {
     const createToolContext = (): ToolContext => ({
       sessionID: "parent-session",
       messageID: "parent-message",
-      agent: "sisyphus",
+      agent: "ismaya",
       directory: "/project",
       worktree: "/project",
       abort: new AbortController().signal,
@@ -587,7 +587,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -640,7 +640,7 @@ describe("look-at tool", () => {
       const toolContext: ToolContext = {
         sessionID: "parent-session",
         messageID: "parent-message",
-        agent: "sisyphus",
+        agent: "ismaya",
         directory: "/project",
         worktree: "/project",
         abort: new AbortController().signal,
@@ -687,7 +687,7 @@ describe("look-at tool", () => {
     const buildToolContext = (): ToolContext => ({
       sessionID: "parent-session",
       messageID: "parent-message",
-      agent: "sisyphus",
+      agent: "ismaya",
       directory: "/project",
       worktree: "/project",
       abort: new AbortController().signal,

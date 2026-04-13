@@ -77,4 +77,50 @@ describe("session-recovery resume", () => {
     const firstPart = (promptBody?.parts as Array<{ text?: string }>)?.[0]
     expect(firstPart?.text).toContain(OMO_INTERNAL_INITIATOR_MARKER)
   })
+
+  test("resumeSession canonicalizes legacy Hephaestus agent to togog", async () => {
+    // given
+    let promptBody: Record<string, unknown> | undefined
+    const client = {
+      session: {
+        promptAsync: async (input: { body: Record<string, unknown> }) => {
+          promptBody = input.body
+          return {}
+        },
+      },
+    }
+
+    // when
+    const ok = await resumeSession(client as never, {
+      sessionID: "ses_resume_legacy_agent",
+      agent: "Hephaestus",
+    })
+
+    // then
+    expect(ok).toBe(true)
+    expect(promptBody?.agent).toBe("togog")
+  })
+
+  test("resumeSession canonicalizes display-form Prometheus agent to dewi-sri", async () => {
+    // given
+    let promptBody: Record<string, unknown> | undefined
+    const client = {
+      session: {
+        promptAsync: async (input: { body: Record<string, unknown> }) => {
+          promptBody = input.body
+          return {}
+        },
+      },
+    }
+
+    // when
+    const ok = await resumeSession(client as never, {
+      sessionID: "ses_resume_display_agent",
+      agent: "Prometheus",
+    })
+
+    // then
+    expect(ok).toBe(true)
+    expect(promptBody?.agent).toBe("dewi-sri")
+  })
 })

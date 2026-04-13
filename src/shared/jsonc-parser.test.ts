@@ -363,10 +363,10 @@ describe("detectPluginConfigFile", () => {
     rmSync(testDir, { recursive: true, force: true })
   })
 
-  test("loads oh-my-openagent.json before oh-my-opencode.json when no jsonc exists", () => {
+  test("loads para-hyang.json before oh-my-opencode.json when no jsonc exists", () => {
     // given
     if (!existsSync(testDir)) mkdirSync(testDir, { recursive: true })
-    writeFileSync(join(testDir, "oh-my-openagent.json"), "{}")
+    writeFileSync(join(testDir, "para-hyang.json"), "{}")
     writeFileSync(join(testDir, "oh-my-opencode.json"), "{}")
 
     // when
@@ -374,7 +374,7 @@ describe("detectPluginConfigFile", () => {
 
     // then
     expect(result.format).toBe("json")
-    expect(result.path).toBe(join(testDir, "oh-my-openagent.json"))
+    expect(result.path).toBe(join(testDir, "para-hyang.json"))
     expect(result.legacyPath).toBe(join(testDir, "oh-my-opencode.json"))
 
     rmSync(testDir, { recursive: true, force: true })
@@ -390,7 +390,7 @@ describe("detectPluginConfigFile", () => {
 
     // then
     expect(result.format).toBe("none")
-    expect(result.path).toBe(join(emptyDir, "oh-my-openagent.json"))
+    expect(result.path).toBe(join(emptyDir, "para-hyang.json"))
 
     rmSync(testDir, { recursive: true, force: true })
   })
@@ -399,14 +399,14 @@ describe("detectPluginConfigFile", () => {
     // given
     if (!existsSync(testDir)) mkdirSync(testDir, { recursive: true })
     writeFileSync(join(testDir, "oh-my-opencode.json"), "{}")
-    writeFileSync(join(testDir, "oh-my-openagent.jsonc"), "{}")
+    writeFileSync(join(testDir, "para-hyang.jsonc"), "{}")
 
     // when
     const result = detectPluginConfigFile(testDir)
 
     // then
     expect(result.format).toBe("jsonc")
-    expect(result.path).toBe(join(testDir, "oh-my-openagent.jsonc"))
+    expect(result.path).toBe(join(testDir, "para-hyang.jsonc"))
     expect(result.legacyPath).toBe(join(testDir, "oh-my-opencode.json"))
 
     rmSync(testDir, { recursive: true, force: true })

@@ -41,7 +41,7 @@ function buildPromptGenerationParams(model: DelegatedModelConfig | undefined): R
 }
 
 function isOracleAgent(agentToUse: string): boolean {
-  return agentToUse.toLowerCase() === "oracle"
+  return agentToUse.toLowerCase() === "ratu-kidul"
 }
 
 function isUnexpectedEofError(error: unknown): boolean {

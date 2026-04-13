@@ -9,7 +9,7 @@ import {
 describe("AGENT_MODEL_REQUIREMENTS", () => {
   test("oracle has valid fallbackChain with gpt-5.4 as primary", () => {
     // given - oracle agent requirement
-    const oracle = AGENT_MODEL_REQUIREMENTS["oracle"]
+    const oracle = AGENT_MODEL_REQUIREMENTS["ratu-kidul"]
 
     // when - accessing oracle requirement
     // then - fallbackChain exists with gpt-5.4 as first entry
@@ -25,7 +25,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("sisyphus has claude-opus-4-6 as primary with k2p5, kimi-k2.5, gpt-5.4 medium fallbacks", () => {
     // #given - sisyphus agent requirement
-    const sisyphus = AGENT_MODEL_REQUIREMENTS["sisyphus"]
+    const sisyphus = AGENT_MODEL_REQUIREMENTS["ismaya"]
 
     // #when - accessing Sisyphus requirement
     // #then - fallbackChain has 7 entries with correct ordering
@@ -66,7 +66,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("librarian has valid fallbackChain with opencode-go/minimax-m2.7 as primary", () => {
     // given - librarian agent requirement
-    const librarian = AGENT_MODEL_REQUIREMENTS["librarian"]
+    const librarian = AGENT_MODEL_REQUIREMENTS["pujangga"]
 
     // when - accessing librarian requirement
     // then - fallbackChain exists with opencode-go/minimax-m2.7 as first entry
@@ -92,7 +92,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("explore has valid fallbackChain with grok-code-fast-1 as primary", () => {
     // given - explore agent requirement
-    const explore = AGENT_MODEL_REQUIREMENTS["explore"]
+    const explore = AGENT_MODEL_REQUIREMENTS["nayagenggong"]
 
     // when - accessing explore requirement
     expect(explore).toBeDefined()
@@ -123,7 +123,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("multimodal-looker has valid fallbackChain with gpt-5.4 as primary", () => {
     // given - multimodal-looker agent requirement
-    const multimodalLooker = AGENT_MODEL_REQUIREMENTS["multimodal-looker"]
+    const multimodalLooker = AGENT_MODEL_REQUIREMENTS["surya"]
 
     // when - accessing multimodal-looker requirement
     // then - fallbackChain: gpt-5.4 -> opencode-go/kimi-k2.5 -> glm-4.6v -> gpt-5-nano
@@ -150,7 +150,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("prometheus has claude-opus-4-6 as primary", () => {
     // #given - prometheus agent requirement
-    const prometheus = AGENT_MODEL_REQUIREMENTS["prometheus"]
+    const prometheus = AGENT_MODEL_REQUIREMENTS["dewi-sri"]
 
     // #when - accessing Prometheus requirement
     // #then - claude-opus-4-6 is first
@@ -166,7 +166,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("metis has claude-opus-4-6 as primary", () => {
     // #given - metis agent requirement
-    const metis = AGENT_MODEL_REQUIREMENTS["metis"]
+    const metis = AGENT_MODEL_REQUIREMENTS["jayabaya"]
 
     // #when - accessing Metis requirement
     // #then - claude-opus-4-6 is first
@@ -189,7 +189,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("momus has valid fallbackChain with gpt-5.4 as primary", () => {
     // given - momus agent requirement
-    const momus = AGENT_MODEL_REQUIREMENTS["momus"]
+    const momus = AGENT_MODEL_REQUIREMENTS["sabdapalon"]
 
     // when - accessing Momus requirement
     // then - fallbackChain exists with gpt-5.4 as first entry, variant xhigh
@@ -205,7 +205,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("atlas has valid fallbackChain with claude-sonnet-4-6 as primary", () => {
     // given - atlas agent requirement
-    const atlas = AGENT_MODEL_REQUIREMENTS["atlas"]
+    const atlas = AGENT_MODEL_REQUIREMENTS["aji-saka"]
 
     // when - accessing Atlas requirement
     // then - fallbackChain exists with claude-sonnet-4-6 as first entry
@@ -235,7 +235,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("sisyphus-junior has an OpenAI fallback and minimax before big-pickle", () => {
     // given - sisyphus-junior agent requirement
-    const sisyphusJunior = AGENT_MODEL_REQUIREMENTS["sisyphus-junior"]
+    const sisyphusJunior = AGENT_MODEL_REQUIREMENTS["cenil"]
 
     // when - locating the OpenAI fallback entry
     const openAiFallback = sisyphusJunior.fallbackChain.find((entry) => entry.providers.includes("openai"))
@@ -256,7 +256,7 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
 
   test("hephaestus supports openai, github-copilot, venice, and opencode providers", () => {
     // #given - hephaestus agent requirement
-    const hephaestus = AGENT_MODEL_REQUIREMENTS["hephaestus"]
+    const hephaestus = AGENT_MODEL_REQUIREMENTS["togog"]
 
     // #when - accessing hephaestus requirement
     // #then - requiresProvider includes openai, github-copilot, venice, and opencode
@@ -268,17 +268,17 @@ describe("AGENT_MODEL_REQUIREMENTS", () => {
   test("all 11 builtin agents have valid fallbackChain arrays", () => {
     // #given - list of 11 agent names
     const expectedAgents = [
-      "sisyphus",
-      "hephaestus",
-      "oracle",
-      "librarian",
-      "explore",
-      "multimodal-looker",
-      "prometheus",
-      "metis",
-      "momus",
-      "atlas",
-      "sisyphus-junior",
+      "ismaya",
+      "togog",
+      "ratu-kidul",
+      "pujangga",
+      "nayagenggong",
+      "surya",
+      "dewi-sri",
+      "jayabaya",
+      "sabdapalon",
+      "aji-saka",
+      "cenil",
     ]
 
     // when - checking AGENT_MODEL_REQUIREMENTS

@@ -31,7 +31,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_unresolved",
         sessionID: undefined,
         description: "Unresolved session",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "running",
       }),
       getTask: () => undefined,
@@ -52,7 +52,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_1" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -74,7 +74,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_resolved",
         sessionID: "ses_sub_123",
         description: "Resolved session",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "running",
       }),
       getTask: () => ({ sessionID: "ses_sub_123" }),
@@ -95,7 +95,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_2" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -120,7 +120,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_late",
         sessionID: undefined,
         description: "Late session",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "running",
       }),
       getTask: () => {
@@ -144,7 +144,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_3" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -168,7 +168,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
           id: "bg_permission",
           sessionID: "ses_permission_123",
           description: "Permission session",
-          agent: "explore",
+          agent: "nayagenggong",
           status: "running",
         }
       },
@@ -191,7 +191,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_4" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -214,7 +214,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
           id: "bg_clean_agent",
           sessionID: "ses_clean_agent",
           description: "Clean agent",
-          agent: "sisyphus-junior",
+          agent: "cenil",
           status: "running",
         }
       },
@@ -245,7 +245,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
 
     //#then
     expectFn(launchCalls).toHaveLength(1)
-    expectFn((launchCalls[0] as { agent: string }).agent).toBe("sisyphus-junior")
+    expectFn((launchCalls[0] as { agent: string }).agent).toBe("cenil")
   })
 
   testFn("keeps launched background task alive when parent aborts before session id resolves", async () => {
@@ -257,7 +257,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_abort_after_launch",
         sessionID: undefined,
         description: "Abort after launch",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "pending",
       }),
       getTask: () => {
@@ -282,7 +282,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_abort_after_launch" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -306,7 +306,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_abort_category",
         sessionID: undefined,
         description: "Abort category",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "pending",
       }),
       getTask: () => {
@@ -334,7 +334,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_abort_category" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       [{ providers: ["openai"], model: "gpt-5.4" }],
@@ -356,7 +356,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_abort_terminal",
         sessionID: undefined,
         description: "Abort terminal",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "pending",
       }),
       getTask: () => ({ sessionID: undefined, status: "interrupt" }),
@@ -378,7 +378,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_abort_terminal" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -398,7 +398,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         id: "bg_crash_before_prompt",
         sessionID: undefined,
         description: "Crash before prompt",
-        agent: "explore",
+        agent: "nayagenggong",
         status: "pending",
       }),
       getTask: () => {
@@ -426,7 +426,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       },
       { manager },
       { sessionID: "ses_parent", messageID: "msg_crash" },
-      "explore",
+      "nayagenggong",
       undefined,
       undefined,
       undefined,
@@ -450,8 +450,8 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
       launch: async () => {
         launchCount += 1
         return launchCount === 1
-          ? { id: "bg_first", sessionID: undefined, description: "First", agent: "explore", status: "pending" }
-          : { id: "bg_second", sessionID: undefined, description: "Second", agent: "explore", status: "pending" }
+          ? { id: "bg_first", sessionID: undefined, description: "First", agent: "nayagenggong", status: "pending" }
+          : { id: "bg_second", sessionID: undefined, description: "Second", agent: "nayagenggong", status: "pending" }
       },
       getTask: (taskID: string) => {
         const state = states.get(taskID)
@@ -483,7 +483,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         },
         { manager },
         { sessionID: "ses_parent", messageID: "msg_first" },
-        "explore",
+        "nayagenggong",
         undefined,
         undefined,
         undefined,
@@ -503,7 +503,7 @@ describeFn("executeBackgroundTask output/session metadata compatibility", () => 
         },
         { manager },
         { sessionID: "ses_parent", messageID: "msg_second" },
-        "explore",
+        "nayagenggong",
         undefined,
         undefined,
         undefined,

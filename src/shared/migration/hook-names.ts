@@ -3,9 +3,16 @@
 export const HOOK_NAME_MAP: Record<string, string | null> = {
   // Legacy names (backward compatibility)
   "anthropic-auto-compact": "anthropic-context-window-limit-recovery",
-  "sisyphus-orchestrator": "atlas",
+  "sisyphus-orchestrator": "aji-saka",
 
-  "sisyphus-gpt-hephaestus-reminder": "no-sisyphus-gpt",
+  "sisyphus-gpt-hephaestus-reminder": "no-ismaya-gpt",
+
+  // Renamed hooks (directory renames)
+  "atlas": "aji-saka",
+  "no-sisyphus-gpt": "no-ismaya-gpt",
+  "no-hephaestus-non-gpt": "no-togog-non-gpt",
+  "sisyphus-junior-notepad": "cenil-notepad",
+  "prometheus-md-only": "dewi-sri-md-only",
 
   // Removed hooks (v3.0.0) - will be filtered out and user warned
   "empty-message-sanitizer": null,

@@ -16,6 +16,7 @@ import {
   resolveInheritedPromptTools,
   createInternalAgentTextPart,
 } from "../../shared"
+import { getAgentConfigKey } from "../../shared/agent-display-names"
 import { applySessionPromptParams } from "../../shared/session-prompt-params-helpers"
 import { setSessionTools } from "../../shared/session-tools-store"
 import { SessionCategoryRegistry } from "../../shared/session-category-registry"
@@ -59,6 +60,7 @@ import { pruneStaleTasksAndNotifications } from "./task-poller"
 import { checkAndInterruptStaleTasks } from "./task-poller"
 import { removeTaskToastTracking } from "./remove-task-toast-tracking"
 import { abortWithTimeout } from "./abort-with-timeout"
+import { isPlanFamily, normalizePlanFamilyName, normalizeResumedAgentName } from "../../tools/delegate-task/constants"
 import {
   MIN_SESSION_GONE_POLLS,
   verifySessionExists as verifySessionStillExists,
@@ -841,12 +843,15 @@ export class BackgroundManager {
       this.pendingByParent.set(input.parentSessionID, pending)
     }
 
+    const canonicalAgent = normalizeResumedAgentName(existingTask.agent) ?? getAgentConfigKey(existingTask.agent)
+    existingTask.agent = canonicalAgent
+
     const toastManager = getTaskToastManager()
     if (toastManager) {
       toastManager.addTask({
         id: existingTask.id,
         description: existingTask.description,
-        agent: existingTask.agent,
+        agent: canonicalAgent,
         isBackground: true,
       })
     }
@@ -855,7 +860,7 @@ export class BackgroundManager {
 
     log("[background-agent] Resuming task - calling prompt (fire-and-forget) with:", {
       sessionID: existingTask.sessionID,
-      agent: existingTask.agent,
+      agent: canonicalAgent,
       model: existingTask.model,
       promptLength: input.prompt.length,
     })
@@ -877,15 +882,15 @@ export class BackgroundManager {
     this.client.session.promptAsync({
       path: { id: existingTask.sessionID },
       body: {
-        agent: existingTask.agent,
+        agent: canonicalAgent,
         ...(resumeModel ? { model: resumeModel } : {}),
         ...(resumeVariant ? { variant: resumeVariant } : {}),
         tools: (() => {
           const tools = {
-            task: false,
+            task: isPlanFamily(normalizePlanFamilyName(canonicalAgent)),
             call_omo_agent: true,
             question: false,
-            ...getAgentToolRestrictions(existingTask.agent),
+            ...getAgentToolRestrictions(canonicalAgent),
           }
           setSessionTools(existingTask.sessionID!, tools)
           return tools
@@ -1060,14 +1065,18 @@ export class BackgroundManager {
 
         task.progress.toolCalls += 1
         task.progress.lastTool = partInfo.tool
-        const circuitBreaker = this.cachedCircuitBreakerSettings ?? (this.cachedCircuitBreakerSettings = resolveCircuitBreakerSettings(this.config))
+        let circuitBreaker = this.cachedCircuitBreakerSettings
+        if (!circuitBreaker) {
+          circuitBreaker = resolveCircuitBreakerSettings(this.config)
+          this.cachedCircuitBreakerSettings = circuitBreaker
+        }
         if (partInfo.tool) {
-         task.progress.toolCallWindow = recordToolCall(
-             task.progress.toolCallWindow,
-             partInfo.tool,
-             circuitBreaker,
-             partInfo.state?.input
-           )
+          task.progress.toolCallWindow = recordToolCall(
+            task.progress.toolCallWindow,
+            partInfo.tool,
+            circuitBreaker,
+            partInfo.state?.input
+          )
 
            if (circuitBreaker.enabled) {
              const loopDetection = detectRepetitiveToolUse(task.progress.toolCallWindow)

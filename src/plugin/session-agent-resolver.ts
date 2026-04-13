@@ -1,5 +1,6 @@
 import { log } from "../shared"
 import { normalizeSDKResponse } from "../shared"
+import { normalizeAgentForPrompt } from "../shared/agent-display-names"
 
 interface SessionMessage {
   info?: {
@@ -24,7 +25,7 @@ export async function resolveSessionAgent(
 
     for (const msg of messages) {
       if (msg.info?.agent) {
-        return msg.info.agent
+        return normalizeAgentForPrompt(msg.info.agent)
       }
     }
   } catch (error) {

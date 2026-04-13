@@ -12,7 +12,7 @@ import { formatTaskStatus } from "./task-status-format"
 import { getAgentDisplayName } from "../../shared/agent-display-names"
 import { recordBackgroundOutputConsumption } from "../../shared/background-output-consumption"
 
-const SISYPHUS_JUNIOR_AGENT = getAgentDisplayName("sisyphus-junior")
+const SISYPHUS_JUNIOR_AGENT = getAgentDisplayName("cenil")
 
 type ToolContextWithMetadata = {
   sessionID: string

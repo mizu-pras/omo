@@ -110,7 +110,7 @@ afterEach(() => {
 				ralphLoop: { event: async () => {} },
 				stopContinuationGuard: { event: async () => {} },
 				compactionTodoPreserver: { event: async () => {} },
-				atlasHook: { handler: async () => {} },
+				ajiSakaHook: { handler: async () => {} },
 			} as any,
 		})
 
@@ -187,7 +187,7 @@ afterEach(() => {
 				ralphLoop: { event: async () => {} },
 				stopContinuationGuard: { event: async () => {} },
 				compactionTodoPreserver: { event: async () => {} },
-				atlasHook: { handler: async () => {} },
+				ajiSakaHook: { handler: async () => {} },
 			} as any,
 		})
 
@@ -257,7 +257,7 @@ afterEach(() => {
 				ralphLoop: { event: async () => {} },
 				stopContinuationGuard: { event: async () => {} },
 				compactionTodoPreserver: { event: async () => {} },
-				atlasHook: { handler: async () => {} },
+				ajiSakaHook: { handler: async () => {} },
 			} as any,
 		})
 
@@ -350,7 +350,7 @@ afterEach(() => {
 				ralphLoop: { event: async () => {} },
 				stopContinuationGuard: { event: async () => {} },
 				compactionTodoPreserver: { event: async () => {} },
-				atlasHook: { handler: async () => {} },
+				ajiSakaHook: { handler: async () => {} },
 			} as any,
 		})
 
@@ -408,7 +408,7 @@ afterEach(() => {
 				ralphLoop: { event: async () => {} },
 				stopContinuationGuard: { event: async () => {} },
 				compactionTodoPreserver: { event: async () => {} },
-				atlasHook: { handler: async () => {} },
+				ajiSakaHook: { handler: async () => {} },
 			} as any,
 		})
 
@@ -591,7 +591,8 @@ describe("createEventHandler - event forwarding", () => {
 	})
 
 	it("dispatches OpenClaw after session.created using tracked pane metadata", async () => {
-		const openClawSpy = spyOn(openclawRuntimeDispatch, "dispatchOpenClawEvent").mockResolvedValue(null)
+		const openClawSpy = spyOn(openclawRuntimeDispatch, "dispatchOpenClawEvent")
+		openClawSpy.mockResolvedValue(null)
 		const eventHandler = createEventHandler({
 			ctx: asEventHandlerContext({ directory: "/tmp/project-created" }),
 			pluginConfig: asPluginConfig({
@@ -698,7 +699,8 @@ describe("createEventHandler - event forwarding", () => {
 	})
 
 	it("dispatches OpenClaw for synthetic session.idle events", async () => {
-		const openClawSpy = spyOn(openclawRuntimeDispatch, "dispatchOpenClawEvent").mockResolvedValue(null)
+		const openClawSpy = spyOn(openclawRuntimeDispatch, "dispatchOpenClawEvent")
+		openClawSpy.mockResolvedValue(null)
 		const eventHandler = createEventHandler({
 			ctx: asEventHandlerContext({ directory: "/tmp/project-idle" }),
 			pluginConfig: asPluginConfig({ openclaw: { enabled: true, gateways: {}, hooks: {} } }),
@@ -880,7 +882,7 @@ describe("createEventHandler - retry dedupe lifecycle", () => {
 		await chatMessageHandler(
 			{
 				sessionID,
-				agent: "sisyphus",
+				agent: "ismaya",
 				model: { providerID: "anthropic", modelID: "claude-opus-4-6-thinking" },
 			},
 			firstOutput,

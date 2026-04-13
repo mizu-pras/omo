@@ -50,7 +50,8 @@ describe("scheduleDeferredModelOverride", () => {
     `)
     db.close()
 
-    getDataDirSpy = spyOn(dataPathModule, "getDataDir").mockReturnValue(tempDir)
+    getDataDirSpy = spyOn(dataPathModule, "getDataDir")
+    getDataDirSpy.mockReturnValue(tempDir)
     logSpy = spyOn(sharedModule, "log").mockImplementation(() => {})
   })
 

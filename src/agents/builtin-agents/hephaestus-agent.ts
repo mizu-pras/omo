@@ -3,7 +3,7 @@ import type { AgentOverrides } from "../types"
 import type { CategoryConfig } from "../../config/schema"
 import type { AvailableAgent, AvailableCategory, AvailableSkill } from "../dynamic-agent-prompt-builder"
 import { AGENT_MODEL_REQUIREMENTS, isAnyProviderConnected } from "../../shared"
-import { createHephaestusAgent } from "../hephaestus"
+import { createHephaestusAgent } from "../togog"
 import { applyEnvironmentContext } from "./environment-context"
 import { applyCategoryOverride, mergeAgentConfig } from "./agent-overrides"
 import { applyModelResolution, getFirstFallbackModel } from "./model-resolution"
@@ -37,10 +37,10 @@ export function maybeCreateHephaestusConfig(input: {
     disableOmoEnv = false,
   } = input
 
-  if (disabledAgents.includes("hephaestus")) return undefined
+  if (disabledAgents.includes("togog")) return undefined
 
-  const hephaestusOverride = agentOverrides["hephaestus"]
-  const hephaestusRequirement = AGENT_MODEL_REQUIREMENTS["hephaestus"]
+  const hephaestusOverride = agentOverrides["togog"]
+  const hephaestusRequirement = AGENT_MODEL_REQUIREMENTS["togog"]
   const hasHephaestusExplicitConfig = hephaestusOverride !== undefined
 
   const hasRequiredProvider =

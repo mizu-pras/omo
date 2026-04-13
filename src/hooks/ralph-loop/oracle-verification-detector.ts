@@ -54,7 +54,7 @@ export function isOracleVerified(text: string): boolean {
 		return false
 	}
 
-	const isOracleAgent = evidence.agent.toLowerCase() === "oracle"
+	const isOracleAgent = evidence.agent.toLowerCase() === "ratu-kidul"
 	const isVerifiedPromise = evidence.promise === ULTRAWORK_VERIFICATION_PROMISE
 
 	return isOracleAgent && isVerifiedPromise
@@ -62,7 +62,7 @@ export function isOracleVerified(text: string): boolean {
 
 export function extractOracleSessionID(text: string): string | undefined {
 	const evidence = parseOracleVerificationEvidence(text)
-	if (!evidence || evidence.agent.toLowerCase() !== "oracle") {
+	if (!evidence || evidence.agent.toLowerCase() !== "ratu-kidul") {
 		return undefined
 	}
 

@@ -2,8 +2,8 @@ import type { AgentConfig } from "@opencode-ai/sdk"
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import * as agents from "../agents"
 import * as shared from "../shared"
-import * as sisyphusJunior from "../agents/sisyphus-junior"
-import type { OhMyOpenCodeConfig } from "../config"
+import * as sisyphusJunior from "../agents/cenil"
+import type { ParaHyangConfig } from "../config"
 import * as skillLoader from "../features/opencode-skill-loader"
 import { applyAgentConfig } from "./agent-config-handler"
 import type { PluginComponents } from "./plugin-components-loader"
@@ -20,7 +20,7 @@ function createPluginComponents(): PluginComponents {
   }
 }
 
-function createPluginConfig(): OhMyOpenCodeConfig {
+function createPluginConfig(): ParaHyangConfig {
   return {
     sisyphus_agent: {
       planner_enabled: false,
@@ -42,13 +42,13 @@ describe("applyAgentConfig .agents skills", () => {
 
   beforeEach(() => {
     createBuiltinAgentsSpy = spyOn(agents, "createBuiltinAgents").mockResolvedValue({
-      sisyphus: { name: "sisyphus", prompt: "builtin", mode: "primary" } satisfies AgentConfig,
+      sisyphus: { name: "ismaya", prompt: "builtin", mode: "primary" } satisfies AgentConfig,
     })
     createSisyphusJuniorAgentSpy = spyOn(
       sisyphusJunior,
       "createSisyphusJuniorAgentWithOverrides",
     ).mockReturnValue({
-      name: "sisyphus-junior",
+      name: "cenil",
       prompt: "junior",
       mode: "all",
     } satisfies AgentConfig)

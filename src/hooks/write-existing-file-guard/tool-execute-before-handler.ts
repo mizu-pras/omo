@@ -136,9 +136,9 @@ export async function handleWriteExistingFileGuardToolExecuteBefore(params: {
     return
   }
 
-  const isSisyphusPath = canonicalPath.includes("/.sisyphus/")
+  const isSisyphusPath = canonicalPath.includes("/.ismaya/")
   if (isSisyphusPath) {
-    log("[write-existing-file-guard] Allowing .sisyphus/** overwrite", {
+    log("[write-existing-file-guard] Allowing .ismaya/** overwrite", {
       sessionID: input.sessionID,
       filePath,
     })

@@ -4,6 +4,7 @@ import { storeToolMetadata } from "../../features/tool-metadata-store"
 import { formatDetailedError } from "./error-formatting"
 import { getSessionTools } from "../../shared/session-tools-store"
 import { resolveCallID } from "./resolve-call-id"
+import { normalizeResumedAgentName } from "./constants"
 
 export async function executeBackgroundContinuation(
   args: DelegateTaskArgs,
@@ -23,12 +24,13 @@ export async function executeBackgroundContinuation(
       parentAgent: parentContext.agent,
       parentTools: getSessionTools(parentContext.sessionID),
     })
+    const canonicalAgent = normalizeResumedAgentName(task.agent)
 
     const bgContMeta = {
       title: `Continue: ${task.description}`,
       metadata: {
         prompt: args.prompt,
-        agent: task.agent,
+        agent: canonicalAgent,
         load_skills: args.load_skills,
         description: args.description,
         run_in_background: args.run_in_background,
@@ -45,10 +47,10 @@ export async function executeBackgroundContinuation(
 
     return `Background task continued.
 
-Task ID: ${task.id}
-Description: ${task.description}
-Agent: ${task.agent}
-Status: ${task.status}
+      Task ID: ${task.id}
+      Description: ${task.description}
+      Agent: ${canonicalAgent}
+      Status: ${task.status}
 
 Agent continues with full previous context preserved.
 System notifies on completion. Use \`background_output\` with task_id="${task.id}" to check.
@@ -57,7 +59,7 @@ Do NOT call background_output now. Wait for <system-reminder> notification first
 
 <task_metadata>
 session_id: ${task.sessionID}
-${task.agent ? `subagent: ${task.agent}\n` : ""}</task_metadata>`
+${canonicalAgent ? `subagent: ${canonicalAgent}\n` : ""}</task_metadata>`
   } catch (error) {
     return formatDetailedError(error, {
       operation: "Continue background task",

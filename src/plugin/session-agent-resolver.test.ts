@@ -2,15 +2,15 @@ import { describe, expect, test } from "bun:test"
 import { resolveSessionAgent } from "./session-agent-resolver"
 
 describe("resolveSessionAgent", () => {
-  test("returns agent from first message with agent field", async () => {
+  test("returns canonical agent from first message with agent field", async () => {
     //#given
     const client = {
       session: {
         messages: async () => ({
           data: [
             { info: { role: "user" } },
-            { info: { role: "assistant", agent: "explore" } },
-            { info: { role: "assistant", agent: "oracle" } },
+            { info: { role: "assistant", agent: "nayagenggong" } },
+            { info: { role: "assistant", agent: "ratu-kidul" } },
           ],
         }),
       },
@@ -20,7 +20,35 @@ describe("resolveSessionAgent", () => {
     const agent = await resolveSessionAgent(client, "ses_test")
 
     //#then
-    expect(agent).toBe("explore")
+    expect(agent).toBe("Nayagenggong")
+  })
+
+  test("canonicalizes legacy agent aliases", async () => {
+    //#given
+    const cases = [
+      ["ratu-kidul", "Kanjeng Ratu Kidul"],
+      ["dewi-sri", "Dewi Sri"],
+      ["ismaya", "Sang Hyang Ismaya"],
+      ["togog", "Togog"],
+      ["aji-saka", "Aji Saka"],
+      ["nayagenggong", "Nayagenggong"],
+      ["surya", "Batara Surya"],
+      ["cenil", "Cenil"],
+    ] as const
+
+    //#when / //#then
+    for (const [legacyName, canonicalName] of cases) {
+      const client = {
+        session: {
+          messages: async () => ({
+            data: [{ info: { role: "assistant", agent: legacyName } }],
+          }),
+        },
+      }
+
+      const agent = await resolveSessionAgent(client, "ses_test")
+      expect(agent).toBe(canonicalName)
+    }
   })
 
   test("skips messages without agent field", async () => {

@@ -2,7 +2,7 @@
 
 import { describe, it, expect } from "bun:test"
 import { buildAntiDuplicationSection } from "./dynamic-agent-prompt-builder"
-import { METIS_SYSTEM_PROMPT } from "./metis"
+import { METIS_SYSTEM_PROMPT } from "./jayabaya"
 
 describe("buildAntiDuplicationSection", () => {
   it("#given no arguments #when building anti-duplication section #then returns comprehensive rule section", () => {

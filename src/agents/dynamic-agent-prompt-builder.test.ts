@@ -243,7 +243,7 @@ describe("buildNonClaudePlannerSection", () => {
     const result = buildNonClaudePlannerSection(model)
 
     //#then
-    expect(result).toContain("Plan Agent")
+    expect(result).toContain("Dewi Sri")
     expect(result).toContain("session_id")
     expect(result).toContain("Multi-step")
   })
@@ -267,8 +267,7 @@ describe("buildNonClaudePlannerSection", () => {
     const result = buildNonClaudePlannerSection(model)
 
     //#then
-    expect(result).toContain("Plan Agent")
+    expect(result).toContain("Dewi Sri")
     expect(result).not.toBe("")
   })
 })
-

@@ -52,7 +52,7 @@ function writeBoulderStateFile(
   sessionIDs: string[],
   sessionOrigins?: Record<string, "direct" | "appended">,
 ): void {
-  const sisyphusDir = join(directory, ".sisyphus")
+  const sisyphusDir = join(directory, ".ismaya")
   mkdirSync(sisyphusDir, { recursive: true })
   writeFileSync(
     join(sisyphusDir, "boulder.json"),
@@ -62,7 +62,7 @@ function writeBoulderStateFile(
       session_ids: sessionIDs,
       session_origins: sessionOrigins,
       plan_name: "test-plan",
-      agent: "atlas",
+      agent: "aji-saka",
     }),
     "utf-8",
   )
@@ -73,8 +73,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "active-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "active-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] incomplete task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["test-session"])
     const ctx = createMockContext(directory)
@@ -91,8 +91,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "done-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "done-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [x] completed task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["test-session"])
     const ctx = createMockContext(directory)
@@ -109,8 +109,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "active-descendant-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "active-descendant-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session", "child-session"], {
       "root-session": "direct",
@@ -119,7 +119,7 @@ describe("checkCompletionConditions continuation coverage", () => {
 
     const ctx = createMockContext(directory)
     ctx.sessionID = "child-session"
-    setSessionAgent("child-session", "atlas")
+    setSessionAgent("child-session", "aji-saka")
     ctx.client.session.get = mock(async ({ path }: { path: { id: string } }) => ({
       data: {
         id: path.id,
@@ -128,7 +128,7 @@ describe("checkCompletionConditions continuation coverage", () => {
     })) as unknown as RunContext["client"]["session"]["get"]
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "child-session"
-        ? [{ info: { agent: "atlas", providerID: "openai", modelID: "gpt-5.4" } }]
+        ? [{ info: { agent: "aji-saka", providerID: "openai", modelID: "gpt-5.4" } }]
         : [],
     })) as unknown as RunContext["client"]["session"]["messages"]
 
@@ -145,8 +145,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "lineage-non-subagent-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "lineage-non-subagent-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session"])
 
@@ -173,8 +173,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "lineage-agent-mismatch-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "lineage-agent-mismatch-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session", "mismatch-subagent-session"], {
       "root-session": "direct",
@@ -191,7 +191,7 @@ describe("checkCompletionConditions continuation coverage", () => {
     })) as unknown as RunContext["client"]["session"]["get"]
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "mismatch-subagent-session"
-        ? [{ info: { agent: "sisyphus-junior", providerID: "openai", modelID: "gpt-5.4" } }]
+        ? [{ info: { agent: "cenil", providerID: "openai", modelID: "gpt-5.4" } }]
         : [],
     })) as unknown as RunContext["client"]["session"]["messages"]
 
@@ -208,8 +208,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "appended-mismatch-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "appended-mismatch-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session", "appended-mismatch-session"], {
       "root-session": "direct",
@@ -226,7 +226,7 @@ describe("checkCompletionConditions continuation coverage", () => {
     })) as unknown as RunContext["client"]["session"]["get"]
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "appended-mismatch-session"
-        ? [{ info: { agent: "sisyphus-junior", providerID: "openai", modelID: "gpt-5.4" } }]
+        ? [{ info: { agent: "cenil", providerID: "openai", modelID: "gpt-5.4" } }]
         : [],
     })) as unknown as RunContext["client"]["session"]["messages"]
 
@@ -243,8 +243,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "appended-unresolved-lineage-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "appended-unresolved-lineage-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session", "ses_appended_descendant"], {
       "root-session": "direct",
@@ -258,7 +258,7 @@ describe("checkCompletionConditions continuation coverage", () => {
     }) as unknown as RunContext["client"]["session"]["get"]
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "ses_appended_descendant"
-        ? [{ info: { agent: "atlas", providerID: "openai", modelID: "gpt-5.4" } }]
+        ? [{ info: { agent: "aji-saka", providerID: "openai", modelID: "gpt-5.4" } }]
         : [],
     })) as unknown as RunContext["client"]["session"]["messages"]
 
@@ -275,8 +275,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "direct-tracked-child-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "direct-tracked-child-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["ses_direct_child"])
 
@@ -302,8 +302,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "multi-tracked-direct-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "multi-tracked-direct-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["ses_other_tracked", "ses_direct_tracked"], {
       "ses_other_tracked": "direct",
@@ -332,8 +332,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "unknown-origin-multi-session-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "unknown-origin-multi-session-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["ses_root_tracked", "ses_unknown_child"])
 
@@ -356,8 +356,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "multi-tracked-direct-child-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "multi-tracked-direct-child-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["ses_root_tracked", "ses_direct_child"], {
       "ses_root_tracked": "direct",
@@ -374,7 +374,7 @@ describe("checkCompletionConditions continuation coverage", () => {
     })) as unknown as RunContext["client"]["session"]["get"]
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "ses_direct_child"
-        ? [{ info: { agent: "sisyphus-junior", providerID: "openai", modelID: "gpt-5.4" } }]
+        ? [{ info: { agent: "cenil", providerID: "openai", modelID: "gpt-5.4" } }]
         : [],
     })) as unknown as RunContext["client"]["session"]["messages"]
 
@@ -391,8 +391,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "compaction-descendant-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "compaction-descendant-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session", "ses_child_after_compaction"], {
       "root-session": "direct",
@@ -401,7 +401,7 @@ describe("checkCompletionConditions continuation coverage", () => {
 
     const ctx = createMockContext(directory)
     ctx.sessionID = "ses_child_after_compaction"
-    setSessionAgent("ses_child_after_compaction", "atlas")
+    setSessionAgent("ses_child_after_compaction", "aji-saka")
     ctx.client.session.get = mock(async ({ path }: { path: { id: string } }) => ({
       data: {
         id: path.id,
@@ -411,7 +411,7 @@ describe("checkCompletionConditions continuation coverage", () => {
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "ses_child_after_compaction"
         ? [
-            { info: { agent: "atlas", providerID: "openai", modelID: "gpt-5.4" } },
+            { info: { agent: "aji-saka", providerID: "openai", modelID: "gpt-5.4" } },
             { info: { agent: "compaction", providerID: "openai", modelID: "gpt-5.4" } },
           ]
         : [],
@@ -430,8 +430,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "sqlite-ordered-descendant-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "sqlite-ordered-descendant-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["root-session"])
 
@@ -446,9 +446,9 @@ describe("checkCompletionConditions continuation coverage", () => {
     ctx.client.session.messages = mock(async ({ path }: { path: { id: string } }) => ({
       data: path.id === "ses_sqlite_descendant"
         ? [
-            { id: "msg_0001", info: { agent: "atlas", providerID: "openai", modelID: "gpt-5.4", time: { created: 100 } } },
+            { id: "msg_0001", info: { agent: "aji-saka", providerID: "openai", modelID: "gpt-5.4", time: { created: 100 } } },
             { id: "msg_0003", info: { agent: "compaction", providerID: "openai", modelID: "gpt-5.4", time: { created: 200 } } },
-            { id: "msg_0002", info: { agent: "sisyphus-junior", providerID: "openai", modelID: "gpt-5.4", time: { created: 100 } } },
+            { id: "msg_0002", info: { agent: "cenil", providerID: "openai", modelID: "gpt-5.4", time: { created: 100 } } },
           ]
         : [],
     })) as unknown as RunContext["client"]["session"]["messages"]
@@ -466,8 +466,8 @@ describe("checkCompletionConditions continuation coverage", () => {
     // given
     spyOn(console, "log").mockImplementation(() => {})
     const directory = createTempDir()
-    const planPath = join(directory, ".sisyphus", "plans", "session-agent-fallback-plan.md")
-    mkdirSync(join(directory, ".sisyphus", "plans"), { recursive: true })
+    const planPath = join(directory, ".ismaya", "plans", "session-agent-fallback-plan.md")
+    mkdirSync(join(directory, ".ismaya", "plans"), { recursive: true })
     writeFileSync(planPath, "- [ ] unfinished task\n", "utf-8")
     writeBoulderStateFile(directory, planPath, ["ses_root_tracked", "ses_appended_child"], {
       "ses_root_tracked": "direct",
@@ -476,7 +476,7 @@ describe("checkCompletionConditions continuation coverage", () => {
 
     const ctx = createMockContext(directory)
     ctx.sessionID = "ses_appended_child"
-    setSessionAgent("ses_appended_child", "atlas")
+    setSessionAgent("ses_appended_child", "aji-saka")
     ctx.client.session.get = mock(async ({ path }: { path: { id: string } }) => ({
       data: {
         id: path.id,

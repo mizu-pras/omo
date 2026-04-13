@@ -19,7 +19,7 @@ import { readCurrentTopLevelTask } from "./top-level-task"
 
 describe("boulder-state", () => {
   const TEST_DIR = join(tmpdir(), "boulder-state-test-" + Date.now())
-  const SISYPHUS_DIR = join(TEST_DIR, ".sisyphus")
+  const SISYPHUS_DIR = join(TEST_DIR, ".ismaya")
 
   beforeEach(() => {
     if (!existsSync(TEST_DIR)) {
@@ -191,7 +191,7 @@ describe("boulder-state", () => {
   })
 
   describe("writeBoulderState", () => {
-    test("should write state and create .sisyphus directory if needed", () => {
+    test("should write state and create .ismaya directory if needed", () => {
       // given - state to write
       const state: BoulderState = {
         active_plan: "/test/plan.md",
@@ -340,7 +340,7 @@ describe("boulder-state", () => {
         taskLabel: "1",
         taskTitle: "Implement auth flow",
         sessionId: "ses_task_123",
-        agent: "sisyphus-junior",
+        agent: "cenil",
         category: "deep",
       })
       const result = getTaskSessionState(TEST_DIR, "todo:1")
@@ -349,7 +349,7 @@ describe("boulder-state", () => {
       expect(result).not.toBeNull()
       expect(result?.session_id).toBe("ses_task_123")
       expect(result?.task_title).toBe("Implement auth flow")
-      expect(result?.agent).toBe("sisyphus-junior")
+      expect(result?.agent).toBe("cenil")
       expect(result?.category).toBe("deep")
     })
 
@@ -714,7 +714,7 @@ describe("boulder-state", () => {
   describe("getPlanName", () => {
     test("should extract plan name from path", () => {
       // given
-      const path = "/home/user/.sisyphus/plans/project/my-feature.md"
+      const path = "/home/user/.ismaya/plans/project/my-feature.md"
       // when
       const name = getPlanName(path)
       // then
@@ -742,13 +742,13 @@ describe("boulder-state", () => {
       //#given - plan path, session id, and agent type
       const planPath = "/path/to/feature.md"
       const sessionId = "ses-xyz789"
-      const agent = "atlas"
+      const agent = "aji-saka"
 
       //#when - createBoulderState is called with agent
       const state = createBoulderState(planPath, sessionId, agent)
 
       //#then - state should include the agent field
-      expect(state.agent).toBe("atlas")
+      expect(state.agent).toBe("aji-saka")
       expect(state.active_plan).toBe(planPath)
       expect(state.session_ids).toEqual([sessionId])
       expect(state.plan_name).toBe("feature")

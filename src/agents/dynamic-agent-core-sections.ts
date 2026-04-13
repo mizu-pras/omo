@@ -69,13 +69,13 @@ export function buildToolSelectionTable(
   }
 
   rows.push("")
-  rows.push("**Default flow**: explore/librarian (background) + tools → oracle (if required)")
+  rows.push("**Default flow**: nayagenggong/pujangga (background) + tools → ratu-kidul (if required)")
 
   return rows.join("\n")
 }
 
 export function buildExploreSection(agents: AvailableAgent[]): string {
-  const exploreAgent = agents.find((agent) => agent.name === "explore")
+  const exploreAgent = agents.find((agent) => agent.name === "nayagenggong")
   if (!exploreAgent) {
     return ""
   }
@@ -83,7 +83,7 @@ export function buildExploreSection(agents: AvailableAgent[]): string {
   const useWhen = exploreAgent.metadata.useWhen || []
   const avoidWhen = exploreAgent.metadata.avoidWhen || []
 
-  return `### Explore Agent = Contextual Grep
+  return `### Nayagenggong = Contextual Grep
 
 Use it as a **peer tool**, not a fallback. Fire liberally for discovery, not for files you already know.
 
@@ -92,19 +92,19 @@ Use it as a **peer tool**, not a fallback. Fire liberally for discovery, not for
 **Use Direct Tools when:**
 ${avoidWhen.map((entry) => `- ${entry}`).join("\n")}
 
-**Use Explore Agent when:**
+**Use Nayagenggong when:**
 ${useWhen.map((entry) => `- ${entry}`).join("\n")}`
 }
 
 export function buildLibrarianSection(agents: AvailableAgent[]): string {
-  const librarianAgent = agents.find((agent) => agent.name === "librarian")
+  const librarianAgent = agents.find((agent) => agent.name === "pujangga")
   if (!librarianAgent) {
     return ""
   }
 
   const useWhen = librarianAgent.metadata.useWhen || []
 
-  return `### Librarian Agent = Reference Grep
+  return `### Ki Pujangga = Reference Grep
 
 Search **external references** (docs, OSS, web). Fire proactively when unfamiliar libraries are involved.
 
@@ -128,7 +128,7 @@ export function buildDelegationTable(agents: AvailableAgent[]): string {
 }
 
 export function buildOracleSection(agents: AvailableAgent[]): string {
-  const oracleAgent = agents.find((agent) => agent.name === "oracle")
+  const oracleAgent = agents.find((agent) => agent.name === "ratu-kidul")
   if (!oracleAgent) {
     return ""
   }
@@ -137,11 +137,11 @@ export function buildOracleSection(agents: AvailableAgent[]): string {
   const avoidWhen = oracleAgent.metadata.avoidWhen || []
 
   return `<Oracle_Usage>
-## Oracle - Read-Only High-IQ Consultant
+## Kanjeng Ratu Kidul - Read-Only High-IQ Consultant
 
-Oracle is a read-only, expensive, high-quality reasoning model for debugging and architecture. Consultation only.
+Kanjeng Ratu Kidul is a read-only, expensive, high-quality reasoning model for debugging and architecture. Consultation only.
 
-### WHEN to Consult (Oracle FIRST, then implement):
+### WHEN to Consult (Kanjeng Ratu Kidul FIRST, then implement):
 
 ${useWhen.map((entry) => `- ${entry}`).join("\n")}
 
@@ -150,23 +150,23 @@ ${useWhen.map((entry) => `- ${entry}`).join("\n")}
 ${avoidWhen.map((entry) => `- ${entry}`).join("\n")}
 
 ### Usage Pattern:
-Briefly announce "Consulting Oracle for [reason]" before invocation.
+Briefly announce "Consulting Kanjeng Ratu Kidul for [reason]" before invocation.
 
 **Exception**: This is the ONLY case where you announce before acting. For all other work, start immediately without status updates.
 
-### Oracle Background Task Policy:
+### Kanjeng Ratu Kidul Background Task Policy:
 
-**Collect Oracle results before your final answer. No exceptions.**
+**Collect Kanjeng Ratu Kidul results before your final answer. No exceptions.**
 
-**Oracle-dependent implementation is BLOCKED until Oracle finishes.**
+**Kanjeng Ratu Kidul-dependent implementation is BLOCKED until Kanjeng Ratu Kidul finishes.**
 
-- If you asked Oracle for architecture/debugging direction that affects the fix, do not implement before Oracle result arrives.
-- While waiting, only do non-overlapping prep work. Never ship implementation decisions Oracle was asked to decide.
-- Never "time out and continue anyway" for Oracle-dependent tasks.
+- If you asked Kanjeng Ratu Kidul for architecture/debugging direction that affects the fix, do not implement before that result arrives.
+- While waiting, only do non-overlapping prep work. Never ship implementation decisions Kanjeng Ratu Kidul was asked to decide.
+- Never "time out and continue anyway" for Kanjeng Ratu Kidul-dependent tasks.
 
-- Oracle takes minutes. When done with your own work: **end your response** - wait for the \`<system-reminder>\`.
-- Do NOT poll \`background_output\` on a running Oracle. The notification will come.
-- Never cancel Oracle.
+- Kanjeng Ratu Kidul takes minutes. When done with your own work: **end your response** - wait for the \`<system-reminder>\`.
+- Do NOT poll \`background_output\` on a running Kanjeng Ratu Kidul task. The notification will come.
+- Never cancel Kanjeng Ratu Kidul.
 </Oracle_Usage>`
 }
 
@@ -176,16 +176,16 @@ export function buildNonClaudePlannerSection(model: string): string {
     return ""
   }
 
-  return `### Plan Agent Dependency (Non-Claude)
+  return `### Dewi Sri Dependency (Non-Claude)
 
-Multi-step task? **ALWAYS consult Plan Agent first.** Do NOT start implementation without a plan.
+Multi-step task? **ALWAYS consult Dewi Sri first.** Do NOT start implementation without a plan.
 
 - Single-file fix or trivial change → proceed directly
-- Anything else (2+ steps, unclear scope, architecture) → \`task(subagent_type="plan", ...)\` FIRST
-- Use \`session_id\` to resume the same Plan Agent - ask follow-up questions aggressively
-- If ANY part of the task is ambiguous, ask Plan Agent before guessing
+- Anything else (2+ steps, unclear scope, architecture) → \`task(subagent_type="dewi-sri", ...)\` FIRST
+- Use \`session_id\` to resume the same Dewi Sri session - ask follow-up questions aggressively
+- If ANY part of the task is ambiguous, ask Dewi Sri before guessing
 
-Plan Agent returns a structured work breakdown with parallel execution opportunities. Follow it.`
+Dewi Sri returns a structured work breakdown with parallel execution opportunities. Follow it.`
 }
 
 export function buildParallelDelegationSection(

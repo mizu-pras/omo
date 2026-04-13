@@ -55,12 +55,13 @@ describe("createChatMessageHandler - /start-work integration", () => {
   beforeEach(() => {
     testDir = join(tmpdir(), `chat-message-start-work-${randomUUID()}`)
     originalWorkingDirectory = process.cwd()
-    mkdirSync(join(testDir, ".sisyphus", "plans"), { recursive: true })
-    writeFileSync(join(testDir, ".sisyphus", "plans", "worker-plan.md"), "# Plan\n- [ ] Task 1")
+    mkdirSync(join(testDir, ".ismaya", "plans"), { recursive: true })
+    writeFileSync(join(testDir, ".ismaya", "plans", "worker-plan.md"), "# Plan\n- [ ] Task 1")
     process.chdir(testDir)
     _resetForTesting()
-    registerAgentName("prometheus")
-    registerAgentName("sisyphus")
+    registerAgentName("dewi-sri")
+    registerAgentName("ismaya")
+    registerAgentName("aji-saka")
   })
 
   afterEach(() => {
@@ -70,7 +71,7 @@ describe("createChatMessageHandler - /start-work integration", () => {
 
   test("falls back to Sisyphus through the full chat.message slash-command path when Atlas is unavailable", async () => {
     // given
-    updateSessionAgent("test-session", "prometheus")
+    updateSessionAgent("test-session", "dewi-sri")
     const args = createMockHandlerArgs()
     args.hooks.autoSlashCommand = createAutoSlashCommandHook({ skills: [] })
     args.hooks.startWork = createStartWorkHook({
@@ -78,7 +79,7 @@ describe("createChatMessageHandler - /start-work integration", () => {
       client: { tui: { showToast: async () => {} } },
     } as never)
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("prometheus")
+    const input = createMockInput("dewi-sri")
     const output: ChatMessageHandlerOutput = {
       message: {},
       parts: [{ type: "text", text: "/start-work" }],
@@ -88,18 +89,18 @@ describe("createChatMessageHandler - /start-work integration", () => {
     await handler(input, output)
 
     // then
-    expect(output.message["agent"]).toBe("sisyphus")
+    expect(output.message["agent"]).toBe("aji-saka")
     expect(output.parts[0].text).toContain("<auto-slash-command>")
     expect(output.parts[0].text).toContain("Auto-Selected Plan")
     expect(output.parts[0].text).toContain("boulder.json has been created")
-    expect(getSessionAgent("test-session")).toBe("sisyphus")
-    expect(readBoulderState(testDir)?.agent).toBe("sisyphus")
+    expect(getSessionAgent("test-session")).toBe("aji-saka")
+    expect(readBoulderState(testDir)?.agent).toBe("aji-saka")
   })
 
   test("smoke: resolves quoted human-readable plan names through the full /start-work chat.message path", async () => {
     // given
-    writeFileSync(join(testDir, ".sisyphus", "plans", "my-feature-plan.md"), "# Plan\n- [ ] Task 1")
-    updateSessionAgent("test-session", "prometheus")
+    writeFileSync(join(testDir, ".ismaya", "plans", "my-feature-plan.md"), "# Plan\n- [ ] Task 1")
+    updateSessionAgent("test-session", "dewi-sri")
     const args = createMockHandlerArgs()
     args.hooks.autoSlashCommand = createAutoSlashCommandHook({ skills: [] })
     args.hooks.startWork = createStartWorkHook({
@@ -107,7 +108,7 @@ describe("createChatMessageHandler - /start-work integration", () => {
       client: { tui: { showToast: async () => {} } },
     } as never)
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("prometheus")
+    const input = createMockInput("dewi-sri")
     const output: ChatMessageHandlerOutput = {
       message: {},
       parts: [{ type: "text", text: "/start-work \"my feature plan\"" }],
@@ -117,7 +118,7 @@ describe("createChatMessageHandler - /start-work integration", () => {
     await handler(input, output)
 
     // then
-    expect(output.message["agent"]).toBe("sisyphus")
+    expect(output.message["agent"]).toBe("aji-saka")
     expect(output.parts[0].text).toContain("<auto-slash-command>")
     expect(output.parts[0].text).toContain("Auto-Selected Plan")
     expect(output.parts[0].text).toContain("my-feature-plan")
@@ -143,7 +144,7 @@ describe("createChatMessageHandler - /ulw-loop raw slash fallback", () => {
       cancelLoop: () => true,
     }
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("sisyphus")
+    const input = createMockInput("ismaya")
     const output: ChatMessageHandlerOutput = {
       message: {},
       parts: [{ type: "text", text: '/ulw-loop "Ship feature" --strategy=continue' }],
@@ -183,7 +184,7 @@ describe("createChatMessageHandler - /ulw-loop raw slash fallback", () => {
       cancelLoop: () => true,
     }
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("sisyphus")
+    const input = createMockInput("ismaya")
     const output: ChatMessageHandlerOutput = {
       message: {},
       parts: [
@@ -233,7 +234,7 @@ describe("createChatMessageHandler - plain ultrawork keyword routing", () => {
     args.hooks.ralphLoop = ralphLoop
     args.hooks.keywordDetector = createKeywordDetectorHook(args.ctx as never, undefined, ralphLoop)
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("sisyphus")
+    const input = createMockInput("ismaya")
     const output: ChatMessageHandlerOutput = {
       message: {},
       parts: [{ type: "text", text: "ulw fix the flaky keyword tests" }],
@@ -270,7 +271,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     //#given - first message, no user-selected variant
     const args = createMockHandlerArgs({ shouldOverride: true })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("hephaestus", { providerID: "openai", modelID: "gpt-5.3-codex" })
+    const input = createMockInput("togog", { providerID: "openai", modelID: "gpt-5.3-codex" })
     const output = createMockOutput() // no variant set
 
     //#when
@@ -284,7 +285,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     //#given - first message, user already selected "xhigh" variant in OpenCode UI
     const args = createMockHandlerArgs({ shouldOverride: true })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("hephaestus", { providerID: "openai", modelID: "gpt-5.3-codex" })
+    const input = createMockInput("togog", { providerID: "openai", modelID: "gpt-5.3-codex" })
     const output = createMockOutput("xhigh") // user selected xhigh
 
     //#when
@@ -298,7 +299,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     //#given - not first message, variant already set
     const args = createMockHandlerArgs({ shouldOverride: false })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("hephaestus", { providerID: "openai", modelID: "gpt-5.3-codex" })
+    const input = createMockInput("togog", { providerID: "openai", modelID: "gpt-5.3-codex" })
     const output = createMockOutput("xhigh")
 
     //#when
@@ -312,7 +313,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     //#given - not first message, no variant from TUI
     const args = createMockHandlerArgs({ shouldOverride: false })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("hephaestus", { providerID: "openai", modelID: "gpt-5.3-codex" })
+    const input = createMockInput("togog", { providerID: "openai", modelID: "gpt-5.3-codex" })
     const output = createMockOutput() // no variant
 
     //#when
@@ -326,7 +327,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     //#given - first message with user-selected variant
     const args = createMockHandlerArgs({ shouldOverride: true })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("hephaestus", { providerID: "openai", modelID: "gpt-5.3-codex" })
+    const input = createMockInput("togog", { providerID: "openai", modelID: "gpt-5.3-codex" })
     const output = createMockOutput("xhigh")
 
     //#when
@@ -351,7 +352,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
       },
     }
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("hephaestus", { providerID: "openai", modelID: "gpt-5.3-codex" })
+    const input = createMockInput("togog", { providerID: "openai", modelID: "gpt-5.3-codex" })
     const output = createMockOutput()
 
     //#when
@@ -368,7 +369,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     setSessionModel("test-session", { providerID: "openai", modelID: "gpt-5.4" })
     const args = createMockHandlerArgs({ shouldOverride: false })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("sisyphus")
+    const input = createMockInput("ismaya")
     const output = createMockOutput()
 
     //#when
@@ -385,7 +386,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     setSessionModel("test-session", { providerID: "openai", modelID: "gpt-5.4" })
     const args = createMockHandlerArgs({ shouldOverride: true })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("sisyphus")
+    const input = createMockInput("ismaya")
     const output = createMockOutput()
 
     //#when
@@ -404,7 +405,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     const handler = createChatMessageHandler(args)
     const input = {
       sessionID: "subagent-session",
-      agent: "oracle",
+      agent: "ratu-kidul",
     }
     const output = createMockOutput()
 
@@ -424,12 +425,12 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
       shouldOverride: false,
       pluginConfig: {
         agents: {
-          sisyphus: { model: "anthropic/claude-opus-4-6" },
+          ismaya: { model: "anthropic/claude-opus-4-6" },
         },
       },
     })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput("sisyphus")
+    const input = createMockInput("ismaya")
     const output = createMockOutput()
 
     //#when
@@ -453,16 +454,16 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
       },
     })
     const handler = createChatMessageHandler(args)
-    const input = createMockInput(getAgentListDisplayName("prometheus"))
+    const input = createMockInput(getAgentListDisplayName("dewi-sri"))
     const output = createMockOutput()
 
     //#when
     await handler(input, output)
 
     //#then
-    expect(output.message["model"]).toBeUndefined()
+    expect(output.message["model"]).toEqual({ providerID: "openai", modelID: "gpt-5.4" })
     expect(getSessionModel("test-session")).toEqual({ providerID: "openai", modelID: "gpt-5.4" })
-    expect(getSessionAgent("test-session")).toBe("Prometheus - Plan Builder")
+    expect(getSessionAgent("test-session")).toBe("Dewi Sri")
   })
 
   test("respects a mid-conversation model switch instead of reusing the previous stored model", async () => {
@@ -472,7 +473,7 @@ describe("createChatMessageHandler - TUI variant passthrough", () => {
     const args = createMockHandlerArgs({ shouldOverride: false })
     const handler = createChatMessageHandler(args)
     const nextModel = { providerID: "openai", modelID: "gpt-5.4" }
-    const input = createMockInput("sisyphus", nextModel)
+    const input = createMockInput("ismaya", nextModel)
     const output = createMockOutput()
 
     //#when

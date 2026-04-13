@@ -112,8 +112,8 @@ describe("sisyphus-task-retry", () => {
       
       const guidance = buildRetryGuidance(errorInfo)
       
-      expect(guidance).toContain("explore")
-      expect(guidance).toContain("oracle")
+      expect(guidance).toContain("nayagenggong")
+      expect(guidance).toContain("ratu-kidul")
     })
   })
 })

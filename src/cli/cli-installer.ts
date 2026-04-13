@@ -95,7 +95,7 @@ export async function runCliInstaller(args: InstallArgs, version: string): Promi
 
   if (!config.hasClaude) {
     printInfo(
-      "Note: Sisyphus agent performs best with Claude Opus 4.5+. " +
+      "Note: Sang Hyang Ismaya agent performs best with Claude Opus 4.5+. " +
         "Other models work but may have reduced orchestration quality.",
     )
   }
@@ -123,7 +123,7 @@ export async function runCliInstaller(args: InstallArgs, version: string): Promi
 
   console.log(`${SYMBOLS.star} ${color.yellow("If you found this helpful, consider starring the repo!")}`)
   console.log(
-    `  ${color.dim("gh api --silent --method PUT /user/starred/code-yeongyu/oh-my-openagent >/dev/null 2>&1 || true")}`,
+    `  ${color.dim("gh api --silent --method PUT /user/starred/mizu-pras/omo >/dev/null 2>&1 || true")}`,
   )
   console.log()
   console.log(color.dim("oMoMoMoMo... Enjoy!"))

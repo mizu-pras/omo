@@ -44,7 +44,7 @@ function createMinimalEventHandler() {
       stopContinuationGuard: { event: async () => {}, isStopped: () => false },
       compactionTodoPreserver: { event: async () => {} },
       writeExistingFileGuard: { event: async () => {} },
-      atlasHook: { handler: async () => {} },
+      ajiSakaHook: { handler: async () => {} },
     } as never,
   })
 }
@@ -61,7 +61,7 @@ describe("createEventHandler compaction agent filtering", () => {
   it("does not overwrite the stored session agent with compaction", async () => {
     // given
     const sessionID = "ses_compaction_poisoning"
-    updateSessionAgent(sessionID, "atlas")
+    updateSessionAgent(sessionID, "aji-saka")
     const eventHandler = createMinimalEventHandler()
     const input: Parameters<ReturnType<typeof createEventHandler>>[0] = {
       event: {
@@ -83,7 +83,7 @@ describe("createEventHandler compaction agent filtering", () => {
     await eventHandler(input)
 
     // then
-    expect(getSessionAgent(sessionID)).toBe("atlas")
+    expect(getSessionAgent(sessionID)).toBe("aji-saka")
   })
 
   it("does not overwrite the stored session model with compaction", async () => {
@@ -100,8 +100,10 @@ describe("createEventHandler compaction agent filtering", () => {
             sessionID,
             role: "user",
             agent: "compaction",
-            providerID: "anthropic",
-            modelID: "claude-opus-4-1",
+            model: {
+              providerID: "anthropic",
+              modelID: "claude-opus-4-1",
+            },
             time: { created: Date.now() },
           },
         },

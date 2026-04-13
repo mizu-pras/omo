@@ -39,6 +39,6 @@ IF COMPLEX - DO NOT STRUGGLE ALONE. Consult specialists:
 SYNTHESIZE findings before proceeding.
 ---
 MANDATORY delegate_task params: ALWAYS include load_skills=[] and run_in_background when calling delegate_task.
-Example: delegate_task(subagent_type="explore", prompt="...", run_in_background=true, load_skills=[])`,
+Example: delegate_task(subagent_type="nayagenggong", prompt="...", run_in_background=true, load_skills=[])`,
   },
 ]

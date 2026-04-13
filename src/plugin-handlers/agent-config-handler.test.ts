@@ -4,8 +4,8 @@ import type { AgentConfig } from "@opencode-ai/sdk"
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import * as agents from "../agents"
 import * as shared from "../shared"
-import * as sisyphusJunior from "../agents/sisyphus-junior"
-import type { OhMyOpenCodeConfig } from "../config"
+import * as sisyphusJunior from "../agents/cenil"
+import type { ParaHyangConfig } from "../config"
 import * as agentLoader from "../features/claude-code-agent-loader"
 import * as skillLoader from "../features/opencode-skill-loader"
 import type { LoadedSkill } from "../features/opencode-skill-loader"
@@ -13,9 +13,9 @@ import { getAgentDisplayName, getAgentListDisplayName } from "../shared/agent-di
 import { applyAgentConfig } from "./agent-config-handler"
 import type { PluginComponents } from "./plugin-components-loader"
 
-const BUILTIN_SISYPHUS_DISPLAY_NAME = getAgentListDisplayName("sisyphus")
-const BUILTIN_SISYPHUS_JUNIOR_DISPLAY_NAME = getAgentDisplayName("sisyphus-junior")
-const BUILTIN_MULTIMODAL_LOOKER_DISPLAY_NAME = getAgentDisplayName("multimodal-looker")
+const BUILTIN_SISYPHUS_DISPLAY_NAME = getAgentListDisplayName("ismaya")
+const BUILTIN_SISYPHUS_JUNIOR_DISPLAY_NAME = getAgentDisplayName("cenil")
+const BUILTIN_MULTIMODAL_LOOKER_DISPLAY_NAME = getAgentDisplayName("surya")
 
 function createPluginComponents(): PluginComponents {
   return {
@@ -36,7 +36,7 @@ function createBaseConfig(): Record<string, unknown> {
   }
 }
 
-function createPluginConfig(): OhMyOpenCodeConfig {
+function createPluginConfig(): ParaHyangConfig {
   return {
     sisyphus_agent: {
       planner_enabled: false,
@@ -67,36 +67,36 @@ describe("applyAgentConfig builtin override protection", () => {
   }
 
   const builtinOracleConfig: AgentConfig = {
-    name: "oracle",
+    name: "ratu-kidul",
     prompt: "oracle prompt",
     mode: "subagent",
   }
 
   const builtinMultimodalLookerConfig: AgentConfig = {
-    name: "multimodal-looker",
+    name: "surya",
     prompt: "multimodal prompt",
     mode: "subagent",
   }
 
   const builtinAtlasConfig: AgentConfig = {
-    name: "atlas",
+    name: "aji-saka",
     prompt: "atlas prompt",
     mode: "all",
     model: "openai/gpt-5.4",
   }
 
   const sisyphusJuniorConfig: AgentConfig = {
-    name: "Sisyphus-Junior",
+    name: "Cenil",
     prompt: "junior prompt",
     mode: "all",
   }
 
   beforeEach(() => {
     createBuiltinAgentsSpy = spyOn(agents, "createBuiltinAgents").mockResolvedValue({
-      sisyphus: builtinSisyphusConfig,
-      oracle: builtinOracleConfig,
-      "multimodal-looker": builtinMultimodalLookerConfig,
-      atlas: builtinAtlasConfig,
+      ismaya: builtinSisyphusConfig,
+      "ratu-kidul": builtinOracleConfig,
+      surya: builtinMultimodalLookerConfig,
+      "aji-saka": builtinAtlasConfig,
     })
 
     createSisyphusJuniorAgentSpy = spyOn(

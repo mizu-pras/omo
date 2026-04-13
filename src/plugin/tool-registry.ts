@@ -4,7 +4,7 @@ import type { SkillLoadOptions } from "../tools/skill/types"
 import type {
   AvailableCategory,
 } from "../agents/dynamic-agent-prompt-builder"
-import type { OhMyOpenCodeConfig } from "../config"
+import type { ParaHyangConfig } from "../config"
 import { isInteractiveBashEnabled } from "../create-runtime-tmux-config"
 import * as openclawRuntimeDispatch from "../openclaw/runtime-dispatch"
 import type { PluginContext, ToolsRecord } from "./types"
@@ -101,7 +101,7 @@ export function trimToolsToCap(filteredTools: ToolsRecord, maxTools: number): vo
 
 export function createToolRegistry(args: {
   ctx: PluginContext
-  pluginConfig: OhMyOpenCodeConfig
+  pluginConfig: ParaHyangConfig
   managers: Pick<Managers, "backgroundManager" | "tmuxSessionManager" | "skillMcpManager">
   skillContext: SkillContext
   availableCategories: AvailableCategory[]
@@ -125,7 +125,7 @@ export function createToolRegistry(args: {
   )
 
   const isMultimodalLookerEnabled = !(pluginConfig.disabled_agents ?? []).some(
-    (agent) => agent.toLowerCase() === "multimodal-looker",
+    (agent) => agent.toLowerCase() === "surya",
   )
   const lookAt = isMultimodalLookerEnabled ? createLookAt(ctx) : null
 
@@ -136,7 +136,7 @@ export function createToolRegistry(args: {
     userCategories: pluginConfig.categories,
     agentOverrides: pluginConfig.agents,
     gitMasterConfig: pluginConfig.git_master,
-    sisyphusJuniorModel: pluginConfig.agents?.["sisyphus-junior"]?.model,
+    sisyphusJuniorModel: pluginConfig.agents?.["cenil"]?.model,
     browserProvider: skillContext.browserProvider,
     disabledSkills: skillContext.disabledSkills,
     availableCategories,

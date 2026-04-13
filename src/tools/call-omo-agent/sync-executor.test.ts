@@ -72,7 +72,7 @@ function createToolContext(): ToolContext {
   return {
     sessionID: "parent-session",
     messageID: "msg-1",
-    agent: "sisyphus",
+    agent: "ismaya",
     abort: new AbortController().signal,
     metadata: mock(async () => {}),
   }
@@ -96,7 +96,7 @@ describe("executeSync", () => {
     const toolContext = createToolContext()
     const recorder = createPromptAsyncRecorder()
     const args = {
-      subagent_type: "explore",
+      subagent_type: "nayagenggong",
       description: "test task",
       prompt: "find something",
       run_in_background: false,
@@ -109,7 +109,7 @@ describe("executeSync", () => {
     const promptInput = recorder.getCapturedInput()
     expect(promptInput).toBeDefined()
     expect(promptInput?.path.id).toBe("ses-test-123")
-    expect(promptInput?.body.agent).toBe("explore")
+    expect(promptInput?.body.agent).toBe("nayagenggong")
     expect(promptInput?.body.tools.question).toBe(false)
     expect(promptInput?.body.tools.task).toBe(false)
     expect(promptInput?.body.parts).toEqual([{ type: "text", text: "find something" }])
@@ -153,7 +153,7 @@ describe("executeSync", () => {
     const toolContext = createToolContext()
     const recorder = createPromptAsyncRecorder()
     const args = {
-      subagent_type: "explore",
+      subagent_type: "nayagenggong",
       description: "test task",
       prompt: "find something",
       run_in_background: false,
@@ -205,7 +205,7 @@ describe("executeSync", () => {
     const toolContext = createToolContext()
     const recorder = createPromptAsyncRecorder()
     const args = {
-      subagent_type: "explore",
+      subagent_type: "nayagenggong",
       description: "metadata title",
       prompt: "collect evidence",
       run_in_background: false,
@@ -230,7 +230,7 @@ describe("executeSync", () => {
     const toolContext = createToolContext()
     const recorder = createPromptAsyncRecorder()
     const args = {
-      subagent_type: "explore",
+      subagent_type: "nayagenggong",
       description: "test task",
       prompt: "find something",
       run_in_background: false,
@@ -264,7 +264,7 @@ describe("executeSync", () => {
       throw new Error("agent.name is undefined")
     })
     const args = {
-      subagent_type: "explore",
+      subagent_type: "nayagenggong",
       description: "missing agent",
       prompt: "find something",
       run_in_background: false,
@@ -325,7 +325,7 @@ describe("executeSync", () => {
     }
 
     const args = {
-      subagent_type: "explore",
+      subagent_type: "nayagenggong",
       description: "test task",
       prompt: "find something",
     }
@@ -333,7 +333,7 @@ describe("executeSync", () => {
     const toolContext = {
       sessionID: "parent-session",
       messageID: "msg-4",
-      agent: "sisyphus",
+      agent: "ismaya",
       abort: new AbortController().signal,
       metadata: mock(async () => {}),
     }

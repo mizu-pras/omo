@@ -1,9 +1,9 @@
 export {
-  OhMyOpenCodeConfigSchema,
+  ParaHyangConfigSchema,
 } from "./schema"
 
 export type {
-  OhMyOpenCodeConfig,
+  ParaHyangConfig,
   AgentOverrideConfig,
   AgentOverrides,
   McpName,

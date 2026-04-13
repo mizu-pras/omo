@@ -50,7 +50,7 @@ describe("logLegacyPluginStartupWarning", () => {
       //#given
       mockCheckForLegacyPluginEntry.mockReturnValue(createLegacyPluginCheckResult({
         hasLegacyEntry: true,
-        legacyEntries: ["oh-my-opencode", "oh-my-opencode@3.13.1"],
+        legacyEntries: ["oh-my-openagent", "oh-my-openagent@3.13.1"],
         configPath: "/tmp/opencode.json",
       }))
       const { logLegacyPluginStartupWarning } = await importFreshStartupWarningModule()
@@ -65,10 +65,10 @@ describe("logLegacyPluginStartupWarning", () => {
       //#then
       expect(mockLog).toHaveBeenCalledTimes(1)
       expect(mockLog).toHaveBeenCalledWith(
-        "[OhMyOpenCodePlugin] Legacy plugin entry detected in OpenCode config",
+        "[ParaHyangPlugin] Legacy plugin entry detected in OpenCode config",
         {
-          legacyEntries: ["oh-my-opencode", "oh-my-opencode@3.13.1"],
-          suggestedEntries: ["oh-my-openagent", "oh-my-openagent@3.13.1"],
+          legacyEntries: ["oh-my-openagent", "oh-my-openagent@3.13.1"],
+          suggestedEntries: ["para-hyang", "para-hyang@3.13.1"],
           hasCanonicalEntry: false,
         },
       )
@@ -93,8 +93,8 @@ describe("logLegacyPluginStartupWarning", () => {
       //#then
       expect(consoleWarnSpy).toHaveBeenCalled()
       const firstCall = consoleWarnSpy.mock.calls[0]?.[0] as string
-      expect(firstCall).toContain("oh-my-opencode")
       expect(firstCall).toContain("oh-my-openagent")
+      expect(firstCall).toContain("para-hyang")
     })
 
     it("#then attempts auto-migration of the opencode.json", async () => {

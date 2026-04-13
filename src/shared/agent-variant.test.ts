@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test"
-import type { OhMyOpenCodeConfig } from "../config"
+import type { ParaHyangConfig } from "../config"
 import { applyAgentVariant, resolveAgentVariant, resolveVariantForModel } from "./agent-variant"
 
 describe("resolveAgentVariant", () => {
   test("returns undefined when agent name missing", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
 
     // when
     const variant = resolveAgentVariant(config)
@@ -20,10 +20,10 @@ describe("resolveAgentVariant", () => {
       agents: {
         sisyphus: { variant: "low" },
       },
-    } as OhMyOpenCodeConfig
+    } as ParaHyangConfig
 
     // when
-    const variant = resolveAgentVariant(config, "sisyphus")
+    const variant = resolveAgentVariant(config, "ismaya")
 
     // then
     expect(variant).toBe("low")
@@ -38,10 +38,10 @@ describe("resolveAgentVariant", () => {
       categories: {
         ultrabrain: { model: "openai/gpt-5.4", variant: "xhigh" },
       },
-    } as OhMyOpenCodeConfig
+    } as ParaHyangConfig
 
     // when
-    const variant = resolveAgentVariant(config, "sisyphus")
+    const variant = resolveAgentVariant(config, "ismaya")
 
     // then
     expect(variant).toBe("xhigh")
@@ -55,11 +55,11 @@ describe("applyAgentVariant", () => {
       agents: {
         sisyphus: { variant: "low" },
       },
-    } as OhMyOpenCodeConfig
+    } as ParaHyangConfig
     const message: { variant?: string } = {}
 
     // when
-    applyAgentVariant(config, "sisyphus", message)
+    applyAgentVariant(config, "ismaya", message)
 
     // then
     expect(message.variant).toBe("low")
@@ -71,11 +71,11 @@ describe("applyAgentVariant", () => {
       agents: {
         sisyphus: { variant: "low" },
       },
-    } as OhMyOpenCodeConfig
+    } as ParaHyangConfig
     const message = { variant: "max" }
 
     // when
-    applyAgentVariant(config, "sisyphus", message)
+    applyAgentVariant(config, "ismaya", message)
 
     // then
     expect(message.variant).toBe("max")
@@ -90,11 +90,11 @@ describe("resolveVariantForModel", () => {
       agents: {
         sisyphus: { variant: "high" },
       },
-    } as OhMyOpenCodeConfig
+    } as ParaHyangConfig
     const model = { providerID: "anthropic", modelID: "claude-opus-4-6" }
 
     // when
-    const variant = resolveVariantForModel(config, "sisyphus", model)
+    const variant = resolveVariantForModel(config, "ismaya", model)
 
     // then
     expect(variant).toBe("high")
@@ -102,11 +102,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns correct variant for anthropic provider", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "anthropic", modelID: "claude-opus-4-6" }
 
     // when
-    const variant = resolveVariantForModel(config, "sisyphus", model)
+    const variant = resolveVariantForModel(config, "ismaya", model)
 
     // then
     expect(variant).toBe("max")
@@ -114,11 +114,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns correct variant for openai provider (hephaestus agent)", () => {
     // #given hephaestus has openai/gpt-5.4 with variant "medium" in its chain
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "openai", modelID: "gpt-5.4" }
 
     // #when
-    const variant = resolveVariantForModel(config, "hephaestus", model)
+    const variant = resolveVariantForModel(config, "togog", model)
 
     // then
     expect(variant).toBe("medium")
@@ -126,11 +126,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns medium for openai/gpt-5.4 in sisyphus chain", () => {
     // #given openai/gpt-5.4 is now in sisyphus fallback chain with variant medium
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "openai", modelID: "gpt-5.4" }
 
     // when
-    const variant = resolveVariantForModel(config, "sisyphus", model)
+    const variant = resolveVariantForModel(config, "ismaya", model)
 
     // then
     expect(variant).toBe("medium")
@@ -138,11 +138,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns undefined for provider not in chain", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "unknown-provider", modelID: "some-model" }
 
     // when
-    const variant = resolveVariantForModel(config, "sisyphus", model)
+    const variant = resolveVariantForModel(config, "ismaya", model)
 
     // then
     expect(variant).toBeUndefined()
@@ -150,7 +150,7 @@ describe("resolveVariantForModel", () => {
 
   test("returns undefined for unknown agent", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "anthropic", modelID: "claude-opus-4-6" }
 
     // when
@@ -162,11 +162,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns variant for zai-coding-plan provider without variant", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "zai-coding-plan", modelID: "glm-5" }
 
     // when
-    const variant = resolveVariantForModel(config, "sisyphus", model)
+    const variant = resolveVariantForModel(config, "ismaya", model)
 
     // then
     expect(variant).toBeUndefined()
@@ -178,7 +178,7 @@ describe("resolveVariantForModel", () => {
       agents: {
         "custom-agent": { category: "ultrabrain" },
       },
-    } as OhMyOpenCodeConfig
+    } as ParaHyangConfig
     const model = { providerID: "openai", modelID: "gpt-5.4" }
 
     // when
@@ -190,11 +190,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns correct variant for oracle agent with openai", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "openai", modelID: "gpt-5.4" }
 
     // when
-    const variant = resolveVariantForModel(config, "oracle", model)
+    const variant = resolveVariantForModel(config, "ratu-kidul", model)
 
     // then
     expect(variant).toBe("high")
@@ -202,11 +202,11 @@ describe("resolveVariantForModel", () => {
 
   test("returns correct variant for oracle agent with anthropic", () => {
     // given
-    const config = {} as OhMyOpenCodeConfig
+    const config = {} as ParaHyangConfig
     const model = { providerID: "anthropic", modelID: "claude-opus-4-6" }
 
     // when
-    const variant = resolveVariantForModel(config, "oracle", model)
+    const variant = resolveVariantForModel(config, "ratu-kidul", model)
 
     // then
     expect(variant).toBe("max")

@@ -5,7 +5,7 @@ import type { AvailableAgent, AvailableSkill } from "../dynamic-agent-prompt-bui
 import { AGENT_MODEL_REQUIREMENTS } from "../../shared"
 import { applyOverrides } from "./agent-overrides"
 import { applyModelResolution } from "./model-resolution"
-import { createAtlasAgent } from "../atlas"
+import { createAtlasAgent } from "../aji-saka"
 
 export function maybeCreateAtlasConfig(input: {
   disabledAgents: string[]
@@ -33,10 +33,10 @@ export function maybeCreateAtlasConfig(input: {
     userCategories,
   } = input
 
-  if (disabledAgents.includes("atlas")) return undefined
+  if (disabledAgents.includes("aji-saka")) return undefined
 
-  const orchestratorOverride = agentOverrides["atlas"]
-  const atlasRequirement = AGENT_MODEL_REQUIREMENTS["atlas"]
+  const orchestratorOverride = agentOverrides["aji-saka"]
+  const atlasRequirement = AGENT_MODEL_REQUIREMENTS["aji-saka"]
 
   const atlasResolution = applyModelResolution({
     uiSelectedModel: orchestratorOverride?.model !== undefined ? undefined : uiSelectedModel,

@@ -8,6 +8,7 @@ import {
 	normalizeSDKResponse,
 	resolveInheritedPromptTools,
 } from "../../shared"
+import { getAgentConfigKey } from "../../shared/agent-display-names"
 
 type MessageInfo = {
 	agent?: string
@@ -15,6 +16,53 @@ type MessageInfo = {
 	modelID?: string
 	providerID?: string
 	tools?: Record<string, boolean | "allow" | "deny" | "ask">
+}
+
+function canonicalizeInheritedAgent(agent: string | undefined): string | undefined {
+	if (typeof agent !== "string") {
+		return undefined
+	}
+
+	const resolvedAgent = getAgentConfigKey(agent)
+	switch (resolvedAgent) {
+		case "ismaya":
+		case "togog":
+		case "dewi-sri":
+		case "aji-saka":
+		case "cenil":
+		case "jayabaya":
+		case "sabdapalon":
+		case "ratu-kidul":
+		case "pujangga":
+		case "nayagenggong":
+		case "surya":
+		case "council-member":
+			return resolvedAgent
+		case "sisyphus":
+			return "ismaya"
+		case "hephaestus":
+			return "togog"
+		case "prometheus":
+			return "dewi-sri"
+		case "atlas":
+			return "aji-saka"
+		case "sisyphus-junior":
+			return "cenil"
+		case "metis":
+			return "jayabaya"
+		case "momus":
+			return "sabdapalon"
+		case "oracle":
+			return "ratu-kidul"
+		case "librarian":
+			return "pujangga"
+		case "explore":
+			return "nayagenggong"
+		case "multimodal-looker":
+			return "surya"
+		default:
+			return resolvedAgent
+	}
 }
 
 export async function injectContinuationPrompt(
@@ -43,7 +91,7 @@ export async function injectContinuationPrompt(
 		for (let i = messages.length - 1; i >= 0; i--) {
 			const info = messages[i]?.info
 			if (info?.agent || info?.model || (info?.modelID && info?.providerID)) {
-				agent = info.agent
+				agent = canonicalizeInheritedAgent(info.agent)
 				model =
 					info.model ??
 					(info.providerID && info.modelID
@@ -56,7 +104,7 @@ export async function injectContinuationPrompt(
 	} catch {
 		const messageDir = getMessageDir(sourceSessionID)
 		const currentMessage = messageDir ? findNearestMessageWithFields(messageDir) : null
-		agent = currentMessage?.agent
+		agent = canonicalizeInheritedAgent(currentMessage?.agent)
 		model =
 			currentMessage?.model?.providerID && currentMessage?.model?.modelID
 				? {
@@ -74,11 +122,12 @@ export async function injectContinuationPrompt(
 		? { providerID: model.providerID, modelID: model.modelID }
 		: undefined
 	const launchVariant = model?.variant
+	const launchAgent = canonicalizeInheritedAgent(agent)
 
 	await ctx.client.session.promptAsync({
 		path: { id: options.sessionID },
 		body: {
-			...(agent !== undefined ? { agent } : {}),
+			...(launchAgent !== undefined ? { agent: launchAgent } : {}),
 			...(launchModel ? { model: launchModel } : {}),
 			...(launchVariant ? { variant: launchVariant } : {}),
 			...(inheritedTools ? { tools: inheritedTools } : {}),

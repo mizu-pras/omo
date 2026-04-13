@@ -1,10 +1,10 @@
 import { getAgentListDisplayName } from "../shared/agent-display-names";
 
 const CORE_AGENT_ORDER: ReadonlyArray<{ displayName: string; order: number }> = [
-  { displayName: getAgentListDisplayName("sisyphus"), order: 1 },
-  { displayName: getAgentListDisplayName("hephaestus"), order: 2 },
-  { displayName: getAgentListDisplayName("prometheus"), order: 3 },
-  { displayName: getAgentListDisplayName("atlas"), order: 4 },
+  { displayName: getAgentListDisplayName("ismaya"), order: 1 },
+  { displayName: getAgentListDisplayName("togog"), order: 2 },
+  { displayName: getAgentListDisplayName("dewi-sri"), order: 3 },
+  { displayName: getAgentListDisplayName("aji-saka"), order: 4 },
 ];
 
 function injectOrderField(

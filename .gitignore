@@ -1,3 +1,7 @@
+# Local state directories
+.omc/
+.ismaya/
+
 # Dependencies
 .sisyphus/*
 !.sisyphus/rules/

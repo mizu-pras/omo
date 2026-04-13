@@ -1,6 +1,7 @@
 import type { FallbackEntry } from "../../shared/model-requirements"
 import { getAgentConfigKey } from "../../shared/agent-display-names"
 import { AGENT_MODEL_REQUIREMENTS } from "../../shared/model-requirements"
+import { AGENT_NAME_MAP } from "../../shared/migration/agent-names"
 import { readConnectedProvidersCache, readProviderModelsCache } from "../../shared/connected-providers-cache"
 import { selectFallbackProvider } from "../../shared/model-error-classifier"
 import { transformModelForProvider } from "../../shared/provider-model-id-transform"
@@ -67,7 +68,8 @@ export function setPendingModelFallback(
   currentProviderID: string,
   currentModelID: string,
 ): boolean {
-  const agentKey = getAgentConfigKey(agentName)
+  const configKey = getAgentConfigKey(agentName)
+  const agentKey = AGENT_NAME_MAP[configKey] ?? AGENT_NAME_MAP[configKey.toLowerCase()] ?? configKey
   const requirements = AGENT_MODEL_REQUIREMENTS[agentKey]
   const hasSessionFallback = sessionFallbackChains.has(sessionID)
   const sessionFallback = sessionFallbackChains.get(sessionID)

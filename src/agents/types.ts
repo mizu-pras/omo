@@ -17,7 +17,7 @@ export type AgentFactory = ((model: string) => AgentConfig) & {
 };
 
 /**
- * Agent category for grouping in Sisyphus prompt sections
+ * Agent category for grouping in Sang Hyang Ismaya prompt sections
  */
 export type AgentCategory =
   | "exploration"
@@ -31,7 +31,7 @@ export type AgentCategory =
 export type AgentCost = "FREE" | "CHEAP" | "EXPENSIVE";
 
 /**
- * Delegation trigger for Sisyphus prompt's Delegation Table
+ * Delegation trigger for Sang Hyang Ismaya prompt's Delegation Table
  */
 export interface DelegationTrigger {
   /** Domain of work (e.g., "Frontend UI/UX") */
@@ -41,8 +41,8 @@ export interface DelegationTrigger {
 }
 
 /**
- * Metadata for generating Sisyphus prompt sections dynamically
- * This allows adding/removing agents without manually updating the Sisyphus prompt
+ * Metadata for generating Sang Hyang Ismaya prompt sections dynamically
+ * This allows adding/removing agents without manually updating the Sang Hyang Ismaya prompt
  */
 export interface AgentPromptMetadata {
   /** Category for grouping in prompt sections */
@@ -60,10 +60,10 @@ export interface AgentPromptMetadata {
   /** When NOT to use this agent */
   avoidWhen?: string[];
 
-  /** Optional dedicated prompt section (markdown) - for agents like Oracle that have special sections */
+  /** Optional dedicated prompt section (markdown) - for agents like Kanjeng Ratu Kidul that have special sections */
   dedicatedSection?: string;
 
-  /** Nickname/alias used in prompt (e.g., "Oracle" instead of "oracle") */
+  /** Nickname/alias used in prompt (e.g., "Kanjeng Ratu Kidul" instead of "ratu-kidul") */
   promptAlias?: string;
 
   /** Key triggers that should appear in Phase 0 (e.g., "External library mentioned → fire librarian") */
@@ -115,16 +115,16 @@ export function isGeminiModel(model: string): boolean {
 }
 
 export type BuiltinAgentName =
-  | "sisyphus"
-  | "hephaestus"
-  | "oracle"
-  | "librarian"
-  | "explore"
-  | "multimodal-looker"
-  | "metis"
-  | "momus"
-  | "atlas"
-  | "sisyphus-junior";
+  | "ismaya"
+  | "togog"
+  | "ratu-kidul"
+  | "pujangga"
+  | "nayagenggong"
+  | "surya"
+  | "jayabaya"
+  | "sabdapalon"
+  | "aji-saka"
+  | "cenil";
 
 export type OverridableAgentName = "build" | BuiltinAgentName;
 

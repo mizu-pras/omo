@@ -79,11 +79,11 @@ describe("ulw-loop verification", () => {
 		expect(hook.getState()?.completion_promise).toBe("DONE")
 		expect(hook.getState()?.iteration).toBe(2)
 		expect(promptCalls).toHaveLength(1)
-		expect(promptCalls[0].text).not.toContain('task(subagent_type="oracle"')
+		expect(promptCalls[0].text).not.toContain('task(subagent_type="ratu-kidul"')
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(false)
 	})
 
-	test("#given ulw loop is awaiting verification #when VERIFIED appears in oracle session #then loop completes", async () => {
+		test("#given ulw loop is awaiting verification #when VERIFIED appears in ratu-kidul session #then loop completes", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -109,7 +109,7 @@ describe("ulw-loop verification", () => {
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(true)
 	})
 
-	test("#given ulw loop is awaiting verification #when oracle session idles with VERIFIED #then loop completes without parent idle", async () => {
+		test("#given ulw loop is awaiting verification #when ratu-kidul session idles with VERIFIED #then loop completes without parent idle", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -135,7 +135,7 @@ describe("ulw-loop verification", () => {
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(true)
 	})
 
-	test("#given ulw loop is awaiting verification #when oracle transcript stores VERIFIED inside tool_result #then loop completes", async () => {
+		test("#given ulw loop is awaiting verification #when ratu-kidul transcript stores VERIFIED inside tool_result #then loop completes", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -155,7 +155,7 @@ describe("ulw-loop verification", () => {
 			`${JSON.stringify({
 				type: "tool_result",
 				timestamp: new Date().toISOString(),
-				tool_output: `Task completed.\n\nAgent: oracle\n\n<promise>${ULTRAWORK_VERIFICATION_PROMISE}</promise>\n\n<task_metadata>\nsession_id: ses-oracle\n</task_metadata>`,
+				tool_output: `Task completed.\n\nAgent: ratu-kidul\n\n<promise>${ULTRAWORK_VERIFICATION_PROMISE}</promise>\n\n<task_metadata>\nsession_id: ses-oracle\n</task_metadata>`,
 			})}\n`,
 		)
 
@@ -165,7 +165,7 @@ describe("ulw-loop verification", () => {
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(true)
 	})
 
-	test("#given ulw loop is awaiting verification without oracle session #when parent idles again #then loop continues until oracle verifies", async () => {
+		test("#given ulw loop is awaiting verification without ratu-kidul session #when parent idles again #then loop continues until ratu-kidul verifies", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -189,7 +189,7 @@ describe("ulw-loop verification", () => {
 		expect(promptCalls[1]?.text).toContain("Verification failed")
 	})
 
-	test("#given ulw loop is awaiting oracle verification #when parent idles before VERIFIED arrives #then loop continues instead of waiting", async () => {
+		test("#given ulw loop is awaiting ratu-kidul verification #when parent idles before VERIFIED arrives #then loop continues instead of waiting", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -222,7 +222,7 @@ describe("ulw-loop verification", () => {
 		expect(promptCalls[1]?.text).toContain("Verification failed")
 	})
 
-	test("#given oracle verification fails #when oracle session idles #then main session receives retry instructions", async () => {
+		test("#given ratu-kidul verification fails #when ratu-kidul session idles #then main session receives retry instructions", async () => {
 		const sessionMessages: Record<string, unknown[]> = {
 			"session-123": [{}, {}, {}],
 		}
@@ -266,8 +266,8 @@ describe("ulw-loop verification", () => {
 		expect(promptCalls).toHaveLength(2)
 		expect(promptCalls[1]?.sessionID).toBe("session-123")
 		expect(promptCalls[1]?.text).toContain("Verification failed")
-		expect(promptCalls[1]?.text).toContain("Oracle does not lie")
-		expect(promptCalls[1]?.text).toContain('task(subagent_type="oracle"')
+		expect(promptCalls[1]?.text).toContain("Ratu Kidul does not lie")
+		expect(promptCalls[1]?.text).toContain('task(subagent_type="ratu-kidul"')
 	})
 
 	test("#given ulw loop without max iterations #when it continues #then it stays unbounded", async () => {
@@ -337,7 +337,7 @@ describe("ulw-loop verification", () => {
 		expect(hook.getState()?.completion_promise).toBe("DONE")
 	})
 
-	test("#given verification state was overwritten by different ulw loop #when stale oracle session idles #then new loop remains active", async () => {
+		test("#given verification state was overwritten by different ulw loop #when stale ratu-kidul session idles #then new loop remains active", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle-old" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -366,7 +366,7 @@ describe("ulw-loop verification", () => {
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(false)
 	})
 
-	test("#given verification state was overwritten by restarted ulw loop #when stale oracle session idles #then restarted loop remains active", async () => {
+		test("#given verification state was overwritten by restarted ulw loop #when stale ratu-kidul session idles #then restarted loop remains active", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle-old" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -396,7 +396,7 @@ describe("ulw-loop verification", () => {
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(false)
 	})
 
-	test("#given parent session emits VERIFIED #when oracle session is not tracked #then ulw loop completes from parent session evidence", async () => {
+		test("#given parent session emits VERIFIED #when ratu-kidul session is not tracked #then ulw loop completes from parent session evidence", async () => {
 		const hook = createRalphLoopHook(createMockPluginInput(), {
 			getTranscriptPath: (sessionID) => sessionID === "ses-oracle" ? oracleTranscriptPath : parentTranscriptPath,
 		})
@@ -418,7 +418,7 @@ describe("ulw-loop verification", () => {
 		expect(toastCalls.some((toast) => toast.title === "ULTRAWORK LOOP COMPLETE!")).toBe(true)
 	})
 
-	test("#given oracle verification fails #when loop restarts #then old oracle session is aborted", async () => {
+		test("#given ratu-kidul verification fails #when loop restarts #then old ratu-kidul session is aborted", async () => {
 		const sessionMessages: Record<string, unknown[]> = {
 			"session-123": [{}, {}, {}],
 		}

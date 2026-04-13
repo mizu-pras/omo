@@ -17,7 +17,7 @@ function createBaseArgs(overrides?: Partial<DelegateTaskArgs>): DelegateTaskArgs
     prompt: "Review the current changes",
     run_in_background: false,
     load_skills: [],
-    subagent_type: "oracle",
+    subagent_type: "ratu-kidul",
     ...overrides,
   }
 }
@@ -63,7 +63,7 @@ describe("resolveSubagentExecution", () => {
     })
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.agentToUse).toBe("")
@@ -79,7 +79,7 @@ describe("resolveSubagentExecution", () => {
     })
 
     //#when
-    await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(logSpy).toHaveBeenCalledTimes(1)
@@ -87,22 +87,22 @@ describe("resolveSubagentExecution", () => {
     expect(callArgs?.[0]).toBe("[delegate-task] Failed to resolve subagent execution")
     expect(callArgs?.[1]).toEqual({
       requestedAgent: "review",
-      parentAgent: "sisyphus",
+      parentAgent: "ismaya",
       error: "network timeout",
     })
   })
 
   test("hides primary agents from task delegation lookups", async () => {
     //#given
-    const args = createBaseArgs({ subagent_type: "sisyphus" })
+    const args = createBaseArgs({ subagent_type: "ismaya" })
     const executorCtx = createExecutorContext(async () => ([
-      { name: "sisyphus", mode: "primary" },
-      { name: "oracle", mode: "subagent" },
-      { name: "metis", mode: "all" },
+      { name: "ismaya", mode: "primary" },
+      { name: "ratu-kidul", mode: "subagent" },
+      { name: "jayabaya", mode: "all" },
     ]))
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.agentToUse).toBe("")
@@ -115,11 +115,11 @@ describe("resolveSubagentExecution", () => {
     const args = createBaseArgs({ subagent_type: "custom-worker" })
     const executorCtx = createExecutorContext(async () => ([
       { name: "custom-worker" },
-      { name: "oracle", mode: "subagent" },
+      { name: "ratu-kidul", mode: "subagent" },
     ]))
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.agentToUse).toBe("")
@@ -134,13 +134,13 @@ describe("resolveSubagentExecution", () => {
       connected: ["openai"],
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
-    const args = createBaseArgs({ subagent_type: "oracle" })
+    const args = createBaseArgs({ subagent_type: "ratu-kidul" })
     const executorCtx = createExecutorContext(async () => ([
-      { name: "oracle", mode: "subagent", model: "openai/gpt-5.3-codex" },
+      { name: "ratu-kidul", mode: "subagent", model: "openai/gpt-5.3-codex" },
     ]))
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -155,10 +155,10 @@ describe("resolveSubagentExecution", () => {
       connected: ["quotio"],
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5" },
       ]),
       {
         agentOverrides: {
@@ -170,7 +170,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -188,10 +188,10 @@ describe("resolveSubagentExecution", () => {
       connected: ["anthropic"],
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5" },
       ]),
       {
         agentOverrides: {
@@ -208,7 +208,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -226,10 +226,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
       ]),
       {
         agentOverrides: {
@@ -251,7 +251,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -277,10 +277,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "openai/gpt-5.4-preview" },
+        { name: "nayagenggong", mode: "subagent", model: "openai/gpt-5.4-preview" },
       ]),
       {
         agentOverrides: {
@@ -298,7 +298,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -318,10 +318,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
       ]),
       {
         agentOverrides: {
@@ -343,7 +343,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -369,10 +369,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
       ]),
       {
         agentOverrides: {
@@ -395,7 +395,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -417,10 +417,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
       ]),
       {
         agentOverrides: {
@@ -438,7 +438,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -468,7 +468,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -493,7 +493,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -510,10 +510,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
       ]),
       {
         agentOverrides: {
@@ -536,7 +536,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -558,10 +558,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue(["openai"])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
+        { name: "nayagenggong", mode: "subagent", model: "quotio/claude-haiku-4-5-unavailable" },
       ]),
       {
         agentOverrides: {
@@ -585,7 +585,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -608,10 +608,10 @@ describe("resolveSubagentExecution", () => {
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
     const connectedSpy = spyOn(connectedProvidersCache, "readConnectedProvidersCache").mockReturnValue([])
-    const args = createBaseArgs({ subagent_type: "explore" })
+    const args = createBaseArgs({ subagent_type: "nayagenggong" })
     const executorCtx = createExecutorContext(
       async () => ([
-        { name: "explore", mode: "subagent", model: "openai/gpt-5.4" },
+        { name: "nayagenggong", mode: "subagent", model: "openai/gpt-5.4" },
       ]),
       {
         agentOverrides: {
@@ -634,7 +634,7 @@ describe("resolveSubagentExecution", () => {
     )
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
@@ -666,24 +666,24 @@ describe("resolveSubagentExecution - agent name sanitization", () => {
     logSpy?.mockRestore()
   })
 
-  test("strips backslash-wrapped agent names like \\hephaestus\\", async () => {
+  test("strips backslash-wrapped agent names like \\togog\\", async () => {
     //#given
     const cacheSpy = spyOn(connectedProvidersCache, "readProviderModelsCache").mockReturnValue({
       models: {},
       connected: [],
       updatedAt: "2026-03-03T00:00:00.000Z",
     })
-    const args = createBaseArgs({ subagent_type: "\\hephaestus\\" })
+    const args = createBaseArgs({ subagent_type: "\\togog\\" })
     const executorCtx = createExecutorContext(async () => ([
-      { name: "Hephaestus - Deep Agent", mode: "subagent", model: "openai/gpt-5.3-codex" },
+      { name: "Togog", mode: "subagent", model: "openai/gpt-5.3-codex" },
     ]))
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
-    expect(result.agentToUse).toBe("Hephaestus - Deep Agent")
+    expect(result.agentToUse).toBe("Togog")
     cacheSpy.mockRestore()
   })
 
@@ -696,15 +696,15 @@ describe("resolveSubagentExecution - agent name sanitization", () => {
     })
     const args = createBaseArgs({ subagent_type: '"oracle"' })
     const executorCtx = createExecutorContext(async () => ([
-      { name: "oracle", mode: "subagent" },
+      { name: "ratu-kidul", mode: "subagent" },
     ]))
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
-    expect(result.agentToUse).toBe("oracle")
+    expect(result.agentToUse).toBe("ratu-kidul")
     cacheSpy.mockRestore()
   })
 
@@ -717,15 +717,15 @@ describe("resolveSubagentExecution - agent name sanitization", () => {
     })
     const args = createBaseArgs({ subagent_type: "'explore'" })
     const executorCtx = createExecutorContext(async () => ([
-      { name: "explore", mode: "subagent" },
+      { name: "nayagenggong", mode: "subagent" },
     ]))
 
     //#when
-    const result = await resolveSubagentExecution(args, executorCtx, "sisyphus", "deep")
+    const result = await resolveSubagentExecution(args, executorCtx, "ismaya", "deep")
 
     //#then
     expect(result.error).toBeUndefined()
-    expect(result.agentToUse).toBe("explore")
+    expect(result.agentToUse).toBe("nayagenggong")
     cacheSpy.mockRestore()
   })
 })

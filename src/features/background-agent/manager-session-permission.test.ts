@@ -26,7 +26,7 @@ describe("BackgroundManager session permission", () => {
     await manager.launch({
       description: "Test task",
       prompt: "Do something",
-      agent: "explore",
+      agent: "nayagenggong",
       parentSessionID: "ses_parent",
       parentMessageID: "msg_parent",
       sessionPermission: [

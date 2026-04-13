@@ -1,11 +1,11 @@
 import { describe, test, expect } from "bun:test"
-import { createOracleAgent } from "./oracle"
-import { createLibrarianAgent } from "./librarian"
-import { createExploreAgent } from "./explore"
-import { createMomusAgent } from "./momus"
-import { createMetisAgent } from "./metis"
-import { createAtlasAgent } from "./atlas"
-import { createSisyphusAgent } from "./sisyphus"
+import { createOracleAgent } from "./ratu-kidul"
+import { createLibrarianAgent } from "./pujangga"
+import { createExploreAgent } from "./nayagenggong"
+import { createMomusAgent } from "./sabdapalon"
+import { createMetisAgent } from "./jayabaya"
+import { createAtlasAgent } from "./aji-saka"
+import { createSisyphusAgent } from "./ismaya"
 
 const TEST_MODEL = "anthropic/claude-sonnet-4-5"
 

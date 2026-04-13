@@ -1026,7 +1026,6 @@ describe("todo-continuation-enforcer", () => {
   })
 
   test("should show countdown toast updates", async () => {
-    fakeTimers.restore()
     // given - session with incomplete todos
     const sessionID = "main-toast"
     setMainSession(sessionID)
@@ -1039,7 +1038,7 @@ describe("todo-continuation-enforcer", () => {
     })
 
     // then - multiple toast updates during countdown (2s countdown = 2 toasts: "2s" and "1s")
-    await wait(2500)
+    await fakeTimers.advanceBy(1100)
     expect(toastCalls.length).toBeGreaterThanOrEqual(2)
     expect(toastCalls[0].message).toContain("2s")
   }, { timeout: 15000 })
@@ -1540,8 +1539,8 @@ describe("todo-continuation-enforcer", () => {
 
     // OpenCode returns assistant messages with flat modelID/providerID, not nested model object
     const mockMessagesWithAssistant = [
-      { info: { id: "msg-1", role: "user", agent: "sisyphus", model: { providerID: "openai", modelID: "gpt-5.4" } } },
-      { info: { id: "msg-2", role: "assistant", agent: "sisyphus", modelID: "gpt-5.4", providerID: "openai" } },
+      { info: { id: "msg-1", role: "user", agent: "ismaya", model: { providerID: "openai", modelID: "gpt-5.4" } } },
+      { info: { id: "msg-2", role: "assistant", agent: "ismaya", modelID: "gpt-5.4", providerID: "openai" } },
     ]
 
     const mockInput = {
@@ -1600,8 +1599,8 @@ describe("todo-continuation-enforcer", () => {
     setMainSession(sessionID)
 
     const mockMessagesWithCompaction = [
-      { info: { id: "msg-1", role: "user", agent: "sisyphus", model: { providerID: "anthropic", modelID: "claude-sonnet-4-6" } } },
-      { info: { id: "msg-2", role: "assistant", agent: "sisyphus", modelID: "claude-sonnet-4-6", providerID: "anthropic" } },
+      { info: { id: "msg-1", role: "user", agent: "ismaya", model: { providerID: "anthropic", modelID: "claude-sonnet-4-6" } } },
+      { info: { id: "msg-2", role: "assistant", agent: "ismaya", modelID: "claude-sonnet-4-6", providerID: "anthropic" } },
       { info: { id: "msg-3", role: "assistant", agent: "compaction", modelID: "claude-sonnet-4-6", providerID: "anthropic" } },
     ]
 
@@ -1707,9 +1706,9 @@ describe("todo-continuation-enforcer", () => {
     setMainSession(sessionID)
 
     const mockMessagesWithCompactionMarker = [
-      { info: { id: "msg-1", role: "assistant", agent: "sisyphus", modelID: "claude-sonnet-4-6", providerID: "anthropic" } },
+      { info: { id: "msg-1", role: "assistant", agent: "ismaya", modelID: "claude-sonnet-4-6", providerID: "anthropic" } },
       {
-        info: { id: "msg-2", role: "user", agent: "atlas", model: { providerID: "openai", modelID: "gpt-5.4" } },
+        info: { id: "msg-2", role: "user", agent: "aji-saka", model: { providerID: "openai", modelID: "gpt-5.4" } },
         parts: [{ type: "compaction" }],
       },
     ]

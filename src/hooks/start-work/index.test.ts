@@ -6,7 +6,7 @@ import { join } from "node:path"
 import { tmpdir } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createStartWorkHook } from "./index"
-import { createAtlasHook } from "../atlas"
+import { createAjiSakaHook as createAtlasHook } from "../aji-saka"
 import {
   writeBoulderState,
   clearBoulderState,
@@ -45,10 +45,10 @@ You are starting a Sisyphus work session.
 
   beforeEach(() => {
     sessionState._resetForTesting()
-    sessionState.registerAgentName("atlas")
-    sessionState.registerAgentName("sisyphus")
+    sessionState.registerAgentName("aji-saka")
+    sessionState.registerAgentName("ismaya")
     testDir = join(tmpdir(), `start-work-test-${randomUUID()}`)
-    sisyphusDir = join(testDir, ".sisyphus")
+    sisyphusDir = join(testDir, ".ismaya")
     if (!existsSync(testDir)) {
       mkdirSync(testDir, { recursive: true })
     }
@@ -201,7 +201,7 @@ You are starting a Sisyphus work session.
 
     test("should auto-select when only one incomplete plan among multiple plans", async () => {
       // given - multiple plans but only one incomplete
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       // Plan 1: complete (all checked)
@@ -231,7 +231,7 @@ You are starting a Sisyphus work session.
 
     test("should wrap multiple plans message in system-reminder tag", async () => {
       // given - multiple incomplete plans
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const plan1Path = join(plansDir, "plan-a.md")
@@ -259,7 +259,7 @@ You are starting a Sisyphus work session.
 
     test("should use 'ask user' prompt style for multiple plans", async () => {
       // given - multiple incomplete plans
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const plan1Path = join(plansDir, "plan-x.md")
@@ -286,7 +286,7 @@ You are starting a Sisyphus work session.
 
     test("should select explicitly specified plan name from user-request, ignoring existing boulder state", async () => {
       // given - existing boulder state pointing to old plan
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       // Old plan (in boulder state)
@@ -330,7 +330,7 @@ You are starting a Sisyphus work session.
 
     test("should strip ultrawork/ulw keywords from plan name argument", async () => {
       // given - plan with ultrawork keyword in user-request
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "my-feature-plan.md")
@@ -359,7 +359,7 @@ You are starting a Sisyphus work session.
 
     test("should strip ulw keyword from plan name argument", async () => {
       // given - plan with ulw keyword in user-request
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "api-refactor.md")
@@ -388,7 +388,7 @@ You are starting a Sisyphus work session.
 
     test("should match plan by partial name", async () => {
       // given - user specifies partial plan name
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "2026-01-15-feature-implementation.md")
@@ -417,7 +417,7 @@ You are starting a Sisyphus work session.
 
     test("should match quoted human-readable plan names to slugged filenames", async () => {
       // given - saved plan uses a slugged filename
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "my-feature-plan.md")
@@ -446,7 +446,7 @@ You are starting a Sisyphus work session.
 
     test("should match Korean plan names after Unicode-aware normalization", async () => {
       // given
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "결제-플로우.md")
@@ -475,7 +475,7 @@ You are starting a Sisyphus work session.
 
     test("should match Japanese plan names after Unicode-aware normalization", async () => {
       // given
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "支払い-フロー.md")
@@ -504,7 +504,7 @@ You are starting a Sisyphus work session.
 
     test("should keep ASCII plan name matching behavior unchanged", async () => {
       // given
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "checkout-flow.md")
@@ -533,7 +533,7 @@ You are starting a Sisyphus work session.
 
     test("should match mixed ASCII and non-ASCII plan names", async () => {
       // given
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
 
       const planPath = join(plansDir, "v2-결제-flow.md")
@@ -578,7 +578,7 @@ You are starting a Sisyphus work session.
       )
 
       // then
-      expect(updateSpy).toHaveBeenCalledWith("ses-prometheus-to-sisyphus", "atlas")
+      expect(updateSpy).toHaveBeenCalledWith("ses-prometheus-to-sisyphus", "aji-saka")
       updateSpy.mockRestore()
     })
 
@@ -596,14 +596,14 @@ You are starting a Sisyphus work session.
         output
       )
 
-      // then - config key, not display name (matches no-sisyphus-gpt / boulder-continuation-injector convention)
-      expect(output.message.agent).toBe("atlas")
+      // then - config key, not display name (matches no-ismaya-gpt / boulder-continuation-injector convention)
+      expect(output.message.agent).toBe("aji-saka")
     })
 
     test("should switch to Atlas even when current session is Sisyphus (regression: #3155)", async () => {
       // given: user runs /start-work while in a Sisyphus session
       // atlas is registered, so /start-work must always hand off to atlas
-      sessionState.updateSessionAgent("ses-sisyphus-to-atlas", "sisyphus")
+      sessionState.updateSessionAgent("ses-sisyphus-to-atlas", "ismaya")
 
       const hook = createStartWorkHook(createMockPluginInput())
       const output = {
@@ -616,16 +616,16 @@ You are starting a Sisyphus work session.
         output
       )
 
-      // atlas is registered in beforeEach, so it must be selected
-      expect(output.message.agent).toBe("atlas")
-      expect(sessionState.getSessionAgent("ses-sisyphus-to-atlas")).toBe("atlas")
+      // aji-saka is registered in beforeEach, so it must be selected
+      expect(output.message.agent).toBe("aji-saka")
+      expect(sessionState.getSessionAgent("ses-sisyphus-to-atlas")).toBe("aji-saka")
     })
 
     test("should keep the current agent when Atlas is unavailable", async () => {
       // given
       sessionState._resetForTesting()
-      sessionState.registerAgentName("sisyphus")
-      sessionState.updateSessionAgent("ses-prometheus-to-sisyphus", "sisyphus")
+      sessionState.registerAgentName("ismaya")
+      sessionState.updateSessionAgent("ses-prometheus-to-sisyphus", "ismaya")
 
       const hook = createStartWorkHook(createMockPluginInput())
       const output = {
@@ -640,18 +640,19 @@ You are starting a Sisyphus work session.
       )
 
       // then
-      expect(output.message.agent).toBe("sisyphus")
-      expect(sessionState.getSessionAgent("ses-prometheus-to-sisyphus")).toBe("sisyphus")
+      expect(output.message.agent).toBe("ismaya")
+      expect(sessionState.getSessionAgent("ses-prometheus-to-sisyphus")).toBe("ismaya")
     })
 
     test("should fall back to Sisyphus instead of keeping Prometheus when Atlas is unavailable", async () => {
       // given
       sessionState._resetForTesting()
-      sessionState.registerAgentName("prometheus")
-      sessionState.registerAgentName("sisyphus")
-      sessionState.updateSessionAgent("ses-prometheus-to-worker", "prometheus")
+      sessionState.registerAgentName("dewi-sri")
+      sessionState.registerAgentName("ismaya")
+      sessionState.registerAgentName("aji-saka")
+      sessionState.updateSessionAgent("ses-prometheus-to-worker", "dewi-sri")
 
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "worker-plan.md"), "# Plan\n- [ ] Task 1")
 
@@ -668,17 +669,18 @@ You are starting a Sisyphus work session.
       )
 
       // then
-      expect(output.message.agent).toBe("sisyphus")
-      expect(sessionState.getSessionAgent("ses-prometheus-to-worker")).toBe("sisyphus")
-      expect(readBoulderState(testDir)?.agent).toBe("sisyphus")
+      expect(output.message.agent).toBe("aji-saka")
+      expect(sessionState.getSessionAgent("ses-prometheus-to-worker")).toBe("aji-saka")
+      expect(readBoulderState(testDir)?.agent).toBe("aji-saka")
     })
 
     test("should rewrite stale Prometheus boulder state to Sisyphus when resuming without Atlas", async () => {
       // given
       sessionState._resetForTesting()
-      sessionState.registerAgentName("prometheus")
-      sessionState.registerAgentName("sisyphus")
-      sessionState.updateSessionAgent("ses-prometheus-resume", "prometheus")
+      sessionState.registerAgentName("dewi-sri")
+      sessionState.registerAgentName("ismaya")
+      sessionState.registerAgentName("aji-saka")
+      sessionState.updateSessionAgent("ses-prometheus-resume", "dewi-sri")
 
       const planPath = join(testDir, "resume-plan.md")
       writeFileSync(planPath, "# Plan\n- [ ] Task 1")
@@ -687,7 +689,7 @@ You are starting a Sisyphus work session.
         started_at: "2026-01-02T10:00:00Z",
         session_ids: ["old-session"],
         plan_name: "resume-plan",
-        agent: "prometheus",
+        agent: "dewi-sri",
       })
 
       const hook = createStartWorkHook(createMockPluginInput())
@@ -703,13 +705,13 @@ You are starting a Sisyphus work session.
       )
 
       // then
-      expect(output.message.agent).toBe("sisyphus")
-      expect(readBoulderState(testDir)?.agent).toBe("sisyphus")
+      expect(output.message.agent).toBe("aji-saka")
+      expect(readBoulderState(testDir)?.agent).toBe("aji-saka")
     })
 
     test("#given start-work hands the session to Atlas #when Atlas later receives session.idle #then the same session continues the selected plan", async () => {
       // given
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "atlas-plan.md"), "# Plan\n- [ ] Task 1\n- [ ] Task 2")
 
@@ -738,16 +740,16 @@ You are starting a Sisyphus work session.
       await atlasHook.handler({ event: { type: "session.idle", properties: { sessionID: "session-123" } } })
 
       // then
-      expect(output.message.agent).toBe("atlas")
+      expect(output.message.agent).toBe("aji-saka")
       expect(readBoulderState(testDir)?.session_ids).toContain("session-123")
-      expect(readBoulderState(testDir)?.agent).toBe("atlas")
+      expect(readBoulderState(testDir)?.agent).toBe("aji-saka")
       expect(promptAsyncMock).toHaveBeenCalledTimes(1)
       promptAsyncMock.mockRestore()
     })
 
     test("#given start-work hands the session to Atlas but background work is still running #when that work finishes #then Atlas resumes via retry for the same session", async () => {
       // given
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "atlas-plan.md"), "# Plan\n- [ ] Task 1\n- [ ] Task 2")
 
@@ -828,9 +830,9 @@ You are starting a Sisyphus work session.
         await firePendingTimers()
 
         // then
-        expect(output.message.agent).toBe("atlas")
-        expect(readBoulderState(testDir)?.session_ids).toContain("session-123")
-        expect(readBoulderState(testDir)?.agent).toBe("atlas")
+      expect(output.message.agent).toBe("aji-saka")
+      expect(readBoulderState(testDir)?.session_ids).toContain("session-123")
+      expect(readBoulderState(testDir)?.agent).toBe("aji-saka")
         expect(promptAsyncMock).toHaveBeenCalledTimes(1)
       } finally {
         globalThis.setTimeout = originalSetTimeout
@@ -845,7 +847,8 @@ You are starting a Sisyphus work session.
     let detectSpy: ReturnType<typeof spyOn>
 
     beforeEach(() => {
-      detectSpy = spyOn(worktreeDetector, "detectWorktreePath").mockReturnValue(null)
+      detectSpy = spyOn(worktreeDetector, "detectWorktreePath")
+      detectSpy.mockReturnValue(null)
     })
 
     afterEach(() => {
@@ -854,7 +857,7 @@ You are starting a Sisyphus work session.
 
     test("should NOT inject worktree instructions when no --worktree flag", async () => {
       // given - single plan, no worktree flag
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "my-plan.md"), "# Plan\n- [ ] Task 1")
 
@@ -874,7 +877,7 @@ You are starting a Sisyphus work session.
 
     test("should inject worktree path when --worktree flag is valid", async () => {
       // given - single plan + valid worktree path
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "my-plan.md"), "# Plan\n- [ ] Task 1")
       detectSpy.mockReturnValue("/validated/worktree")
@@ -896,7 +899,7 @@ You are starting a Sisyphus work session.
 
     test("should store worktree_path in boulder when --worktree is valid", async () => {
       // given - plan + valid worktree
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "my-plan.md"), "# Plan\n- [ ] Task 1")
       detectSpy.mockReturnValue("/valid/wt")
@@ -916,7 +919,7 @@ You are starting a Sisyphus work session.
 
     test("should NOT store worktree_path when --worktree path is invalid", async () => {
       // given - plan + invalid worktree path (detectWorktreePath returns null)
-      const plansDir = join(testDir, ".sisyphus", "plans")
+      const plansDir = join(testDir, ".ismaya", "plans")
       mkdirSync(plansDir, { recursive: true })
       writeFileSync(join(plansDir, "my-plan.md"), "# Plan\n- [ ] Task 1")
       // detectSpy already returns null by default

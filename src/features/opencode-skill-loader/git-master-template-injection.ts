@@ -94,14 +94,14 @@ function buildCommitFooterInjection(
 
 	sections.push("### 5.5 Commit Footer & Co-Author")
 	sections.push("")
-	sections.push("Add Sisyphus attribution to EVERY commit:")
+		sections.push("Add Sang Hyang Ismaya attribution to EVERY commit:")
 	sections.push("")
 
 	if (commitFooter) {
 		const footerText =
 			typeof commitFooter === "string"
 				? commitFooter
-				: "Ultraworked with [Sisyphus](https://github.com/code-yeongyu/oh-my-openagent)"
+				: "Ultraworked with [Sang Hyang Ismaya](https://github.com/mizu-pras/omo)"
 		sections.push("1. **Footer in commit body:**")
 		sections.push("```")
 		sections.push(footerText)
@@ -112,7 +112,7 @@ function buildCommitFooterInjection(
 	if (includeCoAuthoredBy) {
 		sections.push(`${commitFooter ? "2" : "1"}. **Co-authored-by trailer:**`)
 		sections.push("```")
-		sections.push("Co-authored-by: Sisyphus <clio-agent@sisyphuslabs.ai>")
+		sections.push("Co-authored-by: Sang Hyang Ismaya <clio-agent@sisyphuslabs.ai>")
 		sections.push("```")
 		sections.push("")
 	}
@@ -121,18 +121,18 @@ function buildCommitFooterInjection(
 		const footerText =
 			typeof commitFooter === "string"
 				? commitFooter
-				: "Ultraworked with [Sisyphus](https://github.com/code-yeongyu/oh-my-openagent)"
+				: "Ultraworked with [Sang Hyang Ismaya](https://github.com/mizu-pras/omo)"
 		sections.push("**Example (both enabled):**")
 		sections.push("```bash")
 		sections.push(
-			`${cmdPrefix}git commit -m "{Commit Message}" -m "${footerText}" -m "Co-authored-by: Sisyphus <clio-agent@sisyphuslabs.ai>"`
+			`${cmdPrefix}git commit -m "{Commit Message}" -m "${footerText}" -m "Co-authored-by: Sang Hyang Ismaya <clio-agent@sisyphuslabs.ai>"`
 		)
 		sections.push("```")
 	} else if (commitFooter) {
 		const footerText =
 			typeof commitFooter === "string"
 				? commitFooter
-				: "Ultraworked with [Sisyphus](https://github.com/code-yeongyu/oh-my-openagent)"
+				: "Ultraworked with [Sang Hyang Ismaya](https://github.com/mizu-pras/omo)"
 		sections.push("**Example:**")
 		sections.push("```bash")
 		sections.push(`${cmdPrefix}git commit -m "{Commit Message}" -m "${footerText}"`)
@@ -141,7 +141,7 @@ function buildCommitFooterInjection(
 		sections.push("**Example:**")
 		sections.push("```bash")
 		sections.push(
-			`${cmdPrefix}git commit -m "{Commit Message}" -m "Co-authored-by: Sisyphus <clio-agent@sisyphuslabs.ai>"`
+			`${cmdPrefix}git commit -m "{Commit Message}" -m "Co-authored-by: Sang Hyang Ismaya <clio-agent@sisyphuslabs.ai>"`
 		)
 		sections.push("```")
 	}

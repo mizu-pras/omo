@@ -72,13 +72,13 @@ function createMockClient(messages: Array<{
 describe("findNearestMessageWithFieldsFromSDK", () => {
   it("returns message with all fields when available", async () => {
     const mockClient = createMockClient([
-      { info: { agent: "sisyphus", model: { providerID: "anthropic", modelID: "claude-opus-4" } } },
+      { info: { agent: "ismaya", model: { providerID: "anthropic", modelID: "claude-opus-4" } } },
     ])
 
     const result = await findNearestMessageWithFieldsFromSDK(mockClient as any, "ses_123")
 
     expect(result).toEqual({
-      agent: "sisyphus",
+      agent: "ismaya",
       model: { providerID: "anthropic", modelID: "claude-opus-4" },
       tools: undefined,
     })
@@ -86,13 +86,13 @@ describe("findNearestMessageWithFieldsFromSDK", () => {
 
   it("returns message with assistant shape (providerID/modelID directly on info)", async () => {
     const mockClient = createMockClient([
-      { info: { agent: "sisyphus", providerID: "openai", modelID: "gpt-5" } },
+      { info: { agent: "ismaya", providerID: "openai", modelID: "gpt-5" } },
     ])
 
     const result = await findNearestMessageWithFieldsFromSDK(mockClient as any, "ses_123")
 
     expect(result).toEqual({
-      agent: "sisyphus",
+      agent: "ismaya",
       model: { providerID: "openai", modelID: "gpt-5" },
       tools: undefined,
     })
@@ -156,7 +156,7 @@ describe("findNearestMessageWithFieldsFromSDK", () => {
     const mockClient = createMockClient([
       {
         info: {
-          agent: "sisyphus",
+          agent: "ismaya",
           model: { providerID: "anthropic", modelID: "claude-opus-4" },
           tools: { edit: true, write: false },
         },
@@ -183,18 +183,18 @@ describe("findNearestMessageWithFieldsFromSDK", () => {
     const mockClient = createMockClient([
       {
         id: "msg_compaction",
-        info: { agent: "atlas", model: { providerID: "openai", modelID: "gpt-5" }, time: { created: 200 } },
+        info: { agent: "aji-saka", model: { providerID: "openai", modelID: "gpt-5" }, time: { created: 200 } },
         parts: [{ type: "compaction" }],
       },
       {
         id: "msg_real",
-        info: { agent: "sisyphus", model: { providerID: "anthropic", modelID: "claude-opus-4" }, time: { created: 100 } },
+        info: { agent: "ismaya", model: { providerID: "anthropic", modelID: "claude-opus-4" }, time: { created: 100 } },
       },
     ])
 
     const result = await findNearestMessageWithFieldsFromSDK(mockClient as any, "ses_123")
 
-    expect(result?.agent).toBe("sisyphus")
+    expect(result?.agent).toBe("ismaya")
   })
 })
 
@@ -227,7 +227,7 @@ describe("findNearestMessageWithFields JSON backend ordering", () => {
 
     writeFileSync(join(messageDir, "msg_0001.json"), JSON.stringify({
       id: compactionMessageID,
-      agent: "atlas",
+      agent: "aji-saka",
       model: { providerID: "openai", modelID: "gpt-5" },
       time: { created: 200 },
     }))
@@ -236,14 +236,14 @@ describe("findNearestMessageWithFields JSON backend ordering", () => {
 
     writeFileSync(join(messageDir, "msg_0002.json"), JSON.stringify({
       id: "msg_0002",
-      agent: "sisyphus",
+      agent: "ismaya",
       model: { providerID: "anthropic", modelID: "claude-opus-4" },
       time: { created: 100 },
     }))
 
     const result = findNearestMessageWithFields(messageDir)
 
-    expect(result?.agent).toBe("sisyphus")
+    expect(result?.agent).toBe("ismaya")
   })
 })
 
@@ -272,13 +272,13 @@ describe("findFirstMessageWithAgentFromSDK", () => {
 
   it("skips compaction marker user messages when resolving first agent", async () => {
     const mockClient = createMockClient([
-      { id: "msg_compaction", info: { agent: "atlas", time: { created: 10 } }, parts: [{ type: "compaction" }] },
-      { id: "msg_real", info: { agent: "sisyphus", time: { created: 20 } } },
+      { id: "msg_compaction", info: { agent: "aji-saka", time: { created: 10 } }, parts: [{ type: "compaction" }] },
+      { id: "msg_real", info: { agent: "ismaya", time: { created: 20 } } },
     ])
 
     const result = await findFirstMessageWithAgentFromSDK(mockClient as any, "ses_123")
 
-    expect(result).toBe("sisyphus")
+    expect(result).toBe("ismaya")
   })
 
   it("skips messages without agent field", async () => {
@@ -365,7 +365,7 @@ describe("injectHookMessage", () => {
     mockIsSqliteBackend.mockReturnValue(true)
 
     const result = injectHookMessage("ses_123", "test content", {
-      agent: "sisyphus",
+      agent: "ismaya",
       model: { providerID: "anthropic", modelID: "claude-opus-4" },
     })
 
@@ -377,7 +377,7 @@ describe("injectHookMessage", () => {
     mockIsSqliteBackend.mockReturnValue(false)
 
     const result = injectHookMessage("ses_123", "", {
-      agent: "sisyphus",
+      agent: "ismaya",
       model: { providerID: "anthropic", modelID: "claude-opus-4" },
     })
 
@@ -388,7 +388,7 @@ describe("injectHookMessage", () => {
     mockIsSqliteBackend.mockReturnValue(false)
 
     const result = injectHookMessage("ses_123", "   \n\t  ", {
-      agent: "sisyphus",
+      agent: "ismaya",
       model: { providerID: "anthropic", modelID: "claude-opus-4" },
     })
 

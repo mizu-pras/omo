@@ -1,4 +1,4 @@
-import type { OhMyOpenCodeConfig } from "../../config"
+import type { ParaHyangConfig } from "../../config"
 import type { PluginContext } from "../types"
 import type { RalphLoopHook } from "../../hooks/ralph-loop"
 
@@ -24,7 +24,7 @@ export type TransformHooks = {
 
 export function createTransformHooks(args: {
   ctx: PluginContext
-  pluginConfig: OhMyOpenCodeConfig
+  pluginConfig: ParaHyangConfig
   isHookEnabled: (hookName: string) => boolean
   safeHookEnabled?: boolean
   ralphLoop?: RalphLoopHook | null

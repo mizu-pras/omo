@@ -1,6 +1,6 @@
 import { createBuiltinAgents } from "../agents";
-import { createSisyphusJuniorAgentWithOverrides } from "../agents/sisyphus-junior";
-import type { OhMyOpenCodeConfig } from "../config";
+import { createSisyphusJuniorAgentWithOverrides } from "../agents/cenil";
+import type { ParaHyangConfig } from "../config";
 import { isTaskSystemEnabled, log, migrateAgentConfig } from "../shared";
 import { AGENT_NAME_MAP } from "../shared/migration";
 import { getAgentDisplayName } from "../shared/agent-display-names";
@@ -41,7 +41,7 @@ function getConfiguredDefaultAgent(config: Record<string, unknown>): string | un
 
 export async function applyAgentConfig(params: {
   config: Record<string, unknown>;
-  pluginConfig: OhMyOpenCodeConfig;
+  pluginConfig: ParaHyangConfig;
   ctx: { directory: string; client?: any };
   pluginComponents: PluginComponents;
 }): Promise<Record<string, unknown>> {
@@ -157,30 +157,30 @@ export async function applyAgentConfig(params: {
   const shouldDemotePlan = plannerEnabled && replacePlan;
   const configuredDefaultAgent = getConfiguredDefaultAgent(params.config);
 
-  if (isSisyphusEnabled && builtinAgents.sisyphus) {
+  if (isSisyphusEnabled && builtinAgents.ismaya) {
     if (configuredDefaultAgent) {
       (params.config as { default_agent?: string }).default_agent =
         getAgentListDisplayName(configuredDefaultAgent);
     } else {
       (params.config as { default_agent?: string }).default_agent =
-        getAgentListDisplayName("sisyphus");
+        getAgentListDisplayName("ismaya");
     }
 
-    // Assembly order: Sisyphus -> Hephaestus -> Prometheus -> Atlas
+    // Assembly order: Ismaya -> Togog -> Dewi-Sri -> Aji-Saka
     const agentConfig: Record<string, unknown> = {
-      sisyphus: builtinAgents.sisyphus,
+      ismaya: builtinAgents.ismaya,
     };
 
-    if (builtinAgents.hephaestus) {
-      agentConfig["hephaestus"] = builtinAgents.hephaestus;
+    if (builtinAgents.togog) {
+      agentConfig["togog"] = builtinAgents.togog;
     }
 
     if (plannerEnabled) {
-      const prometheusOverride = params.pluginConfig.agents?.["prometheus"] as
+      const prometheusOverride = params.pluginConfig.agents?.["dewi-sri"] as
         | (Record<string, unknown> & { prompt_append?: string })
         | undefined;
 
-      agentConfig["prometheus"] = await buildPrometheusAgentConfig({
+      agentConfig["dewi-sri"] = await buildPrometheusAgentConfig({
         configAgentPlan: configAgent?.plan,
         pluginPrometheusOverride: prometheusOverride,
         userCategories: params.pluginConfig.categories,
@@ -189,13 +189,13 @@ export async function applyAgentConfig(params: {
       });
     }
 
-    if (builtinAgents.atlas) {
-      agentConfig["atlas"] = builtinAgents.atlas;
+    if (builtinAgents["aji-saka"]) {
+      agentConfig["aji-saka"] = builtinAgents["aji-saka"];
     }
 
-    agentConfig["sisyphus-junior"] = createSisyphusJuniorAgentWithOverrides(
-      params.pluginConfig.agents?.["sisyphus-junior"],
-      (builtinAgents.atlas as { model?: string } | undefined)?.model,
+    agentConfig["cenil"] = createSisyphusJuniorAgentWithOverrides(
+      params.pluginConfig.agents?.["cenil"],
+      (builtinAgents["aji-saka"] as { model?: string } | undefined)?.model,
       useTaskSystem,
     );
 
@@ -237,7 +237,7 @@ export async function applyAgentConfig(params: {
 
     const planDemoteConfig = shouldDemotePlan
       ? buildPlanDemoteConfig(
-          agentConfig["prometheus"] as Record<string, unknown> | undefined,
+          agentConfig["dewi-sri"] as Record<string, unknown> | undefined,
           params.pluginConfig.agents?.plan as Record<string, unknown> | undefined,
         )
       : undefined;
@@ -263,7 +263,7 @@ export async function applyAgentConfig(params: {
       ...agentConfig,
       ...Object.fromEntries(
         Object.entries(builtinAgents).filter(
-          ([key]) => key !== "sisyphus" && key !== "hephaestus" && key !== "atlas",
+          ([key]) => key !== "ismaya" && key !== "togog" && key !== "aji-saka",
         ),
       ),
       ...filterDisabledAgents(filteredUserAgents),

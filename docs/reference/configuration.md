@@ -53,18 +53,18 @@ User config is loaded first, then project config overrides it. In each directory
 | macOS/Linux | `~/.config/opencode/oh-my-openagent.json[c]`, `~/.config/opencode/oh-my-opencode.json[c]` |
 | Windows     | `%APPDATA%\opencode\oh-my-openagent.json[c]`, `%APPDATA%\opencode\oh-my-opencode.json[c]` |
 
-**Rename compatibility:** The published package and CLI binary remain `oh-my-opencode`. OpenCode plugin registration prefers `oh-my-openagent`, while legacy `oh-my-opencode` entries and config basenames still load during the transition. Config detection checks `oh-my-opencode` before `oh-my-openagent`, so if both plugin config basenames exist in the same directory, the legacy `oh-my-opencode.*` file currently wins.
+**Rename compatibility:** The canonical package and CLI binary are `para-hyang`. OpenCode plugin registration prefers `para-hyang`, while legacy `oh-my-openagent` and `oh-my-opencode` entries and config basenames still load during migration.
 JSONC supports `// line comments`, `/* block comments */`, and trailing commas.
 
 Enable schema autocomplete:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json"
+  "$schema": "https://raw.githubusercontent.com/mizu-pras/omo/dev/assets/para-hyang.schema.json"
 }
 ```
 
-Run `bunx oh-my-opencode install` for guided setup. Run `opencode models` to list available models.
+Run `bunx para-hyang install` for guided setup. Run `opencode models` to list available models.
 
 ### Quick Start Example
 
@@ -72,7 +72,7 @@ Here's a practical starting configuration:
 
 ```jsonc
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "$schema": "https://raw.githubusercontent.com/mizu-pras/omo/dev/assets/para-hyang.schema.json",
 
   "agents": {
     // Main orchestrator: Claude Opus or Kimi K2.5 work best

@@ -18,7 +18,7 @@ export type ModelRequirement = {
 };
 
 export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
-  sisyphus: {
+  ismaya: {
     fallbackChain: [
       {
         providers: ["anthropic", "github-copilot", "opencode"],
@@ -44,7 +44,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
     ],
     requiresAnyModel: true,
   },
-  hephaestus: {
+  togog: {
     fallbackChain: [
       {
         providers: ["openai", "github-copilot", "venice", "opencode"],
@@ -54,7 +54,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
     ],
     requiresProvider: ["openai", "github-copilot", "venice", "opencode"],
   },
-  oracle: {
+  "ratu-kidul": {
     fallbackChain: [
       {
         providers: ["openai", "github-copilot", "opencode"],
@@ -74,7 +74,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["opencode-go"], model: "glm-5" },
     ],
   },
-  librarian: {
+  pujangga: {
     fallbackChain: [
       { providers: ["opencode-go"], model: "minimax-m2.7" },
       { providers: ["opencode"], model: "minimax-m2.7-highspeed" },
@@ -82,7 +82,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["opencode"], model: "gpt-5-nano" },
     ],
   },
-  explore: {
+  nayagenggong: {
     fallbackChain: [
       { providers: ["github-copilot", "xai"], model: "grok-code-fast-1" },
       { providers: ["opencode-go"], model: "minimax-m2.7-highspeed" },
@@ -91,7 +91,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["opencode"], model: "gpt-5-nano" },
     ],
   },
-  "multimodal-looker": {
+  surya: {
     fallbackChain: [
       { providers: ["openai", "opencode"], model: "gpt-5.4", variant: "medium" },
       { providers: ["opencode-go"], model: "kimi-k2.5" },
@@ -99,7 +99,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["openai", "github-copilot", "opencode"], model: "gpt-5-nano" },
     ],
   },
-  prometheus: {
+  "dewi-sri": {
     fallbackChain: [
       {
         providers: ["anthropic", "github-copilot", "opencode"],
@@ -118,7 +118,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       },
     ],
   },
-  metis: {
+  jayabaya: {
     fallbackChain: [
       {
         providers: ["anthropic", "github-copilot", "opencode"],
@@ -134,7 +134,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["kimi-for-coding"], model: "k2p5" },
     ],
   },
-  momus: {
+  sabdapalon: {
     fallbackChain: [
       {
         providers: ["openai", "github-copilot", "opencode"],
@@ -154,7 +154,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["opencode-go"], model: "glm-5" },
     ],
   },
-  atlas: {
+  "aji-saka": {
     fallbackChain: [
       { providers: ["anthropic", "github-copilot", "opencode"], model: "claude-sonnet-4-6" },
       { providers: ["opencode-go"], model: "kimi-k2.5" },
@@ -166,7 +166,7 @@ export const AGENT_MODEL_REQUIREMENTS: Record<string, ModelRequirement> = {
       { providers: ["opencode-go"], model: "minimax-m2.7" },
     ],
   },
-  "sisyphus-junior": {
+  cenil: {
     fallbackChain: [
       { providers: ["anthropic", "github-copilot", "opencode"], model: "claude-sonnet-4-6" },
       { providers: ["opencode-go"], model: "kimi-k2.5" },

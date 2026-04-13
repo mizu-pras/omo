@@ -72,7 +72,7 @@ async function detectOracleVerificationFromParentSession(
 
 		return undefined
 	} catch (error) {
-		log(`[${HOOK_NAME}] Failed to scan parent session for oracle verification evidence`, {
+			log(`[${HOOK_NAME}] Failed to scan parent session for Ratu Kidul verification evidence`, {
 			parentSessionID,
 			error: String(error),
 		})
@@ -144,7 +144,7 @@ export async function handlePendingVerification(
 		}
 	}
 
-	log(`[${HOOK_NAME}] Waiting for oracle verification`, {
+	log(`[${HOOK_NAME}] Waiting for Ratu Kidul verification`, {
 		sessionID,
 		verificationSessionID,
 		iteration: state.iteration,

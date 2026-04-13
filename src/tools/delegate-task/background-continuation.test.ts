@@ -1,13 +1,13 @@
-const { describe, test, expect, mock } = require("bun:test")
+import { describe, test, expect, mock } from "bun:test"
 
 describe("executeBackgroundContinuation - subagent metadata", () => {
-  test("includes subagent in task_metadata when task has agent", async () => {
-    //#given - mock manager.resume returning task with agent info
+  test("canonicalizes legacy oracle agent in task_metadata", async () => {
+    //#given - mock manager.resume returning legacy oracle agent
     const mockManager = {
       resume: async () => ({
         id: "bg_task_001",
         description: "oracle consultation",
-        agent: "oracle",
+        agent: "ratu-kidul",
         status: "running",
         sessionID: "ses_resumed_123",
       }),
@@ -26,7 +26,7 @@ describe("executeBackgroundContinuation - subagent metadata", () => {
     const parentContext = {
       sessionID: "parent-session",
       messageID: "msg-parent",
-      agent: "sisyphus",
+      agent: "ismaya",
     }
 
     const args = {
@@ -41,10 +41,57 @@ describe("executeBackgroundContinuation - subagent metadata", () => {
     const { executeBackgroundContinuation } = require("./background-continuation")
     const result = await executeBackgroundContinuation(args, mockCtx, mockExecutorCtx, parentContext)
 
-    //#then - task_metadata should contain subagent field
+    //#then - task_metadata should contain canonical subagent field
     expect(result).toContain("<task_metadata>")
-    expect(result).toContain("subagent: oracle")
+    expect(result).toContain("subagent: ratu-kidul")
+    expect(result).toContain("Agent: ratu-kidul")
     expect(result).toContain("session_id: ses_resumed_123")
+  })
+
+  test("canonicalizes legacy prometheus agent in task_metadata", async () => {
+    //#given - mock manager.resume returning legacy prometheus agent
+    const mockManager = {
+      resume: async () => ({
+        id: "bg_task_003",
+        description: "plan builder",
+        agent: "dewi-sri",
+        status: "running",
+        sessionID: "ses_resumed_789",
+      }),
+    }
+
+    const mockCtx = {
+      sessionID: "parent-session",
+      callID: "call-999",
+      metadata: mock(() => Promise.resolve()),
+    }
+
+    const mockExecutorCtx = {
+      manager: mockManager,
+    }
+
+    const parentContext = {
+      sessionID: "parent-session",
+      messageID: "msg-parent",
+      agent: "ismaya",
+    }
+
+    const args = {
+      session_id: "ses_resumed_789",
+      prompt: "continue planning",
+      description: "resume plan builder",
+      load_skills: [],
+      run_in_background: true,
+    }
+
+    //#when - executeBackgroundContinuation completes
+    const { executeBackgroundContinuation } = require("./background-continuation")
+    const result = await executeBackgroundContinuation(args, mockCtx, mockExecutorCtx, parentContext)
+
+    //#then - task_metadata should contain canonical plan-family subagent field
+    expect(result).toContain("subagent: dewi-sri")
+    expect(result).toContain("Agent: dewi-sri")
+    expect(result).toContain("session_id: ses_resumed_789")
   })
 
   test("omits subagent from task_metadata when task agent is undefined", async () => {
@@ -72,7 +119,7 @@ describe("executeBackgroundContinuation - subagent metadata", () => {
     const parentContext = {
       sessionID: "parent-session",
       messageID: "msg-parent",
-      agent: "sisyphus",
+      agent: "ismaya",
     }
 
     const args = {

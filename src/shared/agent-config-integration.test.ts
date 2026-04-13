@@ -19,23 +19,23 @@ describe("Agent Config Integration", () => {
       const result = migrateAgentNames(oldConfig)
 
       // then - keys are lowercase
-      expect(result.migrated).toHaveProperty("sisyphus")
-      expect(result.migrated).toHaveProperty("atlas")
-      expect(result.migrated).toHaveProperty("prometheus")
-      expect(result.migrated).toHaveProperty("metis")
-      expect(result.migrated).toHaveProperty("momus")
+      expect(result.migrated).toHaveProperty("ismaya")
+      expect(result.migrated).toHaveProperty("aji-saka")
+      expect(result.migrated).toHaveProperty("dewi-sri")
+      expect(result.migrated).toHaveProperty("jayabaya")
+      expect(result.migrated).toHaveProperty("sabdapalon")
 
       // then - old keys are removed
       expect(result.migrated).not.toHaveProperty("Sisyphus")
       expect(result.migrated).not.toHaveProperty("Atlas")
-      expect(result.migrated).not.toHaveProperty("Prometheus - Plan Builder")
-      expect(result.migrated).not.toHaveProperty("Metis - Plan Consultant")
-      expect(result.migrated).not.toHaveProperty("Momus - Plan Critic")
+      expect(result.migrated).not.toHaveProperty("Dewi Sri")
+      expect(result.migrated).not.toHaveProperty("Jayabaya")
+      expect(result.migrated).not.toHaveProperty("Sabdapalon")
 
       // then - values are preserved
-      expect(result.migrated.sisyphus).toEqual({ model: "anthropic/claude-opus-4-6" })
-      expect(result.migrated.atlas).toEqual({ model: "anthropic/claude-opus-4-6" })
-      expect(result.migrated.prometheus).toEqual({ model: "anthropic/claude-opus-4-6" })
+      expect(result.migrated.ismaya).toEqual({ model: "anthropic/claude-opus-4-6" })
+      expect(result.migrated["aji-saka"]).toEqual({ model: "anthropic/claude-opus-4-6" })
+      expect(result.migrated["dewi-sri"]).toEqual({ model: "anthropic/claude-opus-4-6" })
       
       // then - changed flag is true
       expect(result.changed).toBe(true)
@@ -45,37 +45,41 @@ describe("Agent Config Integration", () => {
       // given - config with lowercase keys
       const config = {
         sisyphus: { model: "anthropic/claude-opus-4-6" },
-        oracle: { model: "openai/gpt-5.4" },
-        librarian: { model: "opencode/big-pickle" },
+        "ratu-kidul": { model: "openai/gpt-5.4" },
+        pujangga: { model: "opencode/big-pickle" },
       }
 
       // when - migration is applied
       const result = migrateAgentNames(config)
 
       // then - keys remain unchanged
-      expect(result.migrated).toEqual(config)
+      expect(result.migrated).toEqual({
+        ismaya: { model: "anthropic/claude-opus-4-6" },
+        "ratu-kidul": { model: "openai/gpt-5.4" },
+        pujangga: { model: "opencode/big-pickle" },
+      })
       
       // then - changed flag is false
-      expect(result.changed).toBe(false)
+      expect(result.changed).toBe(true)
     })
 
     test("handles mixed case config", () => {
       // given - config with mixed old and new format
       const mixedConfig = {
         Sisyphus: { model: "anthropic/claude-opus-4-6" },
-        oracle: { model: "openai/gpt-5.4" },
+        "ratu-kidul": { model: "openai/gpt-5.4" },
         "Prometheus - Plan Builder": { model: "anthropic/claude-opus-4-6" },
-        librarian: { model: "opencode/big-pickle" },
+        pujangga: { model: "opencode/big-pickle" },
       }
 
       // when - migration is applied
       const result = migrateAgentNames(mixedConfig)
 
       // then - all keys are lowercase
-      expect(result.migrated).toHaveProperty("sisyphus")
-      expect(result.migrated).toHaveProperty("oracle")
-      expect(result.migrated).toHaveProperty("prometheus")
-      expect(result.migrated).toHaveProperty("librarian")
+      expect(result.migrated).toHaveProperty("ismaya")
+      expect(result.migrated).toHaveProperty("ratu-kidul")
+      expect(result.migrated).toHaveProperty("dewi-sri")
+      expect(result.migrated).toHaveProperty("pujangga")
       expect(Object.keys(result.migrated).every((key) => key === key.toLowerCase())).toBe(true)
       
       // then - changed flag is true
@@ -86,38 +90,38 @@ describe("Agent Config Integration", () => {
   describe("Display name resolution", () => {
     test("returns correct display names for all builtin agents", () => {
       // given - lowercase config keys
-      const agents = ["sisyphus", "hephaestus", "prometheus", "atlas", "metis", "momus", "oracle", "librarian", "explore", "multimodal-looker"]
+      const agents = ["ismaya", "togog", "dewi-sri", "aji-saka", "jayabaya", "sabdapalon", "ratu-kidul", "pujangga", "nayagenggong", "surya"]
 
       // when - display names are requested
       const displayNames = agents.map((agent) => getAgentDisplayName(agent))
 
       // then - display names are correct
-      expect(displayNames).toContain("Sisyphus - Ultraworker")
-      expect(displayNames).toContain("Hephaestus - Deep Agent")
-      expect(displayNames).toContain("Prometheus - Plan Builder")
-      expect(displayNames).toContain("Atlas - Plan Executor")
-      expect(displayNames).toContain("Metis - Plan Consultant")
-      expect(displayNames).toContain("Momus - Plan Critic")
-      expect(displayNames).toContain("oracle")
-      expect(displayNames).toContain("librarian")
-      expect(displayNames).toContain("explore")
-      expect(displayNames).toContain("multimodal-looker")
+      expect(displayNames).toContain("Sang Hyang Ismaya")
+      expect(displayNames).toContain("Togog")
+      expect(displayNames).toContain("Dewi Sri")
+      expect(displayNames).toContain("Aji Saka")
+      expect(displayNames).toContain("Jayabaya")
+      expect(displayNames).toContain("Sabdapalon")
+      expect(displayNames).toContain("Kanjeng Ratu Kidul")
+      expect(displayNames).toContain("Ki Pujangga")
+      expect(displayNames).toContain("Nayagenggong")
+      expect(displayNames).toContain("Batara Surya")
     })
 
     test("handles lowercase keys case-insensitively", () => {
       // given - various case formats of lowercase keys
-      const keys = ["Sisyphus", "Atlas", "SISYPHUS", "atlas", "prometheus", "PROMETHEUS"]
+      const keys = ["Sisyphus", "Atlas", "SISYPHUS", "aji-saka", "dewi-sri", "PROMETHEUS"]
 
       // when - display names are requested
       const displayNames = keys.map((key) => getAgentDisplayName(key))
 
       // then - correct display names are returned
-      expect(displayNames[0]).toBe("Sisyphus - Ultraworker")
-      expect(displayNames[1]).toBe("Atlas - Plan Executor")
-      expect(displayNames[2]).toBe("Sisyphus - Ultraworker")
-      expect(displayNames[3]).toBe("Atlas - Plan Executor")
-      expect(displayNames[4]).toBe("Prometheus - Plan Builder")
-      expect(displayNames[5]).toBe("Prometheus - Plan Builder")
+      expect(displayNames[0]).toBe("Sang Hyang Ismaya")
+      expect(displayNames[1]).toBe("Aji Saka")
+      expect(displayNames[2]).toBe("Sang Hyang Ismaya")
+      expect(displayNames[3]).toBe("Aji Saka")
+      expect(displayNames[4]).toBe("Dewi Sri")
+      expect(displayNames[5]).toBe("Dewi Sri")
     })
 
     test("returns original key for unknown agents", () => {
@@ -146,7 +150,7 @@ describe("Agent Config Integration", () => {
 
     test("model requirements include all builtin agents", () => {
       // given - expected builtin agents
-      const expectedAgents = ["sisyphus", "hephaestus", "prometheus", "atlas", "metis", "momus", "oracle", "librarian", "explore", "multimodal-looker"]
+      const expectedAgents = ["ismaya", "togog", "dewi-sri", "aji-saka", "jayabaya", "sabdapalon", "ratu-kidul", "pujangga", "nayagenggong", "surya"]
 
       // when - checking AGENT_MODEL_REQUIREMENTS
       const agentKeys = Object.keys(AGENT_MODEL_REQUIREMENTS)
@@ -181,27 +185,27 @@ describe("Agent Config Integration", () => {
       const result = migrateAgentNames(oldConfig)
 
       // then - keys are lowercase
-      expect(result.migrated).toHaveProperty("sisyphus")
-      expect(result.migrated).toHaveProperty("prometheus")
+      expect(result.migrated).toHaveProperty("ismaya")
+      expect(result.migrated).toHaveProperty("dewi-sri")
 
       // when - display names are retrieved
-      const sisyphusDisplay = getAgentDisplayName("sisyphus")
-      const prometheusDisplay = getAgentDisplayName("prometheus")
+      const sisyphusDisplay = getAgentDisplayName("ismaya")
+      const prometheusDisplay = getAgentDisplayName("dewi-sri")
 
       // then - display names are correct
-      expect(sisyphusDisplay).toBe("Sisyphus - Ultraworker")
-      expect(prometheusDisplay).toBe("Prometheus - Plan Builder")
+      expect(sisyphusDisplay).toBe("Sang Hyang Ismaya")
+      expect(prometheusDisplay).toBe("Dewi Sri")
 
       // then - config values are preserved
-      expect(result.migrated.sisyphus).toEqual({ model: "anthropic/claude-opus-4-6", temperature: 0.1 })
-      expect(result.migrated.prometheus).toEqual({ model: "anthropic/claude-opus-4-6" })
+      expect(result.migrated.ismaya).toEqual({ model: "anthropic/claude-opus-4-6", temperature: 0.1 })
+      expect(result.migrated["dewi-sri"]).toEqual({ model: "anthropic/claude-opus-4-6" })
     })
 
     test("new config works without migration", () => {
       // given - new format config (already lowercase)
       const newConfig = {
-        sisyphus: { model: "anthropic/claude-opus-4-6" },
-        atlas: { model: "anthropic/claude-opus-4-6" },
+        ismaya: { model: "anthropic/claude-opus-4-6" },
+        "aji-saka": { model: "anthropic/claude-opus-4-6" },
       }
 
       // when - migration is applied (should be no-op)
@@ -214,12 +218,12 @@ describe("Agent Config Integration", () => {
       expect(result.changed).toBe(false)
 
       // when - display names are retrieved
-      const sisyphusDisplay = getAgentDisplayName("sisyphus")
-      const atlasDisplay = getAgentDisplayName("atlas")
+      const sisyphusDisplay = getAgentDisplayName("ismaya")
+      const atlasDisplay = getAgentDisplayName("aji-saka")
 
       // then - display names are correct
-      expect(sisyphusDisplay).toBe("Sisyphus - Ultraworker")
-      expect(atlasDisplay).toBe("Atlas - Plan Executor")
+      expect(sisyphusDisplay).toBe("Sang Hyang Ismaya")
+      expect(atlasDisplay).toBe("Aji Saka")
     })
   })
 })

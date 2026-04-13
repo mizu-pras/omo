@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto"
 import { getMainSessionID } from "../features/claude-code-session-state"
 import { clearBoulderState } from "../features/boulder-state"
 import { log } from "../shared"
+import { getAgentConfigKey } from "../shared/agent-display-names"
+import { AGENT_NAME_MAP } from "../shared/migration/agent-names"
 import { resolveSessionAgent } from "./session-agent-resolver"
 import { parseRalphLoopArguments } from "../hooks/ralph-loop/command-arguments"
 import { ULTRAWORK_VERIFICATION_PROMISE } from "../hooks/ralph-loop/constants"
@@ -53,7 +55,7 @@ export function createToolExecuteBeforeHandler(args: {
   return async (input, output): Promise<void> => {
     if (input.tool.toLowerCase() === "bash" && typeof output.args.command === "string") {
       if (output.args.command.includes("\x00")) {
-        output.args.command = output.args.command.replace(/\x00/g, "")
+        output.args.command = output.args.command.replace(new RegExp("\\u0000", "g"), "")
         log("[tool-execute-before] Stripped null bytes from bash command", {
           sessionID: input.sessionID,
           callID: input.callID,
@@ -72,9 +74,9 @@ export function createToolExecuteBeforeHandler(args: {
     await hooks.rulesInjector?.["tool.execute.before"]?.(input, output)
     await hooks.tasksTodowriteDisabler?.["tool.execute.before"]?.(input, output)
     await hooks.webfetchRedirectGuard?.["tool.execute.before"]?.(input, output)
-    await hooks.prometheusMdOnly?.["tool.execute.before"]?.(input, output)
-    await hooks.sisyphusJuniorNotepad?.["tool.execute.before"]?.(input, output)
-    await hooks.atlasHook?.["tool.execute.before"]?.(input, output)
+    await hooks.dewiSriMdOnly?.["tool.execute.before"]?.(input, output)
+    await hooks.cenilNotepad?.["tool.execute.before"]?.(input, output)
+    await hooks.ajiSakaHook?.["tool.execute.before"]?.(input, output)
 
     const normalizedToolName = input.tool.toLowerCase()
     if (
@@ -102,7 +104,7 @@ export function createToolExecuteBeforeHandler(args: {
       const sessionId = typeof argsObject.session_id === "string" ? argsObject.session_id : undefined
 
       if (category) {
-        argsObject.subagent_type = "sisyphus-junior"
+        argsObject.subagent_type = "cenil"
       } else if (!subagentType && sessionId) {
         const resolvedAgent = await resolveSessionAgent(ctx.client, sessionId)
         argsObject.subagent_type = resolvedAgent ?? "continue"
@@ -110,10 +112,16 @@ export function createToolExecuteBeforeHandler(args: {
 
       const normalizedSubagentType =
         typeof argsObject.subagent_type === "string" ? argsObject.subagent_type : undefined
+      const canonicalSubagentType =
+        typeof normalizedSubagentType === "string"
+          ? AGENT_NAME_MAP[getAgentConfigKey(normalizedSubagentType)]
+            ?? AGENT_NAME_MAP[getAgentConfigKey(normalizedSubagentType).toLowerCase()]
+            ?? getAgentConfigKey(normalizedSubagentType)
+          : undefined
       const prompt = typeof argsObject.prompt === "string" ? argsObject.prompt : ""
       const loopState = typeof ctx.directory === "string" ? readState(ctx.directory) : null
       const shouldInjectOracleVerification =
-        normalizedSubagentType === "oracle"
+        canonicalSubagentType === "ratu-kidul"
         && loopState?.active === true
         && loopState.ultrawork === true
         && loopState.verification_pending === true

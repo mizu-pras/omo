@@ -1,4 +1,4 @@
-import type { OhMyOpenCodeConfig } from "../config";
+import type { ParaHyangConfig } from "../config";
 import { getAgentDisplayName, getAgentListDisplayName } from "../shared/agent-display-names";
 import { isTaskSystemEnabled } from "../shared";
 
@@ -23,7 +23,7 @@ function agentByKey(agentResult: Record<string, unknown>, key: string): AgentWit
 
 export function applyToolConfig(params: {
   config: Record<string, unknown>;
-  pluginConfig: OhMyOpenCodeConfig;
+  pluginConfig: ParaHyangConfig;
   agentResult: Record<string, unknown>;
 }): void {
   const taskSystemEnabled = isTaskSystemEnabled(params.pluginConfig)
@@ -59,15 +59,15 @@ export function applyToolConfig(params: {
     isCliRunMode ? "deny" :
     "allow";
 
-  const librarian = agentByKey(params.agentResult, "librarian");
+  const librarian = agentByKey(params.agentResult, "pujangga");
   if (librarian) {
     librarian.permission = { ...librarian.permission, "grep_app_*": "allow" };
   }
-  const looker = agentByKey(params.agentResult, "multimodal-looker");
+  const looker = agentByKey(params.agentResult, "surya");
   if (looker) {
     looker.permission = { ...looker.permission, task: "deny", look_at: "deny" };
   }
-  const atlas = agentByKey(params.agentResult, "atlas");
+  const atlas = agentByKey(params.agentResult, "aji-saka");
   if (atlas) {
     atlas.permission = {
       ...atlas.permission,
@@ -78,7 +78,7 @@ export function applyToolConfig(params: {
       ...denyTodoTools,
     };
   }
-  const sisyphus = agentByKey(params.agentResult, "sisyphus");
+  const sisyphus = agentByKey(params.agentResult, "ismaya");
   if (sisyphus) {
     sisyphus.permission = {
       ...sisyphus.permission,
@@ -90,7 +90,7 @@ export function applyToolConfig(params: {
       ...denyTodoTools,
     };
   }
-  const hephaestus = agentByKey(params.agentResult, "hephaestus");
+  const hephaestus = agentByKey(params.agentResult, "togog");
   if (hephaestus) {
     hephaestus.permission = {
       ...hephaestus.permission,
@@ -100,7 +100,7 @@ export function applyToolConfig(params: {
       ...denyTodoTools,
     };
   }
-  const prometheus = agentByKey(params.agentResult, "prometheus");
+  const prometheus = agentByKey(params.agentResult, "dewi-sri");
   if (prometheus) {
     prometheus.permission = {
       ...prometheus.permission,
@@ -112,7 +112,7 @@ export function applyToolConfig(params: {
       ...denyTodoTools,
     };
   }
-  const junior = agentByKey(params.agentResult, "sisyphus-junior");
+  const junior = agentByKey(params.agentResult, "cenil");
   if (junior) {
     junior.permission = {
       ...junior.permission,

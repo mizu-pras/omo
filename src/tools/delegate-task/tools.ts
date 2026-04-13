@@ -69,7 +69,7 @@ export function createDelegateTask(options: DelegateTaskToolOptions): ToolDefini
   
   **CORRECT - Using subagent_type:**
   \`\`\`
-  task(subagent_type="explore", load_skills=[], description="Find patterns", prompt="...", run_in_background=true)
+  task(subagent_type="nayagenggong", load_skills=[], description="Find patterns", prompt="...", run_in_background=true)
   \`\`\`
   
   REQUIRED: Provide ONE of:

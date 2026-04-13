@@ -1,11 +1,11 @@
 /**
- * Unified system directive prefix for oh-my-opencode internal messages.
+ * Unified system directive prefix for para-hyang internal messages.
  * All system-generated messages should use this prefix for consistent filtering.
  *
- * Format: [SYSTEM DIRECTIVE: OH-MY-OPENCODE - {TYPE}]
+ * Format: [SYSTEM DIRECTIVE: PARA-HYANG - {TYPE}]
  */
 
-export const SYSTEM_DIRECTIVE_PREFIX = "[SYSTEM DIRECTIVE: OH-MY-OPENCODE"
+export const SYSTEM_DIRECTIVE_PREFIX = "[SYSTEM DIRECTIVE: PARA-HYANG"
 
 const SYSTEM_DIRECTIVE_LEADING_KEYWORD_PATTERN = /^\s*(?:ultrawork|ulw)\s+/i
 

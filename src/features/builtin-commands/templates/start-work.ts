@@ -11,12 +11,12 @@ export const START_WORK_TEMPLATE = `You are starting a Sisyphus work session.
 
 ## WHAT TO DO
 
-1. **Find available plans**: Search for Prometheus-generated plan files at \`.sisyphus/plans/\`
+1. **Find available plans**: Search for Prometheus-generated plan files at \`.ismaya/plans/\`
 
-2. **Check for active boulder state**: Read \`.sisyphus/boulder.json\` if it exists
+2. **Check for active boulder state**: Read \`.ismaya/boulder.json\` if it exists
 
 3. **Decision logic**:
-   - If \`.sisyphus/boulder.json\` exists AND plan is NOT complete (has unchecked boxes):
+   - If \`.ismaya/boulder.json\` exists AND plan is NOT complete (has unchecked boxes):
      - **APPEND** current session to session_ids
      - Continue work on existing plan
    - If no active plan OR plan is complete:
@@ -115,10 +115,10 @@ Register these as task/todo items so progress is tracked and visible throughout 
 
 When working in a worktree (\`worktree_path\` is set in boulder.json) and ALL plan tasks are complete:
 1. Commit all remaining changes in the worktree
-2. **Sync .sisyphus state back**: Copy \`.sisyphus/\` from the worktree to the main repo before removal.
-   This is CRITICAL when \`.sisyphus/\` is gitignored - state written during worktree execution would otherwise be lost.
+2. **Sync .ismaya state back**: Copy \`.ismaya/\` from the worktree to the main repo before removal.
+   This is CRITICAL when \`.ismaya/\` is gitignored - state written during worktree execution would otherwise be lost.
    \`\`\`bash
-   cp -r <worktree-path>/.sisyphus/* <main-repo>/.sisyphus/ 2>/dev/null || true
+   cp -r <worktree-path>/.ismaya/* <main-repo>/.ismaya/ 2>/dev/null || true
    \`\`\`
 3. Switch to the main working directory (the original repo, NOT the worktree)
 4. Merge the worktree branch into the current branch: \`git merge <worktree-branch>\`

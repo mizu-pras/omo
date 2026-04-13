@@ -46,6 +46,12 @@ describe("config check", () => {
         const result = await config.checkConfig()
 
         expect(result.details?.[0]).toEndWith("/oh-my-openagent.json")
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({
+            title: "Using legacy config filename",
+            severity: "warning",
+          }),
+        )
       } finally {
         rmSync(testConfigDir, { recursive: true, force: true })
         if (originalConfigDir === undefined) {

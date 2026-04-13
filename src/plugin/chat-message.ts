@@ -1,4 +1,4 @@
-import type { OhMyOpenCodeConfig } from "../config"
+import type { ParaHyangConfig } from "../config"
 import type { PluginContext } from "./types"
 
 import { hasConnectedProvidersCache } from "../shared"
@@ -45,7 +45,7 @@ function isStartWorkHookOutput(value: unknown): value is StartWorkHookOutput {
 
 function hasExplicitAgentModelOverride(
   agent: string | undefined,
-  pluginConfig: OhMyOpenCodeConfig
+  pluginConfig: ParaHyangConfig
 ): boolean {
   const configuredAgents = pluginConfig.agents
   const normalizedAgent = typeof agent === "string" ? getAgentConfigKey(agent) : undefined
@@ -60,7 +60,7 @@ function hasExplicitAgentModelOverride(
 
 function getStoredMainSessionModel(
   input: ChatMessageInput,
-  pluginConfig: OhMyOpenCodeConfig,
+  pluginConfig: ParaHyangConfig,
   isFirstMessage: boolean,
   output: ChatMessageHandlerOutput
 ): SessionModelOverride | undefined {
@@ -127,7 +127,7 @@ function parseRawLoopSlashCommand(promptText: string): RawLoopCommand | null {
 
 export function createChatMessageHandler(args: {
   ctx: PluginContext
-  pluginConfig: OhMyOpenCodeConfig
+  pluginConfig: ParaHyangConfig
   firstMessageVariantGate: FirstMessageVariantGate
   hooks: CreatedHooks
 }): (
@@ -204,8 +204,8 @@ export function createChatMessageHandler(args: {
     await hooks.thinkMode?.["chat.message"]?.(input, output)
     await hooks.claudeCodeHooks?.["chat.message"]?.(input, output)
     await hooks.autoSlashCommand?.["chat.message"]?.(input, output)
-    await hooks.noSisyphusGpt?.["chat.message"]?.(input, output)
-    await hooks.noHephaestusNonGpt?.["chat.message"]?.(input, output)
+    await hooks.noIsmayaGpt?.["chat.message"]?.(input, output)
+    await hooks.noTogogNonGpt?.["chat.message"]?.(input, output)
     if (hooks.startWork && isStartWorkHookOutput(output)) {
       await hooks.startWork["chat.message"]?.(input, output)
     }

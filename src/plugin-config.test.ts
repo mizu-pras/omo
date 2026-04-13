@@ -4,12 +4,12 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import * as shared from "./shared"
 import { loadPluginConfig, mergeConfigs, parseConfigPartially } from "./plugin-config";
-import { OhMyOpenCodeConfigSchema, type OhMyOpenCodeConfig } from "./config";
+import { ParaHyangConfigSchema, type ParaHyangConfig } from "./config";
 
 const tempDirs: string[] = []
 
-function createConfig(config: Partial<OhMyOpenCodeConfig>): OhMyOpenCodeConfig {
-  return OhMyOpenCodeConfigSchema.parse(config)
+function createConfig(config: Partial<ParaHyangConfig>): ParaHyangConfig {
+  return ParaHyangConfigSchema.parse(config)
 }
 
 afterEach(() => {
@@ -99,22 +99,22 @@ describe("mergeConfigs", () => {
     it("should deep merge agents", () => {
       const base = createConfig({
         agents: {
-          oracle: { model: "openai/gpt-5.4" },
+          "ratu-kidul": { model: "openai/gpt-5.4" },
         },
       });
 
       const override = createConfig({
         agents: {
-          oracle: { temperature: 0.5 },
-          explore: { model: "anthropic/claude-haiku-4-5" },
+          "ratu-kidul": { temperature: 0.5 },
+          nayagenggong: { model: "anthropic/claude-haiku-4-5" },
         },
       });
 
       const result = mergeConfigs(base, override);
 
-      expect(result.agents?.oracle).toMatchObject({ model: "openai/gpt-5.4" });
-      expect(result.agents?.oracle?.temperature).toBe(0.5);
-      expect(result.agents?.explore).toMatchObject({ model: "anthropic/claude-haiku-4-5" });
+      expect(result.agents?.["ratu-kidul"]).toMatchObject({ model: "openai/gpt-5.4" });
+      expect(result.agents?.["ratu-kidul"]?.temperature).toBe(0.5);
+      expect(result.agents?.nayagenggong).toMatchObject({ model: "anthropic/claude-haiku-4-5" });
     });
 
     it("should merge disabled arrays without duplicates", () => {
@@ -160,7 +160,7 @@ describe("parseConfigPartially", () => {
     //#then should accept the hook name so runtime and schema stay aligned
 
     it("should accept unknown disabled_hooks values for forward compatibility", () => {
-      const result = OhMyOpenCodeConfigSchema.safeParse({
+      const result = ParaHyangConfigSchema.safeParse({
         disabled_hooks: ["future-hook-name"],
       });
 
@@ -179,8 +179,8 @@ describe("parseConfigPartially", () => {
     it("should return the full config when everything is valid", () => {
       const rawConfig = {
         agents: {
-          oracle: { model: "openai/gpt-5.4" },
-          momus: { model: "openai/gpt-5.4" },
+          "ratu-kidul": { model: "openai/gpt-5.4" },
+          sabdapalon: { model: "openai/gpt-5.4" },
         },
         disabled_hooks: ["comment-checker"],
       };
@@ -188,8 +188,8 @@ describe("parseConfigPartially", () => {
       const result = parseConfigPartially(rawConfig);
 
       expect(result).not.toBeNull();
-      expect(result!.agents?.oracle).toMatchObject({ model: "openai/gpt-5.4" });
-      expect(result!.agents?.momus).toMatchObject({ model: "openai/gpt-5.4" });
+      expect(result!.agents?.["ratu-kidul"]).toMatchObject({ model: "openai/gpt-5.4" });
+      expect(result!.agents?.sabdapalon).toMatchObject({ model: "openai/gpt-5.4" });
       expect(result!.disabled_hooks).toEqual(["comment-checker"]);
     });
   });
@@ -202,11 +202,11 @@ describe("parseConfigPartially", () => {
     it("should preserve valid agent overrides when another section is invalid", () => {
       const rawConfig = {
         agents: {
-          oracle: { model: "openai/gpt-5.4" },
-          momus: { model: "openai/gpt-5.4" },
-          prometheus: {
+          "ratu-kidul": { model: "openai/gpt-5.4" },
+          sabdapalon: { model: "openai/gpt-5.4" },
+          "dewi-sri": {
             permission: {
-              edit: { "*": "ask", ".sisyphus/**": "allow" },
+              edit: { "*": "ask", ".ismaya/**": "allow" },
             },
           },
         },
@@ -223,7 +223,7 @@ describe("parseConfigPartially", () => {
     it("should preserve valid agents when a non-agent section is invalid", () => {
       const rawConfig = {
         agents: {
-          oracle: { model: "openai/gpt-5.4" },
+          "ratu-kidul": { model: "openai/gpt-5.4" },
         },
         disabled_hooks: ["not-a-real-hook"],
       };
@@ -231,7 +231,7 @@ describe("parseConfigPartially", () => {
       const result = parseConfigPartially(rawConfig);
 
       expect(result).not.toBeNull();
-      expect(result!.agents?.oracle).toMatchObject({ model: "openai/gpt-5.4" });
+      expect(result!.agents?.["ratu-kidul"]).toMatchObject({ model: "openai/gpt-5.4" });
       expect(result!.disabled_hooks).toEqual(["not-a-real-hook"]);
     });
   });
@@ -243,7 +243,7 @@ describe("parseConfigPartially", () => {
 
     it("should return empty object when all sections are invalid", () => {
       const rawConfig = {
-        agents: { oracle: { temperature: "not-a-number" } },
+        agents: { "ratu-kidul": { temperature: "not-a-number" } },
         disabled_hooks: ["not-a-real-hook"],
       };
 
@@ -282,7 +282,7 @@ describe("parseConfigPartially", () => {
     it("should ignore unknown keys and return valid sections", () => {
       const rawConfig = {
         agents: {
-          oracle: { model: "openai/gpt-5.4" },
+          "ratu-kidul": { model: "openai/gpt-5.4" },
         },
         some_future_key: { foo: "bar" },
       };
@@ -290,7 +290,7 @@ describe("parseConfigPartially", () => {
       const result = parseConfigPartially(rawConfig);
 
       expect(result).not.toBeNull();
-      expect(result!.agents?.oracle).toMatchObject({ model: "openai/gpt-5.4" });
+      expect(result!.agents?.["ratu-kidul"]).toMatchObject({ model: "openai/gpt-5.4" });
       expect((result as Record<string, unknown>)["some_future_key"]).toBeUndefined();
     });
   });
@@ -309,11 +309,11 @@ describe("loadPluginConfig", () => {
     mkdirSync(projectConfigDir, { recursive: true })
 
     writeFileSync(
-      join(userConfigDir, "oh-my-openagent.jsonc"),
+      join(userConfigDir, "para-hyang.jsonc"),
       JSON.stringify({ mcp_env_allowlist: ["USER_ONLY_TOKEN"] })
     )
     writeFileSync(
-      join(projectConfigDir, "oh-my-openagent.jsonc"),
+      join(projectConfigDir, "para-hyang.jsonc"),
       JSON.stringify({ mcp_env_allowlist: ["PROJECT_TOKEN"] })
     )
 
@@ -332,27 +332,27 @@ describe("loadPluginConfig", () => {
     const userConfigDir = join(rootDir, "user-config")
     const projectDir = join(rootDir, "project")
     const projectConfigDir = join(projectDir, ".opencode")
-    const legacyConfigPath = join(projectConfigDir, "oh-my-opencode.jsonc")
+    const legacyConfigPath = join(projectConfigDir, "oh-my-openagent.jsonc")
     const backupConfigPath = `${legacyConfigPath}.bak`
-    const canonicalConfigPath = join(projectConfigDir, "oh-my-openagent.jsonc")
+    const canonicalConfigPath = join(projectConfigDir, "para-hyang.jsonc")
 
     tempDirs.push(rootDir)
     mkdirSync(userConfigDir, { recursive: true })
     mkdirSync(projectConfigDir, { recursive: true })
-    writeFileSync(legacyConfigPath, JSON.stringify({ agents: { oracle: { model: "openai/gpt-5.4" } } }))
+    writeFileSync(legacyConfigPath, JSON.stringify({ agents: { "ratu-kidul": { model: "openai/gpt-5.4" } } }))
 
     spyOn(shared, "getOpenCodeConfigDir").mockReturnValue(userConfigDir)
 
     // when
     loadPluginConfig(projectDir, {})
-    writeFileSync(backupConfigPath, JSON.stringify({ agents: { oracle: { model: "openai/gpt-5-nano" } } }))
+    writeFileSync(backupConfigPath, JSON.stringify({ agents: { "ratu-kidul": { model: "openai/gpt-5-nano" } } }))
     const reloadedConfig = loadPluginConfig(projectDir, {})
 
     // then
     expect(existsSync(legacyConfigPath)).toBe(false)
     expect(existsSync(backupConfigPath)).toBe(true)
     expect(readFileSync(canonicalConfigPath, "utf-8")).toContain('"openai/gpt-5.4"')
-    expect(reloadedConfig.agents?.oracle?.model).toBe("openai/gpt-5.4")
+    expect(reloadedConfig.agents?.["ratu-kidul"]?.model).toBe("openai/gpt-5.4")
   })
 
   it("should still load config from legacy path when migration fails", () => {
@@ -361,12 +361,12 @@ describe("loadPluginConfig", () => {
     const userConfigDir = join(rootDir, "user-config")
     const projectDir = join(rootDir, "project")
     const projectConfigDir = join(projectDir, ".opencode")
-    const legacyConfigPath = join(projectConfigDir, "oh-my-opencode.json")
+    const legacyConfigPath = join(projectConfigDir, "oh-my-openagent.json")
 
     tempDirs.push(rootDir)
     mkdirSync(userConfigDir, { recursive: true })
     mkdirSync(projectConfigDir, { recursive: true })
-    writeFileSync(legacyConfigPath, JSON.stringify({ agents: { oracle: { model: "openai/gpt-5.4" } } }))
+    writeFileSync(legacyConfigPath, JSON.stringify({ agents: { "ratu-kidul": { model: "openai/gpt-5.4" } } }))
 
     // Make the directory read-only so migration write fails
     // (simulates Windows file lock / permission issues)
@@ -377,7 +377,7 @@ describe("loadPluginConfig", () => {
     spyOn(shared, "getOpenCodeConfigDir").mockReturnValue(userConfigDir)
 
     // when
-    let config: OhMyOpenCodeConfig
+    let config: ParaHyangConfig
     try {
       config = loadPluginConfig(projectDir, {})
     } finally {
@@ -388,7 +388,7 @@ describe("loadPluginConfig", () => {
     }
 
     // then - should still load the config from legacy path
-    expect(config.agents?.oracle?.model).toBe("openai/gpt-5.4")
+    expect(config.agents?.["ratu-kidul"]?.model).toBe("openai/gpt-5.4")
   })
 
   it("should load migrated legacy project config on the first load", () => {
@@ -397,13 +397,13 @@ describe("loadPluginConfig", () => {
     const userConfigDir = join(rootDir, "user-config")
     const projectDir = join(rootDir, "project")
     const projectConfigDir = join(projectDir, ".opencode")
-    const legacyConfigPath = join(projectConfigDir, "oh-my-opencode.jsonc")
-    const canonicalConfigPath = join(projectConfigDir, "oh-my-openagent.jsonc")
+    const legacyConfigPath = join(projectConfigDir, "oh-my-openagent.jsonc")
+    const canonicalConfigPath = join(projectConfigDir, "para-hyang.jsonc")
 
     tempDirs.push(rootDir)
     mkdirSync(userConfigDir, { recursive: true })
     mkdirSync(projectConfigDir, { recursive: true })
-    writeFileSync(legacyConfigPath, JSON.stringify({ agents: { oracle: { model: "openai/gpt-5.4" } } }))
+    writeFileSync(legacyConfigPath, JSON.stringify({ agents: { "ratu-kidul": { model: "openai/gpt-5.4" } } }))
 
     spyOn(shared, "getOpenCodeConfigDir").mockReturnValue(userConfigDir)
 
@@ -413,6 +413,6 @@ describe("loadPluginConfig", () => {
     // then
     expect(existsSync(legacyConfigPath)).toBe(false)
     expect(existsSync(canonicalConfigPath)).toBe(true)
-    expect(config.agents?.oracle?.model).toBe("openai/gpt-5.4")
+    expect(config.agents?.["ratu-kidul"]?.model).toBe("openai/gpt-5.4")
   })
 })

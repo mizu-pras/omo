@@ -5,7 +5,7 @@ import { injectContinuation } from "./continuation-injection"
 import { OMO_INTERNAL_INITIATOR_MARKER } from "../../shared/internal-initiator-marker"
 
 describe("injectContinuation", () => {
-  test("preserves the registered built-in agent name before promptAsync", async () => {
+  test("canonicalizes canonical display names before promptAsync", async () => {
     // given
     let capturedAgent: string | undefined
     const ctx = {
@@ -33,14 +33,14 @@ describe("injectContinuation", () => {
       ctx: ctx as never,
       sessionID: "ses_display_name_agent",
       resolvedInfo: {
-        agent: "Sisyphus - Ultraworker",
+        agent: "Aji Saka",
         model: { providerID: "anthropic", modelID: "claude-sonnet-4-20250514" },
       },
       sessionStateStore: sessionStateStore as never,
     })
 
     // then
-    expect(capturedAgent).toBe("Sisyphus - Ultraworker")
+    expect(capturedAgent).toBe("aji-saka")
   })
 
   test("inherits tools from resolved message info when reinjecting", async () => {

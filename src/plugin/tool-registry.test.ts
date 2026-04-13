@@ -1,7 +1,7 @@
 import { describe, expect, mock, spyOn, test } from "bun:test"
 import { tool } from "@opencode-ai/plugin"
 
-import type { OhMyOpenCodeConfig } from "../config"
+import type { ParaHyangConfig } from "../config"
 import * as openclawRuntimeDispatch from "../openclaw/runtime-dispatch"
 import type { ToolsRecord } from "./types"
 
@@ -54,7 +54,7 @@ const trackedPaneBySession = new Map<string, string>()
 const { createToolRegistry, trimToolsToCap } = await import("./tool-registry")
 const dispatchOpenClawEvent = spyOn(openclawRuntimeDispatch, "dispatchOpenClawEvent")
 
-function createPluginConfig(overrides: Partial<OhMyOpenCodeConfig> = {}): OhMyOpenCodeConfig {
+function createPluginConfig(overrides: Partial<ParaHyangConfig> = {}): ParaHyangConfig {
   return {
     git_master: {
       commit_footer: false,

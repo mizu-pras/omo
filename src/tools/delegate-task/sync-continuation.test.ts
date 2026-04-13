@@ -357,20 +357,24 @@ describe("executeSyncContinuation - toast cleanup error paths", () => {
     expect(removeTaskCalls.length).toBe(0)
   })
 
-  test("includes subagent in task_metadata when agent info is present in session messages", async () => {
-    //#given - mock session messages with agent info on the last assistant message
+  test("canonicalizes display-form Kanjeng Ratu Kidul in task metadata and tools", async () => {
+    //#given - mock session messages with display-form agent info on the last assistant message
+    const promptAsyncCalls: Array<{ path: { id: string }; body: Record<string, unknown> }> = []
     const mockClient = {
       session: {
         messages: async () => ({
           data: [
-            { info: { id: "msg_001", role: "user", time: { created: 1000 }, agent: "oracle" } },
+            { info: { id: "msg_001", role: "user", time: { created: 1000 }, agent: "Kanjeng Ratu Kidul" } },
             {
-              info: { id: "msg_002", role: "assistant", time: { created: 2000 }, finish: "end_turn", agent: "oracle", providerID: "openai", modelID: "gpt-5.4" },
+              info: { id: "msg_002", role: "assistant", time: { created: 2000 }, finish: "end_turn", agent: "Kanjeng Ratu Kidul", providerID: "openai", modelID: "gpt-5.4" },
               parts: [{ type: "text", text: "Response" }],
             },
           ],
         }),
-        promptAsync: async () => ({}),
+        promptAsync: async (input: { path: { id: string }; body: Record<string, unknown> }) => {
+          promptAsyncCalls.push(input)
+          return {}
+        },
         status: async () => ({
           data: { ses_test: { type: "idle" } },
         }),
@@ -402,12 +406,76 @@ describe("executeSyncContinuation - toast cleanup error paths", () => {
       run_in_background: false,
     }
 
-    //#when - executeSyncContinuation completes with agent info in messages
+    //#when - executeSyncContinuation completes with display-form agent info in messages
     const result = await executeSyncContinuation(args, mockCtx, mockExecutorCtx, deps)
 
-    //#then - task_metadata should contain subagent field with the agent name
+    //#then - task_metadata and outgoing dispatch should use canonical agent name
+    expect(promptAsyncCalls).toHaveLength(1)
+    expect(promptAsyncCalls[0]?.body.agent).toBe("ratu-kidul")
     expect(result).toContain("<task_metadata>")
-    expect(result).toContain("subagent: oracle")
+    expect(result).toContain("subagent: ratu-kidul")
+    expect(result).toContain("session_id: ses_test_12345678")
+  })
+
+  test("canonicalizes display-form Dewi Sri in task metadata and task tools", async () => {
+    //#given - mock session messages with display-form plan-family agent info
+    const promptAsyncCalls: Array<{ path: { id: string }; body: Record<string, unknown> }> = []
+    const mockClient = {
+      session: {
+        messages: async () => ({
+          data: [
+            { info: { id: "msg_001", role: "user", time: { created: 1000 }, agent: "Dewi Sri" } },
+            {
+              info: { id: "msg_002", role: "assistant", time: { created: 2000 }, finish: "end_turn", agent: "Dewi Sri" },
+              parts: [{ type: "text", text: "Response" }],
+            },
+          ],
+        }),
+        promptAsync: async (input: { path: { id: string }; body: Record<string, unknown> }) => {
+          promptAsyncCalls.push(input)
+          return {}
+        },
+        status: async () => ({
+          data: { ses_test: { type: "idle" } },
+        }),
+      },
+    }
+
+    const { executeSyncContinuation } = require("./sync-continuation")
+
+    const deps = {
+      pollSyncSession: async () => null,
+      fetchSyncResult: async () => ({ ok: true as const, textContent: "Result" }),
+    }
+
+    const mockCtx = {
+      sessionID: "parent-session",
+      callID: "call-123",
+      metadata: () => {},
+    }
+
+    const mockExecutorCtx = {
+      client: mockClient,
+      syncPollTimeoutMs: 100,
+    }
+
+    const args = {
+      session_id: "ses_test_12345678",
+      prompt: "continue planning",
+      description: "resume plan task",
+      load_skills: [],
+      run_in_background: false,
+    }
+
+    //#when - executeSyncContinuation completes with display-form plan-family agent info
+    const result = await executeSyncContinuation(args, mockCtx, mockExecutorCtx, deps)
+
+    //#then - canonical agent should be dewi-sri and task delegation should remain enabled
+    expect(promptAsyncCalls).toHaveLength(1)
+    expect(promptAsyncCalls[0]?.body.agent).toBe("dewi-sri")
+    expect(promptAsyncCalls[0]?.body.tools && typeof promptAsyncCalls[0]?.body.tools === "object").toBe(true)
+    expect((promptAsyncCalls[0]?.body.tools as Record<string, unknown>).task).toBe(true)
+    expect(result).toContain("subagent: dewi-sri")
     expect(result).toContain("session_id: ses_test_12345678")
   })
 
@@ -549,7 +617,7 @@ describe("executeSyncContinuation - toast cleanup error paths", () => {
                 role: "assistant",
                 time: { created: 2000 },
                 finish: "end_turn",
-                agent: "librarian",
+                agent: "pujangga",
               },
               parts: [{ type: "text", text: "Response" }],
             },
@@ -606,7 +674,7 @@ describe("executeSyncContinuation - toast cleanup error paths", () => {
   })
 
   test("keeps plan-family task delegation available during sync continuation", async () => {
-    //#given - a resumed plan-family session should keep its intended task capability
+    //#given - a resumed legacy prometheus session should keep its intended task capability
     const promptAsyncCalls: Array<{ path: { id: string }; body: Record<string, unknown> }> = []
     const mockClient = {
       session: {
@@ -619,7 +687,7 @@ describe("executeSyncContinuation - toast cleanup error paths", () => {
                 role: "assistant",
                 time: { created: 2000 },
                 finish: "end_turn",
-                agent: "prometheus",
+                agent: "dewi-sri",
               },
               parts: [{ type: "text", text: "Response" }],
             },
@@ -666,6 +734,7 @@ describe("executeSyncContinuation - toast cleanup error paths", () => {
 
     //#then
     expect(promptAsyncCalls).toHaveLength(1)
+    expect(promptAsyncCalls[0]?.body.agent).toBe("dewi-sri")
     expect(promptAsyncCalls[0]?.body.tools).toEqual({
       task: true,
       call_omo_agent: true,

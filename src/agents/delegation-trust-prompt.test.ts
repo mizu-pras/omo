@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
-import { createSisyphusAgent } from "./sisyphus"
-import { createHephaestusAgent } from "./hephaestus"
-import { buildSisyphusJuniorPrompt } from "./sisyphus-junior/agent"
+import { createSisyphusAgent } from "./ismaya"
+import { createHephaestusAgent } from "./togog"
+import { buildSisyphusJuniorPrompt } from "./cenil/agent"
 import {
   buildAntiDuplicationSection,
   buildExploreSection,
@@ -9,12 +9,12 @@ import {
 } from "./dynamic-agent-prompt-builder"
 
 const exploreAgent = {
-  name: "explore",
+  name: "nayagenggong",
   description: "Contextual grep specialist",
   metadata: {
     category: "advisor",
     cost: "FREE",
-    promptAlias: "Explore",
+    promptAlias: "Nayagenggong",
     triggers: [],
     useWhen: ["Multiple search angles needed"],
     avoidWhen: ["Single keyword search is enough"],

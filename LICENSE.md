@@ -1,5 +1,7 @@
 # License
 
+MODIFIED - This is a modified version of the original work by code-yeongyu, adapted for the Para Hyang fork. Original attribution and SUL-1.0 license terms remain in effect below.
+
 Portions of this software are licensed as follows:
 
 - All third party components incorporated into the oh-my-opencode Software are licensed under the original license

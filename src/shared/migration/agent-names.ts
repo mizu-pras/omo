@@ -1,54 +1,84 @@
 export const AGENT_NAME_MAP: Record<string, string> = {
-  // Sisyphus variants → "sisyphus"
-  omo: "sisyphus",
-  OmO: "sisyphus",
-  Sisyphus: "sisyphus",
-  sisyphus: "sisyphus",
+  // Sisyphus variants → "ismaya"
+  omo: "ismaya",
+  OmO: "ismaya",
+  Sisyphus: "ismaya",
+  sisyphus: "ismaya",
+  SISYPHUS: "ismaya",
+  "Sisyphus - Ultraworker": "ismaya",
+  "sisyphus - ultraworker": "ismaya",
 
-  // Prometheus variants → "prometheus"
-  "OmO-Plan": "prometheus",
-  "omo-plan": "prometheus",
-  "Planner-Sisyphus": "prometheus",
-  "planner-sisyphus": "prometheus",
-  "Prometheus - Plan Builder": "prometheus",
-  prometheus: "prometheus",
+  // Prometheus variants → "dewi-sri"
+  "OmO-Plan": "dewi-sri",
+  "omo-plan": "dewi-sri",
+  "Planner-Sisyphus": "dewi-sri",
+  "planner-sisyphus": "dewi-sri",
+  "Prometheus - Plan Builder": "dewi-sri",
+  prometheus: "dewi-sri",
+  Prometheus: "dewi-sri",
 
-  // Atlas variants → "atlas"
-  "orchestrator-sisyphus": "atlas",
-  Atlas: "atlas",
-  atlas: "atlas",
+  // Atlas variants → "aji-saka"
+  "orchestrator-sisyphus": "aji-saka",
+  Atlas: "aji-saka",
+  atlas: "aji-saka",
+  "Atlas - Plan Executor": "aji-saka",
+  "atlas - plan executor": "aji-saka",
 
-  // Metis variants → "metis"
-  "plan-consultant": "metis",
-  "Metis - Plan Consultant": "metis",
-  metis: "metis",
+  // Metis variants → "jayabaya"
+  "plan-consultant": "jayabaya",
+  "Metis - Plan Consultant": "jayabaya",
+  metis: "jayabaya",
+  Metis: "jayabaya",
 
-  // Momus variants → "momus"
-  "Momus - Plan Critic": "momus",
-  momus: "momus",
+  // Momus variants → "sabdapalon"
+  "Momus - Plan Critic": "sabdapalon",
+  momus: "sabdapalon",
+  Momus: "sabdapalon",
 
-  // Sisyphus-Junior → "sisyphus-junior"
-  "Sisyphus-Junior": "sisyphus-junior",
-  "sisyphus-junior": "sisyphus-junior",
+  // Sisyphus-Junior → "cenil"
+  "Sisyphus-Junior": "cenil",
+  "sisyphus-junior": "cenil",
+  "sisyphus_junior": "cenil",
+  SisyphusJunior: "cenil",
 
-  // Already lowercase - passthrough
+  // Hephaestus variants → "togog"
+  Hephaestus: "togog",
+  hephaestus: "togog",
+
+  // Oracle variants → "ratu-kidul"
+  Oracle: "ratu-kidul",
+  oracle: "ratu-kidul",
+
+  // Librarian variants → "pujangga"
+  Librarian: "pujangga",
+  librarian: "pujangga",
+
+  // Explore variants → "nayagenggong"
+  Explore: "nayagenggong",
+  explore: "nayagenggong",
+
+  // Multimodal-Looker variants → "surya"
+  "Multimodal-Looker": "surya",
+  "multimodal-looker": "surya",
+  "multimodal_looker": "surya",
+  MultimodalLooker: "surya",
+
+  // Passthrough
   build: "build",
-  oracle: "oracle",
-  librarian: "librarian",
-  explore: "explore",
-  "multimodal-looker": "multimodal-looker",
 }
 
 export const BUILTIN_AGENT_NAMES = new Set([
-  "sisyphus", // was "Sisyphus"
-  "oracle",
-  "librarian",
-  "explore",
-  "multimodal-looker",
-  "metis", // was "Metis - Plan Consultant"
-  "momus", // was "Momus - Plan Critic"
-  "prometheus", // was "Prometheus - Plan Builder"
-  "atlas", // was "Atlas"
+  "ismaya", // was "Sisyphus"
+  "ratu-kidul", // was "oracle"
+  "pujangga", // was "librarian"
+  "nayagenggong", // was "explore"
+  "surya", // was "multimodal-looker"
+  "jayabaya", // was "Metis - Plan Consultant"
+  "sabdapalon", // was "Momus - Plan Critic"
+  "dewi-sri", // was "Prometheus - Plan Builder"
+  "aji-saka", // was "Atlas"
+  "togog", // was "Hephaestus"
+  "cenil", // was "Sisyphus-Junior"
   "build",
 ])
 

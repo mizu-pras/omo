@@ -1,10 +1,10 @@
 import pc from "picocolors"
 import type { RunOptions } from "./types"
-import type { OhMyOpenCodeConfig } from "../../config"
+import type { ParaHyangConfig } from "../../config"
 import { getAgentConfigKey, getAgentDisplayName } from "../../shared/agent-display-names"
 
-const CORE_AGENT_ORDER = ["sisyphus", "hephaestus", "prometheus", "atlas"] as const
-const DEFAULT_AGENT = "sisyphus"
+const CORE_AGENT_ORDER = ["ismaya", "togog", "dewi-sri", "aji-saka"] as const
+const DEFAULT_AGENT = "ismaya"
 
 type EnvVars = Record<string, string | undefined>
 type CoreAgentKey = (typeof CORE_AGENT_ORDER)[number]
@@ -29,7 +29,7 @@ const normalizeAgentName = (agent?: string): ResolvedAgent | undefined => {
   }
 }
 
-const isAgentDisabled = (agentConfigKey: string, config: OhMyOpenCodeConfig): boolean => {
+const isAgentDisabled = (agentConfigKey: string, config: ParaHyangConfig): boolean => {
   const lowered = agentConfigKey.toLowerCase()
   if (lowered === DEFAULT_AGENT && config.sisyphus_agent?.disabled === true) {
     return true
@@ -39,7 +39,7 @@ const isAgentDisabled = (agentConfigKey: string, config: OhMyOpenCodeConfig): bo
   )
 }
 
-const pickFallbackAgent = (config: OhMyOpenCodeConfig): CoreAgentKey => {
+const pickFallbackAgent = (config: ParaHyangConfig): CoreAgentKey => {
   for (const agent of CORE_AGENT_ORDER) {
     if (!isAgentDisabled(agent, config)) {
       return agent
@@ -50,7 +50,7 @@ const pickFallbackAgent = (config: OhMyOpenCodeConfig): CoreAgentKey => {
 
 export const resolveRunAgent = (
   options: RunOptions,
-  pluginConfig: OhMyOpenCodeConfig,
+  pluginConfig: ParaHyangConfig,
   env: EnvVars = process.env
 ): string => {
   const cliAgent = normalizeAgentName(options.agent)

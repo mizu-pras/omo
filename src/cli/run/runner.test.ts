@@ -1,11 +1,11 @@
 /// <reference types="bun-types" />
 
 import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test"
-import { OhMyOpenCodeConfigSchema, type OhMyOpenCodeConfig } from "../../config"
+import { ParaHyangConfigSchema, type ParaHyangConfig } from "../../config"
 import { resolveRunAgent } from "./agent-resolver"
 
-const createConfig = (overrides: Partial<OhMyOpenCodeConfig> = {}): OhMyOpenCodeConfig =>
-  OhMyOpenCodeConfigSchema.parse(overrides)
+const createConfig = (overrides: Partial<ParaHyangConfig> = {}): ParaHyangConfig =>
+  ParaHyangConfigSchema.parse(overrides)
 
 describe("resolveRunAgent", () => {
   let consoleLogSpy: ReturnType<typeof spyOn>
@@ -20,7 +20,7 @@ describe("resolveRunAgent", () => {
 
   it("uses CLI agent over env and config", () => {
     // given
-    const config = createConfig({ default_run_agent: "prometheus" })
+    const config = createConfig({ default_run_agent: "dewi-sri" })
     const env = { OPENCODE_DEFAULT_AGENT: "Atlas" }
 
     // when
@@ -31,19 +31,19 @@ describe("resolveRunAgent", () => {
     )
 
     // then
-    expect(agent).toBe("Hephaestus - Deep Agent")
+    expect(agent).toBe("Togog")
   })
 
   it("uses env agent over config", () => {
     // given
-    const config = createConfig({ default_run_agent: "prometheus" })
+    const config = createConfig({ default_run_agent: "dewi-sri" })
     const env = { OPENCODE_DEFAULT_AGENT: "Atlas" }
 
     // when
     const agent = resolveRunAgent({ message: "test" }, config, env)
 
     // then
-    expect(agent).toBe("Atlas - Plan Executor")
+    expect(agent).toBe("Aji Saka")
   })
 
   it("uses config agent over default", () => {
@@ -54,7 +54,7 @@ describe("resolveRunAgent", () => {
     const agent = resolveRunAgent({ message: "test" }, config, {})
 
     // then
-    expect(agent).toBe("Prometheus - Plan Builder")
+    expect(agent).toBe("Dewi Sri")
   })
 
   it("falls back to sisyphus when none set", () => {
@@ -65,18 +65,18 @@ describe("resolveRunAgent", () => {
     const agent = resolveRunAgent({ message: "test" }, config, {})
 
     // then
-    expect(agent).toBe("Sisyphus - Ultraworker")
+    expect(agent).toBe("Sang Hyang Ismaya")
   })
 
   it("skips disabled sisyphus for next available core agent", () => {
     // given
-    const config = createConfig({ disabled_agents: ["sisyphus"] })
+    const config = createConfig({ disabled_agents: ["ismaya"] })
 
     // when
     const agent = resolveRunAgent({ message: "test" }, config, {})
 
     // then
-    expect(agent).toBe("Hephaestus - Deep Agent")
+    expect(agent).toBe("Togog")
   })
 
   it("maps display-name style default_run_agent values to canonical display names", () => {
@@ -87,7 +87,7 @@ describe("resolveRunAgent", () => {
     const agent = resolveRunAgent({ message: "test" }, config, {})
 
     // then
-    expect(agent).toBe("Sisyphus - Ultraworker")
+    expect(agent).toBe("Sang Hyang Ismaya")
   })
 })
 

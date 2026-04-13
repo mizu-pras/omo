@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { parse, ParseError, printParseErrorCode } from "jsonc-parser"
 
-import { CONFIG_BASENAME, LEGACY_CONFIG_BASENAME } from "./plugin-identity"
+import { CONFIG_BASENAME, LEGACY_CONFIG_BASENAME, SECONDARY_LEGACY_CONFIG_BASENAME } from "./plugin-identity"
 
 export interface JsoncParseResult<T> {
   data: T | null
@@ -78,21 +78,47 @@ export function detectConfigFile(basePath: string): {
 export function detectPluginConfigFile(dir: string): {
   format: "json" | "jsonc" | "none"
   path: string
+  legacyPaths: string[]
   legacyPath?: string
 } {
   const canonicalResult = detectConfigFile(join(dir, CONFIG_BASENAME))
   const legacyResult = detectConfigFile(join(dir, LEGACY_CONFIG_BASENAME))
+  const secondaryLegacyResult = detectConfigFile(join(dir, SECONDARY_LEGACY_CONFIG_BASENAME))
+
+  const legacyPaths = [legacyResult, secondaryLegacyResult]
+    .filter((result) => result.format !== "none")
+    .map((result) => result.path)
 
   if (canonicalResult.format !== "none") {
     return {
       ...canonicalResult,
-      legacyPath: legacyResult.format !== "none" ? legacyResult.path : undefined,
+      legacyPaths,
+      legacyPath: legacyPaths[0],
     }
   }
 
   if (legacyResult.format !== "none") {
-    return legacyResult
+    const remainingLegacyPaths = secondaryLegacyResult.format !== "none"
+      ? [secondaryLegacyResult.path]
+      : []
+
+    return {
+      ...legacyResult,
+      legacyPaths: remainingLegacyPaths,
+      legacyPath: remainingLegacyPaths[0],
+    }
   }
 
-  return { format: "none", path: join(dir, `${CONFIG_BASENAME}.json`) }
+  if (secondaryLegacyResult.format !== "none") {
+    return {
+      ...secondaryLegacyResult,
+      legacyPaths: [],
+    }
+  }
+
+  return {
+    format: "none",
+    path: join(dir, `${CONFIG_BASENAME}.json`),
+    legacyPaths: [],
+  }
 }

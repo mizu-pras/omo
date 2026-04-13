@@ -79,9 +79,9 @@ export function createStartWorkHook(ctx: PluginInput) {
     }
 
     log(`[${HOOK_NAME}] Processing start-work command`, { sessionID: input.sessionID })
-    const activeAgent = isAgentRegistered("atlas")
-      ? "atlas"
-      : "sisyphus"
+    const activeAgent = isAgentRegistered("aji-saka")
+      ? "aji-saka"
+      : "ismaya"
     updateSessionAgent(input.sessionID, activeAgent)
     if (output.message) {
       output.message["agent"] = resolveRegisteredAgentName(activeAgent) ?? activeAgent

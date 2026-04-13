@@ -55,7 +55,7 @@ describe("keyword-detector ultrawork edge trigger", () => {
     }
 
     // when
-    await hook["chat.message"]({ sessionID: "main-session", agent: "sisyphus" }, output)
+    await hook["chat.message"]({ sessionID: "main-session", agent: "ismaya" }, output)
 
     // then
     expect(toastCalls).toContain("Ultrawork Mode Activated")
@@ -79,7 +79,7 @@ describe("keyword-detector ultrawork edge trigger", () => {
     }
 
     // when
-    await hook["chat.message"]({ sessionID: "main-session", agent: "sisyphus" }, output)
+    await hook["chat.message"]({ sessionID: "main-session", agent: "ismaya" }, output)
 
     // then
     expect(toastCalls).toContain("Ultrawork Mode Activated")
@@ -103,7 +103,7 @@ describe("keyword-detector ultrawork edge trigger", () => {
     }
 
     // when
-    await hook["chat.message"]({ sessionID: "main-session", agent: "sisyphus" }, output)
+    await hook["chat.message"]({ sessionID: "main-session", agent: "ismaya" }, output)
 
     // then
     expect(toastCalls).toContain("Ultrawork Mode Activated")
@@ -126,7 +126,7 @@ describe("keyword-detector ultrawork edge trigger", () => {
     }
 
     // when
-    await hook["chat.message"]({ sessionID: "main-session", agent: "sisyphus" }, output)
+    await hook["chat.message"]({ sessionID: "main-session", agent: "ismaya" }, output)
 
     // then
     expect(toastCalls).toContain("Ultrawork Mode Activated")

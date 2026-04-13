@@ -80,9 +80,9 @@ function getLibcFamily() {
 function getPackageBaseName() {
   try {
     const packageJson = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
-    return packageJson.name || "oh-my-opencode";
+    return packageJson.name || "para-hyang";
   } catch {
-    return "oh-my-opencode";
+    return "para-hyang";
   }
 }
 
@@ -94,7 +94,7 @@ function main() {
   // Check opencode version requirement
   const versionCheck = checkOpenCodeVersion();
   if (versionCheck.version && !versionCheck.ok) {
-    console.warn(`⚠ oh-my-opencode requires OpenCode >= ${MIN_OPENCODE_VERSION}`);
+    console.warn(`⚠ para-hyang requires OpenCode >= ${MIN_OPENCODE_VERSION}`);
     console.warn(`  Detected: ${versionCheck.version}`);
     console.warn(`  Please update OpenCode to avoid compatibility issues.`);
   }
@@ -122,9 +122,9 @@ function main() {
       );
     }
 
-    console.log(`✓ oh-my-opencode binary installed for ${platform}-${arch} (${resolvedPackage})`);
+    console.log(`✓ para-hyang binary installed for ${platform}-${arch} (${resolvedPackage})`);
   } catch (error) {
-    console.warn(`⚠ oh-my-opencode: ${error.message}`);
+    console.warn(`⚠ para-hyang: ${error.message}`);
     console.warn(`  The CLI may not work on this platform.`);
     // Don't fail installation - let user try anyway
   }

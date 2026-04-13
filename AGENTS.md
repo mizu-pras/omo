@@ -1,23 +1,23 @@
-# oh-my-opencode — OpenCode Plugin
+# Para Hyang — OpenCode Plugin
 
 **Generated:** 2026-04-09 | **Commit:** dc7a4680 | **Branch:** dev
 
 ## OVERVIEW
 
-OpenCode plugin (npm: `oh-my-opencode`) extending Claude Code with multi-agent orchestration, 52 lifecycle hooks, 26 tools, skill/command/MCP systems, Hashline edit tool, IntentGate classifier, and Claude Code compatibility. ~1600 TypeScript source files. Dual-published as `oh-my-opencode` + `oh-my-openagent` during transition.
+OpenCode plugin (npm: `para-hyang`) extending Claude Code with multi-agent orchestration, 52 lifecycle hooks, 26 tools, skill/command/MCP systems, Hashline edit tool, IntentGate classifier, and Claude Code compatibility. ~1600 TypeScript source files.
 
 ## STRUCTURE
 
 ```
-oh-my-opencode/
+para-hyang/
 ├── src/
 │   ├── index.ts              # Plugin entry: loadConfig → createManagers → createTools → createHooks → createPluginInterface
 │   ├── plugin-config.ts      # JSONC multi-level config: user → project → defaults (Zod v4)
-│   ├── agents/               # 11 agents (Sisyphus, Hephaestus, Oracle, Librarian, Explore, Atlas, Prometheus, Metis, Momus, Multimodal-Looker, Sisyphus-Junior)
+│   ├── agents/               # 11 agents (ismaya/Sang Hyang Ismaya, togog/Togog, ratu-kidul/Kanjeng Ratu Kidul, pujangga/Ki Pujangga, nayagenggong/Nayagenggong, aji-saka/Aji Saka, dewi-sri/Dewi Sri, jayabaya/Jayabaya, sabdapalon/Sabdapalon, surya/Batara Surya, cenil/Cenil)
 │   ├── hooks/                # 52 lifecycle hooks across dedicated modules and standalone files
 │   ├── tools/                # 26 tools across 16 directories (includes Hashline edit with LINE#ID content hashing)
 │   ├── features/             # 19 feature modules (background-agent, skill-loader, tmux, MCP-OAuth, skill-mcp-manager, etc.)
-│   ├── shared/               # 170+ utility files (barrel-exported, logger → /tmp/oh-my-opencode.log)
+│   ├── shared/               # 170+ utility files (barrel-exported, logger → /tmp/para-hyang.log)
 │   ├── config/               # Zod v4 schema system (27 files)
 │   ├── cli/                  # CLI: install, run, doctor, mcp-oauth (Commander.js)
 │   ├── mcp/                  # 3 built-in remote MCPs (websearch, context7, grep_app)
@@ -26,14 +26,14 @@ oh-my-opencode/
 │   └── openclaw/             # Bidirectional external integration (Discord/Telegram/webhook/command)
 ├── packages/                 # 11 platform-specific compiled binaries (darwin/linux/windows, AVX2 + baseline variants)
 ├── script/                   # Build/publish automation (singular, not scripts/)
-├── .sisyphus/                # AI agent workspace (rules, plans, tasks, notepads)
+├── .ismaya/                # AI agent workspace (rules, plans, tasks, notepads)
 └── .local-ignore/            # Dev-only test fixtures + PR worktrees
 ```
 
 ## INITIALIZATION FLOW
 
 ```
-OhMyOpenCodePlugin(ctx)
+ParaHyangPlugin(ctx)
   ├─→ loadPluginConfig()         # JSONC parse → project/user merge → Zod validate → migrate
   ├─→ createManagers()           # TmuxSessionManager, BackgroundManager, SkillMcpManager, ConfigHandler
   ├─→ createTools()              # SkillContext + AvailableCategories + ToolRegistry (26 tools)
@@ -51,7 +51,7 @@ OhMyOpenCodePlugin(ctx)
 | `chat.params` | Anthropic effort level, think mode, runtime fallback override |
 | `chat.headers` | Copilot x-initiator header injection |
 | `event` | Session lifecycle (created, deleted, idle, error), openclaw dispatch, runtime fallback |
-| `tool.execute.before` | Pre-tool hooks (file guard, label truncator, rules injector, prometheus md-only) |
+| `tool.execute.before` | Pre-tool hooks (file guard, label truncator, rules injector, dewi-sri md-only) |
 | `tool.execute.after` | Post-tool hooks (output truncation, comment checker, hashline read enhancer) |
 | `experimental.chat.messages.transform` | Context injection, thinking block validation, tool pair validation |
 | `experimental.session.compacting` | Context + todo preservation during compaction |
@@ -69,7 +69,7 @@ OhMyOpenCodePlugin(ctx)
 | Add new command | `src/features/builtin-commands/` | Template in templates/ |
 | Add new CLI command | `src/cli/cli-program.ts` | Commander.js subcommand |
 | Add new doctor check | `src/cli/doctor/checks/` | Register in checks/index.ts |
-| Modify config schema | `src/config/schema/` + update root schema | Zod v4, add to OhMyOpenCodeConfigSchema |
+| Modify config schema | `src/config/schema/` + update root schema | Zod v4, add to ParaHyangConfigSchema |
 | Add new category | `src/tools/delegate-task/constants.ts` | DEFAULT_CATEGORIES + CATEGORY_MODEL_REQUIREMENTS |
 | Debug provider errors | `src/hooks/runtime-fallback/` | Reactive error recovery (distinct from model-fallback) |
 | External notifications | `src/openclaw/` | Bidirectional Discord/Telegram/webhook integration |
@@ -78,7 +78,7 @@ OhMyOpenCodePlugin(ctx)
 ## MULTI-LEVEL CONFIG
 
 ```
-Project (.opencode/oh-my-opencode.jsonc)  →  User (~/.config/opencode/oh-my-opencode.jsonc)  →  Defaults
+Project (.opencode/para-hyang.jsonc)  →  User (~/.config/opencode/para-hyang.jsonc)  →  Defaults
 ```
 
 - `agents`, `categories`, `claude_code`: deep merged recursively (prototype-pollution-safe)
@@ -112,7 +112,6 @@ Fields: agents (14 overridable, 21 fields each), categories (8 built-in + custom
 - **Module structure**: index.ts barrel exports, no catch-all files (utils.ts, helpers.ts banned), 200 LOC soft limit
 - **Imports**: relative within module, barrel imports across modules (`import { log } from "./shared"`)
 - **No path aliases**: no `@/` -- relative imports only
-- **Dual package**: `oh-my-opencode` + `oh-my-openagent` published simultaneously (transition period)
 
 ## ANTI-PATTERNS
 
@@ -136,9 +135,9 @@ bun test                    # Bun test suite
 bun run build              # Build plugin (ESM + declarations + schema)
 bun run build:all          # Build + platform binaries
 bun run typecheck           # tsc --noEmit
-bunx oh-my-opencode install # Interactive setup
-bunx oh-my-opencode doctor  # Health diagnostics
-bunx oh-my-opencode run     # Non-interactive session
+bunx para-hyang install # Interactive setup
+bunx para-hyang doctor  # Health diagnostics
+bunx para-hyang run     # Non-interactive session
 ```
 
 ## CI/CD
@@ -146,16 +145,15 @@ bunx oh-my-opencode run     # Non-interactive session
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | ci.yml | push/PR to master/dev | Tests (split: mock-heavy isolated + batch), typecheck, build, schema auto-commit |
-| publish.yml | manual dispatch | Version bump, dual npm publish (oh-my-opencode + oh-my-openagent), platform binaries, GitHub release |
+| publish.yml | manual dispatch | Version bump, npm publish (para-hyang), platform binaries, GitHub release |
 | publish-platform.yml | called by publish | 11 platform binaries via bun compile (darwin/linux/windows) |
-| sisyphus-agent.yml | @mention / dispatch | AI agent handles issues/PRs |
 | refresh-model-capabilities.yml | weekly schedule / dispatch | Auto-refresh model capabilities from models.dev API |
 | cla.yml | issue_comment/PR | CLA assistant for contributors |
 | lint-workflows.yml | push to .github/ | actionlint + shellcheck on workflow files |
 
 ## NOTES
 
-- Logger writes to `/tmp/oh-my-opencode.log` -- check there for debugging
+- Logger writes to `/tmp/para-hyang.log` -- check there for debugging
 - Background tasks: 5 concurrent per model/provider (configurable, circuit breaker support)
 - Plugin load timeout: 10s for Claude Code plugins
 - Model fallback: per-agent chains in `shared/model-requirements.ts`, not a single global priority
@@ -165,7 +163,7 @@ bunx oh-my-opencode run     # Non-interactive session
 - Test setup: `test-setup.ts` preloaded via bunfig.toml, resets session/cache state between tests
 - Test split: `script/run-ci-tests.ts` auto-isolates files using `mock.module()` (plus `src/openclaw/__tests__/reply-listener-discord.test.ts`)
 - 104 barrel export files (index.ts) establish module boundaries
-- Architecture rules enforced via `.sisyphus/rules/modular-code-enforcement.md`
+- Architecture rules enforced via `.ismaya/rules/modular-code-enforcement.md`
 - Windows builds run on `windows-latest` runner (not cross-compiled) to avoid Bun segfaults
 - Platform binaries detect AVX2 + libc family at runtime, fallback to baseline if needed
 - Hashline edit: every Read output tagged with `LINE#ID` content hashes; edits reject on hash mismatch

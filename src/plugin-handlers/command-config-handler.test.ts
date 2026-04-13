@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
 import * as builtinCommands from "../features/builtin-commands";
 import * as commandLoader from "../features/claude-code-command-loader";
 import * as skillLoader from "../features/opencode-skill-loader";
-import type { OhMyOpenCodeConfig } from "../config";
+import type { ParaHyangConfig } from "../config";
 import type { PluginComponents } from "./plugin-components-loader";
 import { applyCommandConfig } from "./command-config-handler";
 import {
@@ -22,8 +22,14 @@ function createPluginComponents(): PluginComponents {
   };
 }
 
-function createPluginConfig(): OhMyOpenCodeConfig {
-  return {};
+function createPluginConfig(): ParaHyangConfig {
+  return {
+    git_master: {
+      commit_footer: false,
+      include_co_authored_by: false,
+      git_env_prefix: "",
+    },
+  };
 }
 
 describe("applyCommandConfig", () => {
@@ -41,18 +47,30 @@ describe("applyCommandConfig", () => {
   let loadGlobalAgentsSkillsSpy: ReturnType<typeof spyOn>;
 
   beforeEach(() => {
-    loadBuiltinCommandsSpy = spyOn(builtinCommands, "loadBuiltinCommands").mockReturnValue({});
-    loadUserCommandsSpy = spyOn(commandLoader, "loadUserCommands").mockResolvedValue({});
-    loadProjectCommandsSpy = spyOn(commandLoader, "loadProjectCommands").mockResolvedValue({});
-    loadOpencodeGlobalCommandsSpy = spyOn(commandLoader, "loadOpencodeGlobalCommands").mockResolvedValue({});
-    loadOpencodeProjectCommandsSpy = spyOn(commandLoader, "loadOpencodeProjectCommands").mockResolvedValue({});
-    discoverConfigSourceSkillsSpy = spyOn(skillLoader, "discoverConfigSourceSkills").mockResolvedValue([]);
-    loadUserSkillsSpy = spyOn(skillLoader, "loadUserSkills").mockResolvedValue({});
-    loadProjectSkillsSpy = spyOn(skillLoader, "loadProjectSkills").mockResolvedValue({});
-    loadOpencodeGlobalSkillsSpy = spyOn(skillLoader, "loadOpencodeGlobalSkills").mockResolvedValue({});
-    loadOpencodeProjectSkillsSpy = spyOn(skillLoader, "loadOpencodeProjectSkills").mockResolvedValue({});
-    loadProjectAgentsSkillsSpy = spyOn(skillLoader, "loadProjectAgentsSkills").mockResolvedValue({});
-    loadGlobalAgentsSkillsSpy = spyOn(skillLoader, "loadGlobalAgentsSkills").mockResolvedValue({});
+    loadBuiltinCommandsSpy = spyOn(builtinCommands, "loadBuiltinCommands");
+    loadBuiltinCommandsSpy.mockReturnValue({});
+    loadUserCommandsSpy = spyOn(commandLoader, "loadUserCommands");
+    loadUserCommandsSpy.mockResolvedValue({});
+    loadProjectCommandsSpy = spyOn(commandLoader, "loadProjectCommands");
+    loadProjectCommandsSpy.mockResolvedValue({});
+    loadOpencodeGlobalCommandsSpy = spyOn(commandLoader, "loadOpencodeGlobalCommands");
+    loadOpencodeGlobalCommandsSpy.mockResolvedValue({});
+    loadOpencodeProjectCommandsSpy = spyOn(commandLoader, "loadOpencodeProjectCommands");
+    loadOpencodeProjectCommandsSpy.mockResolvedValue({});
+    discoverConfigSourceSkillsSpy = spyOn(skillLoader, "discoverConfigSourceSkills");
+    discoverConfigSourceSkillsSpy.mockResolvedValue([]);
+    loadUserSkillsSpy = spyOn(skillLoader, "loadUserSkills");
+    loadUserSkillsSpy.mockResolvedValue({});
+    loadProjectSkillsSpy = spyOn(skillLoader, "loadProjectSkills");
+    loadProjectSkillsSpy.mockResolvedValue({});
+    loadOpencodeGlobalSkillsSpy = spyOn(skillLoader, "loadOpencodeGlobalSkills");
+    loadOpencodeGlobalSkillsSpy.mockResolvedValue({});
+    loadOpencodeProjectSkillsSpy = spyOn(skillLoader, "loadOpencodeProjectSkills");
+    loadOpencodeProjectSkillsSpy.mockResolvedValue({});
+    loadProjectAgentsSkillsSpy = spyOn(skillLoader, "loadProjectAgentsSkills");
+    loadProjectAgentsSkillsSpy.mockResolvedValue({});
+    loadGlobalAgentsSkillsSpy = spyOn(skillLoader, "loadGlobalAgentsSkills");
+    loadGlobalAgentsSkillsSpy.mockResolvedValue({});
   });
 
   afterEach(() => {
@@ -100,14 +118,14 @@ describe("applyCommandConfig", () => {
     expect(commandConfig["agents-global-skill"]?.description).toContain("Agents global skill");
   });
 
-  test("normalizes Atlas command agents to the exported list key used by opencode command routing", async () => {
+  test("normalizes Aji Saka command agents to the exported list key used by opencode command routing", async () => {
     // given
     loadBuiltinCommandsSpy.mockReturnValue({
       "start-work": {
         name: "start-work",
         description: "(builtin) Start work",
         template: "template",
-        agent: "atlas",
+        agent: "aji-saka",
       },
     });
     const config: Record<string, unknown> = { command: {} };
@@ -122,7 +140,7 @@ describe("applyCommandConfig", () => {
 
     // then
     const commandConfig = config.command as Record<string, { agent?: string }>;
-    expect(commandConfig["start-work"]?.agent).toBe(getAgentListDisplayName("atlas"));
+    expect(commandConfig["start-work"]?.agent).toBe(getAgentListDisplayName("aji-saka"));
   });
 
   test("normalizes legacy display-name command agents to the exported list key", async () => {
@@ -132,7 +150,7 @@ describe("applyCommandConfig", () => {
         name: "start-work",
         description: "(builtin) Start work",
         template: "template",
-        agent: getAgentDisplayName("atlas"),
+        agent: getAgentDisplayName("aji-saka"),
       },
     });
     const config: Record<string, unknown> = { command: {} };
@@ -147,6 +165,6 @@ describe("applyCommandConfig", () => {
 
     // then
     const commandConfig = config.command as Record<string, { agent?: string }>;
-    expect(commandConfig["start-work"]?.agent).toBe(getAgentListDisplayName("atlas"));
+    expect(commandConfig["start-work"]?.agent).toBe(getAgentListDisplayName("aji-saka"));
   });
 });

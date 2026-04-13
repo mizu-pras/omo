@@ -47,7 +47,7 @@ function createRestrictedSkill(): LoadedSkill {
       name: "restricted-skill",
       description: "restricted",
       template: "restricted template",
-      agent: "hephaestus",
+      agent: "togog",
     },
     scope: "user",
   }
@@ -102,7 +102,7 @@ describe("executeSlashCommand resolution semantics", () => {
     //#when
     const result = await executeSlashCommand(parsed, {
       skills: [createRestrictedSkill()],
-      agent: "hephaestus",
+      agent: "togog",
     })
 
     //#then

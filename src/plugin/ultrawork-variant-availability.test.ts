@@ -98,7 +98,7 @@ describe("applyUltraworkModelOverrideOnMessage variant guard", () => {
 
     const config = {
       agents: {
-        sisyphus: {
+        ismaya: {
           ultrawork: {
             model: "anthropic/claude-opus-4-6",
             variant: "max",
@@ -118,7 +118,7 @@ describe("applyUltraworkModelOverrideOnMessage variant guard", () => {
     // when
     await applyUltraworkModelOverrideOnMessage(
       config,
-      "sisyphus",
+      "ismaya",
       output,
       { showToast: async () => {} },
       undefined,
@@ -151,7 +151,7 @@ describe("applyUltraworkModelOverrideOnMessage variant guard", () => {
 
     const config = {
       agents: {
-        sisyphus: {
+        ismaya: {
           ultrawork: {
             variant: "max",
           },
@@ -169,7 +169,7 @@ describe("applyUltraworkModelOverrideOnMessage variant guard", () => {
     // when
     await applyUltraworkModelOverrideOnMessage(
       config,
-      "sisyphus",
+      "ismaya",
       output,
       { showToast: async () => {} },
       undefined,

@@ -1,18 +1,18 @@
 import { describe, test, expect } from "bun:test"
-import { PROMETHEUS_SYSTEM_PROMPT } from "./prometheus"
-import { PROMETHEUS_GPT_SYSTEM_PROMPT } from "./prometheus/gpt"
-import { PROMETHEUS_GEMINI_SYSTEM_PROMPT } from "./prometheus/gemini"
+import { PROMETHEUS_SYSTEM_PROMPT } from "./dewi-sri"
+import { PROMETHEUS_GPT_SYSTEM_PROMPT } from "./dewi-sri/gpt"
+import { PROMETHEUS_GEMINI_SYSTEM_PROMPT } from "./dewi-sri/gemini"
 
-describe("PROMETHEUS_SYSTEM_PROMPT Momus invocation policy", () => {
-  test("should direct providing ONLY the file path string when invoking Momus", () => {
+describe("PROMETHEUS_SYSTEM_PROMPT Sabdapalon review policy", () => {
+  test("should mention Sabdapalon review in the planning flow", () => {
     //#given
     const prompt = PROMETHEUS_SYSTEM_PROMPT
 
     //#when / #then
-    expect(prompt.toLowerCase()).toMatch(/momus.*only.*path|path.*only.*momus/)
+    expect(prompt.toLowerCase()).toMatch(/sabdapalon.*review|high accuracy.*sabdapalon/)
   })
 
-  test("should forbid wrapping Momus invocation in explanations or markdown", () => {
+  test("should preserve the no-wrapping guidance for review invocation instructions", () => {
     //#given
     const prompt = PROMETHEUS_SYSTEM_PROMPT
 

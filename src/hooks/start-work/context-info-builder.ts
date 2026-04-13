@@ -224,7 +224,7 @@ function buildPlanDiscoveryContext(params: {
     return contextInfo + `
 ## No Plans Found
 
-No Prometheus plan files found at .sisyphus/plans/
+No Prometheus plan files found at .ismaya/plans/
 Use Prometheus to create a work plan first: /plan "your task"`
   }
 

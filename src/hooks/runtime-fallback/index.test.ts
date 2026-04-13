@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, afterEach, spyOn } from "bun:test"
 import { createRuntimeFallbackHook } from "./index"
-import type { RuntimeFallbackConfig, OhMyOpenCodeConfig } from "../../config"
+import type { RuntimeFallbackConfig, ParaHyangConfig } from "../../config"
 import * as sharedModule from "../../shared"
 import { SessionCategoryRegistry } from "../../shared/session-category-registry"
 
@@ -62,7 +62,7 @@ describe("runtime-fallback", () => {
     }
   }
 
-  function createMockPluginConfigWithCategoryFallback(fallbackModels: string[]): OhMyOpenCodeConfig {
+  function createMockPluginConfigWithCategoryFallback(fallbackModels: string[]): ParaHyangConfig {
     return {
       git_master: {
         commit_footer: true,
@@ -82,7 +82,7 @@ describe("runtime-fallback", () => {
     model: string,
     fallbackModels: string[],
     variant?: string,
-  ): OhMyOpenCodeConfig {
+  ): ParaHyangConfig {
     return {
       git_master: {
         commit_footer: true,
@@ -2348,7 +2348,7 @@ describe("runtime-fallback", () => {
   })
 
   describe("fallback models configuration", () => {
-    function createMockPluginConfigWithAgentFallback(agentName: string, fallbackModels: string[]): OhMyOpenCodeConfig {
+    function createMockPluginConfigWithAgentFallback(agentName: string, fallbackModels: string[]): ParaHyangConfig {
       return {
         git_master: {
           commit_footer: true,
@@ -2364,10 +2364,26 @@ describe("runtime-fallback", () => {
     }
 
     test("should use agent-level fallback_models", async () => {
-      const input = createMockPluginInput()
+      const promptCalls: Array<Record<string, unknown>> = []
+      const input = createMockPluginInput({
+        session: {
+          messages: async () => ({
+            data: [
+              {
+                info: { role: "user" },
+                parts: [{ type: "text", text: "test" }],
+              },
+            ],
+          }),
+          promptAsync: async (args: unknown) => {
+            promptCalls.push(args as Record<string, unknown>)
+            return {}
+          },
+        },
+      })
       const hook = createRuntimeFallbackHook(input, {
         config: createMockConfig({ notify_on_fallback: false }),
-        pluginConfig: createMockPluginConfigWithAgentFallback("oracle", ["openai/gpt-5.4", "google/gemini-3.1-pro"]),
+        pluginConfig: createMockPluginConfigWithAgentFallback("ratu-kidul", ["openai/gpt-5.4", "google/gemini-3.1-pro"]),
       })
       const sessionID = "test-agent-fallback"
 
@@ -2375,7 +2391,7 @@ describe("runtime-fallback", () => {
       await hook.event({
         event: {
           type: "session.created",
-          properties: { info: { id: sessionID, model: "anthropic/claude-opus-4-5", agent: "oracle" } },
+          properties: { info: { id: sessionID, model: "anthropic/claude-opus-4-5", agent: "ratu-kidul" } },
         },
       })
 
@@ -2383,22 +2399,23 @@ describe("runtime-fallback", () => {
       await hook.event({
         event: {
           type: "session.error",
-          properties: { sessionID, error: { statusCode: 503 }, agent: "oracle" },
+          properties: { sessionID, error: { statusCode: 503 }, agent: "ratu-kidul" },
         },
       })
 
       //#then - should prepare fallback to openai/gpt-5.4
-      const fallbackLog = logCalls.find((c) => c.msg.includes("Preparing fallback"))
-      expect(fallbackLog).toBeDefined()
-      expect(fallbackLog?.data).toMatchObject({ from: "anthropic/claude-opus-4-5", to: "openai/gpt-5.4" })
+      expect(promptCalls).toHaveLength(1)
+      const callBody = promptCalls[0]?.body as Record<string, unknown>
+      expect(callBody?.agent).toBe("ratu-kidul")
+      expect(callBody?.model).toEqual({ providerID: "openai", modelID: "gpt-5.4" })
     })
 
     test("should detect agent from sessionID pattern", async () => {
       const hook = createRuntimeFallbackHook(createMockPluginInput(), {
         config: createMockConfig({ notify_on_fallback: false }),
-        pluginConfig: createMockPluginConfigWithAgentFallback("sisyphus", ["openai/gpt-5.4"]),
+        pluginConfig: createMockPluginConfigWithAgentFallback("dewi-sri", ["openai/gpt-5.4"]),
       })
-      const sessionID = "sisyphus-session-123"
+      const sessionID = "dewi-sri-session-123"
 
       await hook.event({
         event: {
@@ -2414,7 +2431,7 @@ describe("runtime-fallback", () => {
         },
       })
 
-      //#then - should detect sisyphus from sessionID and use its fallback
+      //#then - should detect dewi-sri from sessionID and use its fallback
       const fallbackLog = logCalls.find((c) => c.msg.includes("Preparing fallback"))
       expect(fallbackLog).toBeDefined()
       expect(fallbackLog?.data).toMatchObject({ to: "openai/gpt-5.4" })
@@ -2441,7 +2458,7 @@ describe("runtime-fallback", () => {
         }),
         {
           config: createMockConfig({ notify_on_fallback: false }),
-          pluginConfig: createMockPluginConfigWithAgentFallback("prometheus", ["github-copilot/claude-opus-4.6"]),
+          pluginConfig: createMockPluginConfigWithAgentFallback("dewi-sri", ["github-copilot/claude-opus-4.6"]),
         },
       )
       const sessionID = "test-preserve-agent-on-retry"
@@ -2453,14 +2470,14 @@ describe("runtime-fallback", () => {
             sessionID,
             model: "anthropic/claude-opus-4-6",
             error: { statusCode: 503, message: "Service unavailable" },
-            agent: "prometheus",
+            agent: "dewi-sri",
           },
         },
       })
 
       expect(promptCalls.length).toBe(1)
       const callBody = promptCalls[0]?.body as Record<string, unknown>
-      expect(callBody?.agent).toBe("prometheus")
+      expect(callBody?.agent).toBe("dewi-sri")
       expect(callBody?.model).toEqual({ providerID: "github-copilot", modelID: "claude-opus-4.6" })
     })
   })

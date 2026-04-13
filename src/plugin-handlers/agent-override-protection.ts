@@ -1,15 +1,24 @@
+import { getAgentConfigKey } from "../shared/agent-display-names"
+import { AGENT_NAME_MAP } from "../shared/migration"
+
 const PARENTHETICAL_SUFFIX_PATTERN = /\s*(\([^)]*\)\s*)+$/u
 const DASH_SUFFIX_PATTERN = /\s+-\s+.+$/u
-const ZERO_WIDTH_CHARACTERS_PATTERN = /[\u200B\u200C\u200D\uFEFF]/g
+const ZERO_WIDTH_CHARACTERS_PATTERN = /(?:\u200B|\u200C|\u200D|\uFEFF)/g
 
 export function normalizeProtectedAgentName(agentName: string): string {
-  return agentName
+  const normalizedLabel = agentName
     .replace(ZERO_WIDTH_CHARACTERS_PATTERN, "")
     .trim()
-    .toLowerCase()
     .replace(PARENTHETICAL_SUFFIX_PATTERN, "")
     .replace(DASH_SUFFIX_PATTERN, "")
-    .replace(/[-_]/g, "")
+    .trim()
+
+  const configKey = getAgentConfigKey(normalizedLabel)
+  const canonicalName = AGENT_NAME_MAP[configKey] ?? AGENT_NAME_MAP[configKey.toLowerCase()] ?? configKey
+
+  return canonicalName
+    .toLowerCase()
+    .replace(/[-_ ]/g, "")
     .trim()
 }
 

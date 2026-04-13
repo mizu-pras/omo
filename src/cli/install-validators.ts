@@ -34,12 +34,12 @@ export function formatConfigSummary(config: InstallConfig): string {
 
   const claudeDetail = config.hasClaude ? (config.isMax20 ? "max20" : "standard") : undefined
   lines.push(formatProvider("Claude", config.hasClaude, claudeDetail))
-  lines.push(formatProvider("OpenAI/ChatGPT", config.hasOpenAI, "GPT-5.4 for Oracle"))
+  lines.push(formatProvider("OpenAI/ChatGPT", config.hasOpenAI, "GPT-5.4 for Kanjeng Ratu Kidul"))
   lines.push(formatProvider("Gemini", config.hasGemini))
   lines.push(formatProvider("GitHub Copilot", config.hasCopilot, "fallback"))
   lines.push(formatProvider("OpenCode Zen", config.hasOpencodeZen, "opencode/ models"))
-  lines.push(formatProvider("Z.ai Coding Plan", config.hasZaiCodingPlan, "Librarian/Multimodal"))
-  lines.push(formatProvider("Kimi For Coding", config.hasKimiForCoding, "Sisyphus/Prometheus fallback"))
+  lines.push(formatProvider("Z.ai Coding Plan", config.hasZaiCodingPlan, "Ki Pujangga/Batara Surya"))
+  lines.push(formatProvider("Kimi For Coding", config.hasKimiForCoding, "Sang Hyang Ismaya/Dewi Sri fallback"))
 
   lines.push("")
   lines.push(color.dim("─".repeat(40)))

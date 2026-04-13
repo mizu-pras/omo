@@ -1,9 +1,15 @@
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
+import { basename, join } from "node:path"
 
-import { OhMyOpenCodeConfigSchema } from "../../../config"
-import { detectPluginConfigFile, getOpenCodeConfigDir, parseJsonc } from "../../../shared"
-import { CHECK_IDS, CHECK_NAMES, PACKAGE_NAME } from "../constants"
+import { ParaHyangConfigSchema } from "../../../config"
+import {
+  detectPluginConfigFile,
+  getCanonicalConfigPath,
+  getOpenCodeConfigDir,
+  isLegacyConfigPath,
+  parseJsonc,
+} from "../../../shared"
+import { CHECK_IDS, CHECK_NAMES } from "../constants"
 import type { CheckResult, DoctorIssue } from "../types"
 import { loadAvailableModelsFromCache } from "./model-resolution-cache"
 import { getModelResolutionInfoWithOverrides } from "./model-resolution"
@@ -39,7 +45,7 @@ function validateConfig(): ConfigValidationResult {
   try {
     const content = readFileSync(configPath, "utf-8")
     const rawConfig = parseJsonc<OmoConfig>(content)
-    const schemaResult = OhMyOpenCodeConfigSchema.safeParse(rawConfig)
+    const schemaResult = ParaHyangConfigSchema.safeParse(rawConfig)
 
     if (!schemaResult.success) {
       return {
@@ -152,6 +158,17 @@ export async function checkConfig(): Promise<CheckResult> {
 
   if (validation.config) {
     issues.push(...collectModelResolutionIssues(validation.config))
+  }
+
+  if (validation.path && isLegacyConfigPath(validation.path)) {
+    const canonicalPath = getCanonicalConfigPath(validation.path)
+    issues.push({
+      title: "Using legacy config filename",
+      description: `Config file "${basename(validation.path)}" is still supported, but "${basename(canonicalPath)}" is the canonical para-hyang config name.`,
+      fix: `Rename ${validation.path} to ${canonicalPath}`,
+      severity: "warning",
+      affects: ["config loading"],
+    })
   }
 
   return {

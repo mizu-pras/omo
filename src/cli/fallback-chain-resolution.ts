@@ -23,7 +23,11 @@ export function resolveModelFromChain(
 }
 
 export function getSisyphusFallbackChain(): FallbackEntry[] {
-	return CLI_AGENT_MODEL_REQUIREMENTS.sisyphus.fallbackChain
+	return (
+		CLI_AGENT_MODEL_REQUIREMENTS.ismaya?.fallbackChain
+		?? CLI_AGENT_MODEL_REQUIREMENTS.sisyphus?.fallbackChain
+		?? []
+	)
 }
 
 export function isAnyFallbackEntryAvailable(

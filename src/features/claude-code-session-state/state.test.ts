@@ -56,7 +56,7 @@ describe("claude-code-session-state", () => {
       setSessionAgent(sessionID, "Prometheus - Plan Builder")
 
       // when - try to overwrite
-      setSessionAgent(sessionID, "sisyphus")
+      setSessionAgent(sessionID, "ismaya")
 
       // then - first agent preserved
       expect(getSessionAgent(sessionID)).toBe("Prometheus - Plan Builder")
@@ -77,16 +77,16 @@ describe("claude-code-session-state", () => {
       setSessionAgent(sessionID, "Prometheus - Plan Builder")
 
       // when - force update
-      updateSessionAgent(sessionID, "sisyphus")
+      updateSessionAgent(sessionID, "ismaya")
 
       // then
-      expect(getSessionAgent(sessionID)).toBe("sisyphus")
+      expect(getSessionAgent(sessionID)).toBe("ismaya")
     })
 
     test("should strip zero-width ordering prefixes when overwriting existing agent", () => {
       // given
       const sessionID = "test-session-prefixed-update"
-      setSessionAgent(sessionID, "sisyphus")
+      setSessionAgent(sessionID, "ismaya")
 
       // when
       updateSessionAgent(sessionID, "\u200B\u200BHephaestus - Deep Agent")
@@ -132,21 +132,22 @@ describe("claude-code-session-state", () => {
   })
 
   describe("agent registration", () => {
-    test("should register config-key lookup when given a display name", () => {
+    test("should register canonical config-key lookup when given a display name", () => {
       // given
       registerAgentName("Atlas - Plan Executor")
 
       // when / then
-      expect(isAgentRegistered("atlas")).toBe(true)
+      expect(isAgentRegistered("aji-saka")).toBe(true)
+      expect(isAgentRegistered("aji-saka")).toBe(false)
       expect(isAgentRegistered("Atlas - Plan Executor")).toBe(true)
     })
 
-    test("should resolve config keys back to the registered raw agent name", () => {
+    test("should resolve canonical config keys back to the registered raw agent name", () => {
       // given
       registerAgentName("\u200B\u200B\u200B\u200BAtlas - Plan Executor")
 
       // when / then
-      expect(resolveRegisteredAgentName("atlas")).toBe("\u200B\u200B\u200B\u200BAtlas - Plan Executor")
+      expect(resolveRegisteredAgentName("aji-saka")).toBe("\u200B\u200B\u200B\u200BAtlas - Plan Executor")
       expect(resolveRegisteredAgentName("Atlas - Plan Executor")).toBe("\u200B\u200B\u200B\u200BAtlas - Plan Executor")
     })
 
@@ -166,7 +167,7 @@ describe("claude-code-session-state", () => {
     })
   })
 
-  describe("prometheus-md-only integration scenario", () => {
+  describe("dewi-sri-md-only integration scenario", () => {
     test("should correctly identify Prometheus agent for permission checks", () => {
       // given - Prometheus session
       const sessionID = "test-prometheus-session"
@@ -175,7 +176,7 @@ describe("claude-code-session-state", () => {
       // when - agent is set (simulating chat.message hook)
       setSessionAgent(sessionID, prometheusAgent)
 
-      // then - getSessionAgent returns correct agent for prometheus-md-only hook
+      // then - getSessionAgent returns correct agent for dewi-sri-md-only hook
       const agent = getSessionAgent(sessionID)
       expect(agent).toBe("Prometheus - Plan Builder")
       expect(["Prometheus - Plan Builder"].includes(agent!)).toBe(true)
@@ -195,7 +196,7 @@ describe("claude-code-session-state", () => {
       // given - user switches to custom agent "MyCustomAgent"
       const sessionID = "test-session-custom"
       const customAgent = "MyCustomAgent"
-      const defaultAgent = "sisyphus"
+      const defaultAgent = "ismaya"
 
       // User switches to custom agent (via UI)
       setSessionAgent(sessionID, customAgent)

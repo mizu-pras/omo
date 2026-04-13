@@ -12,10 +12,10 @@ describe("model-resolution check", () => {
       const info = getModelResolutionInfo()
 
       // then: Should have agent entries
-      const sisyphus = info.agents.find((a) => a.name === "sisyphus")
-      expect(sisyphus).toBeDefined()
-      expect(sisyphus!.requirement.fallbackChain[0]?.model).toBe("claude-opus-4-6")
-      expect(sisyphus!.requirement.fallbackChain[0]?.providers).toContain("anthropic")
+      const ismaya = info.agents.find((a) => a.name === "ismaya")
+      expect(ismaya).toBeDefined()
+      expect(ismaya!.requirement.fallbackChain[0]?.model).toBe("claude-opus-4-6")
+      expect(ismaya!.requirement.fallbackChain[0]?.providers).toContain("anthropic")
     })
 
     it("returns category requirements with provider chains", async () => {
@@ -39,20 +39,20 @@ describe("model-resolution check", () => {
     it("shows user override for agent when configured", async () => {
       const { getModelResolutionInfoWithOverrides } = await import("./model-resolution")
 
-      // given: User has override for oracle agent
+      // given: User has override for ratu-kidul agent
       const mockConfig = {
         agents: {
-          oracle: { model: "anthropic/claude-opus-4-6" },
+          "ratu-kidul": { model: "anthropic/claude-opus-4-6" },
         },
       }
 
       const info = getModelResolutionInfoWithOverrides(mockConfig)
 
-      // then: Oracle should show the override
-      const oracle = info.agents.find((a) => a.name === "oracle")
-      expect(oracle).toBeDefined()
-      expect(oracle!.userOverride).toBe("anthropic/claude-opus-4-6")
-      expect(oracle!.effectiveResolution).toBe("User override: anthropic/claude-opus-4-6")
+      // then: Ratu-kidul should show the override
+      const ratuKidul = info.agents.find((a) => a.name === "ratu-kidul")
+      expect(ratuKidul).toBeDefined()
+      expect(ratuKidul!.userOverride).toBe("anthropic/claude-opus-4-6")
+      expect(ratuKidul!.effectiveResolution).toBe("User override: anthropic/claude-opus-4-6")
     })
 
     it("shows user override for category when configured", async () => {
@@ -83,31 +83,31 @@ describe("model-resolution check", () => {
       const info = getModelResolutionInfoWithOverrides(mockConfig)
 
       // then: Should show provider fallback chain
-      const sisyphus = info.agents.find((a) => a.name === "sisyphus")
-      expect(sisyphus).toBeDefined()
-      expect(sisyphus!.userOverride).toBeUndefined()
-      expect(sisyphus!.effectiveResolution).toContain("Provider fallback:")
-      expect(sisyphus!.effectiveResolution).toContain("anthropic")
+      const ismaya = info.agents.find((a) => a.name === "ismaya")
+      expect(ismaya).toBeDefined()
+      expect(ismaya!.userOverride).toBeUndefined()
+      expect(ismaya!.effectiveResolution).toContain("Provider fallback:")
+      expect(ismaya!.effectiveResolution).toContain("anthropic")
     })
 
     it("captures user variant for agent when configured", async () => {
       const { getModelResolutionInfoWithOverrides } = await import("./model-resolution")
 
-      //#given User has model with variant override for oracle agent
+      //#given User has model with variant override for ratu-kidul agent
       const mockConfig = {
         agents: {
-          oracle: { model: "openai/gpt-5.4", variant: "xhigh" },
+          "ratu-kidul": { model: "openai/gpt-5.4", variant: "xhigh" },
         },
       }
 
       //#when getting resolution info with config
       const info = getModelResolutionInfoWithOverrides(mockConfig)
 
-      //#then Oracle should have userVariant set
-      const oracle = info.agents.find((a) => a.name === "oracle")
-      expect(oracle).toBeDefined()
-      expect(oracle!.userOverride).toBe("openai/gpt-5.4")
-      expect(oracle!.userVariant).toBe("xhigh")
+      //#then Ratu-kidul should have userVariant set
+      const ratuKidul = info.agents.find((a) => a.name === "ratu-kidul")
+      expect(ratuKidul).toBeDefined()
+      expect(ratuKidul!.userOverride).toBe("openai/gpt-5.4")
+      expect(ratuKidul!.userVariant).toBe("xhigh")
     })
 
     it("captures user variant for category when configured", async () => {
@@ -134,10 +134,10 @@ describe("model-resolution check", () => {
       const { getModelResolutionInfoWithOverrides } = await import("./model-resolution")
 
       const info = getModelResolutionInfoWithOverrides({})
-      const sisyphus = info.agents.find((a) => a.name === "sisyphus")
+      const ismaya = info.agents.find((a) => a.name === "ismaya")
 
-      expect(sisyphus).toBeDefined()
-      expect(sisyphus!.capabilityDiagnostics).toMatchObject({
+      expect(ismaya).toBeDefined()
+      expect(ismaya!.capabilityDiagnostics).toMatchObject({
         resolutionMode: "snapshot-backed",
         snapshot: { source: "bundled-snapshot" },
       })
@@ -169,14 +169,14 @@ describe("model-resolution check", () => {
 
       const info = getModelResolutionInfoWithOverrides({
         agents: {
-          oracle: { model: "anthropic/claude-opus-4-6-thinking" },
+          "ratu-kidul": { model: "anthropic/claude-opus-4-6-thinking" },
         },
       })
 
-      const oracle = info.agents.find((agent) => agent.name === "oracle")
-      expect(oracle).toBeDefined()
-      expect(oracle!.effectiveModel).toBe("anthropic/claude-opus-4-6-thinking")
-      expect(oracle!.capabilityDiagnostics).toMatchObject({
+      const ratuKidul = info.agents.find((agent) => agent.name === "ratu-kidul")
+      expect(ratuKidul).toBeDefined()
+      expect(ratuKidul!.effectiveModel).toBe("anthropic/claude-opus-4-6-thinking")
+      expect(ratuKidul!.capabilityDiagnostics).toMatchObject({
         resolutionMode: "alias-backed",
         canonicalization: {
           source: "pattern-alias",
@@ -225,7 +225,7 @@ describe("model-resolution check", () => {
 
       const info = getModelResolutionInfoWithOverrides({
         agents: {
-          oracle: { model: "custom/unknown-llm" },
+          "ratu-kidul": { model: "custom/unknown-llm" },
         },
       })
 
@@ -233,7 +233,7 @@ describe("model-resolution check", () => {
 
       expect(issues).toHaveLength(1)
       expect(issues[0]?.title).toContain("compatibility fallback")
-      expect(issues[0]?.description).toContain("oracle=custom/unknown-llm")
+      expect(issues[0]?.description).toContain("ratu-kidul=custom/unknown-llm")
     })
   })
 

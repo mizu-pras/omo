@@ -6,17 +6,17 @@ describe("remapAgentKeysToDisplayNames", () => {
   it("remaps known agent keys to display names", () => {
     // given agents with lowercase keys
     const agents = {
-      sisyphus: { prompt: "test", mode: "primary" },
-      oracle: { prompt: "test", mode: "subagent" },
+      ismaya: { prompt: "test", mode: "primary" },
+      "ratu-kidul": { prompt: "test", mode: "subagent" },
     }
 
     // when remapping
     const result = remapAgentKeysToDisplayNames(agents)
 
     // then known agents get display name keys only
-    expect(result[getAgentListDisplayName("sisyphus")]).toBeDefined()
-    expect(result["oracle"]).toBeDefined()
-    expect(result["sisyphus"]).toBeUndefined()
+    expect(result[getAgentListDisplayName("ismaya")]).toBeDefined()
+    expect(result[getAgentDisplayName("ratu-kidul")]).toBeDefined()
+    expect(result["ismaya"]).toBeUndefined()
   })
 
   it("preserves unknown agent keys unchanged", () => {
@@ -35,60 +35,60 @@ describe("remapAgentKeysToDisplayNames", () => {
   it("remaps all core agents to display names", () => {
     // given all core agents
     const agents = {
-      sisyphus: {},
-      hephaestus: {},
-      prometheus: {},
-      atlas: {},
+      ismaya: {},
+      togog: {},
+      "dewi-sri": {},
+      "aji-saka": {},
       athena: {},
-      metis: {},
-      momus: {},
-      "sisyphus-junior": {},
+      jayabaya: {},
+      sabdapalon: {},
+      cenil: {},
     }
 
     // when remapping
     const result = remapAgentKeysToDisplayNames(agents)
 
     // then all get display name keys
-    expect(result[getAgentListDisplayName("sisyphus")]).toBeDefined()
-    expect(result["sisyphus"]).toBeUndefined()
-    expect(result[getAgentListDisplayName("hephaestus")]).toBeDefined()
-    expect(result["hephaestus"]).toBeUndefined()
-    expect(result[getAgentListDisplayName("prometheus")]).toBeDefined()
-    expect(result["prometheus"]).toBeUndefined()
-    expect(result[getAgentListDisplayName("atlas")]).toBeDefined()
-    expect(result["atlas"]).toBeUndefined()
+    expect(result[getAgentListDisplayName("ismaya")]).toBeDefined()
+    expect(result["ismaya"]).toBeUndefined()
+    expect(result[getAgentListDisplayName("togog")]).toBeDefined()
+    expect(result["togog"]).toBeUndefined()
+    expect(result[getAgentListDisplayName("dewi-sri")]).toBeDefined()
+    expect(result["dewi-sri"]).toBeUndefined()
+    expect(result[getAgentListDisplayName("aji-saka")]).toBeDefined()
+    expect(result["aji-saka"]).toBeUndefined()
     expect(result[getAgentDisplayName("athena")]).toBeDefined()
     expect(result["athena"]).toBeUndefined()
-    expect(result[getAgentDisplayName("metis")]).toBeDefined()
-    expect(result["metis"]).toBeUndefined()
-    expect(result[getAgentDisplayName("momus")]).toBeDefined()
-    expect(result["momus"]).toBeUndefined()
-    expect(result[getAgentDisplayName("sisyphus-junior")]).toBeDefined()
-    expect(result["sisyphus-junior"]).toBeUndefined()
+    expect(result[getAgentDisplayName("jayabaya")]).toBeDefined()
+    expect(result["jayabaya"]).toBeUndefined()
+    expect(result[getAgentDisplayName("sabdapalon")]).toBeDefined()
+    expect(result["sabdapalon"]).toBeUndefined()
+    expect(result[getAgentDisplayName("cenil")]).toBeDefined()
+    expect(result["cenil"]).toBeUndefined()
   })
 
   it("does not emit both config and display keys for remapped agents", () => {
     // given one remapped agent
     const agents = {
-      sisyphus: { prompt: "test", mode: "primary" },
+      ismaya: { prompt: "test", mode: "primary" },
     }
 
     // when remapping
     const result = remapAgentKeysToDisplayNames(agents)
 
     // then only display key is emitted
-    expect(Object.keys(result)).toEqual([getAgentListDisplayName("sisyphus")])
-    expect(result[getAgentListDisplayName("sisyphus")]).toBeDefined()
-    expect(result["sisyphus"]).toBeUndefined()
+    expect(Object.keys(result)).toEqual([getAgentListDisplayName("ismaya")])
+    expect(result[getAgentListDisplayName("ismaya")]).toBeDefined()
+    expect(result["ismaya"]).toBeUndefined()
   })
 
   it("keeps the four core agents in canonical order under opencode name sorting", () => {
     // given
     const result = remapAgentKeysToDisplayNames({
-      atlas: {},
-      prometheus: {},
-      hephaestus: {},
-      sisyphus: {},
+      "aji-saka": {},
+      "dewi-sri": {},
+      togog: {},
+      ismaya: {},
     })
 
     // when
@@ -96,10 +96,10 @@ describe("remapAgentKeysToDisplayNames", () => {
 
     // then
     expect(sortedNames).toEqual([
-      getAgentListDisplayName("sisyphus"),
-      getAgentListDisplayName("hephaestus"),
-      getAgentListDisplayName("prometheus"),
-      getAgentListDisplayName("atlas"),
+      getAgentListDisplayName("ismaya"),
+      getAgentListDisplayName("togog"),
+      getAgentListDisplayName("dewi-sri"),
+      getAgentListDisplayName("aji-saka"),
     ])
   })
 })

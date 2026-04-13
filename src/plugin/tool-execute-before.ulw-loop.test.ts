@@ -21,7 +21,7 @@ describe("tool.execute.before ultrawork oracle verification", () => {
 
 	function createOracleTaskArgs(prompt: string): Record<string, unknown> {
 		return {
-			subagent_type: "oracle",
+			subagent_type: "ratu-kidul",
 			run_in_background: true,
 			prompt,
 		}
@@ -33,7 +33,7 @@ describe("tool.execute.before ultrawork oracle verification", () => {
 	): Record<string, unknown> {
 		return {
 			prompt: args.prompt,
-			agent: "oracle",
+			agent: "ratu-kidul",
 			run_in_background: args.run_in_background,
 			sessionId,
 			sync: true,
@@ -201,7 +201,7 @@ describe("tool.execute.before ultrawork oracle verification", () => {
 				title: "oracle task",
 				output: "done",
 				metadata: {
-					agent: "oracle",
+					agent: "ratu-kidul",
 					sessionId: "ses-oracle-fallback",
 					sync: true,
 				},
@@ -240,7 +240,7 @@ describe("tool.execute.before ultrawork oracle verification", () => {
 				title: "oracle task",
 				output: "done",
 				metadata: {
-					agent: "oracle",
+					agent: "ratu-kidul",
 					sessionID: "ses-oracle-alt",
 					sync: true,
 				},
@@ -295,7 +295,7 @@ describe("tool.execute.before ultrawork oracle verification", () => {
 				title: "oracle task",
 				output: "done",
 				metadata: {
-					agent: "oracle",
+					agent: "ratu-kidul",
 					prompt: String(firstOutput.args.prompt),
 					sessionId: "ses-oracle-old",
 				},
@@ -310,7 +310,7 @@ describe("tool.execute.before ultrawork oracle verification", () => {
 				title: "oracle task",
 				output: "done",
 				metadata: {
-					agent: "oracle",
+					agent: "ratu-kidul",
 					prompt: String(secondOutput.args.prompt),
 					sessionId: "ses-oracle-new",
 				},

@@ -125,7 +125,7 @@ describe("system check", () => {
       //#then
       const outdatedIssue = result.issues.find((issue) => issue.title === "Loaded plugin is outdated")
       expect(outdatedIssue?.fix).toBe(
-        'Update: cd "/Users/test/Library/Caches/opencode with spaces" && bun add oh-my-opencode@canary'
+        'Update: cd "/Users/test/Library/Caches/opencode with spaces" && bun add para-hyang@canary'
       )
     })
   })
@@ -150,7 +150,7 @@ describe("system check", () => {
       const legacyEntryIssue = result.issues.find((issue) => issue.title === "Using legacy package name")
       expect(legacyEntryIssue?.severity).toBe("warning")
       expect(legacyEntryIssue?.fix).toBe(
-        'Update your opencode.json plugin entry: "oh-my-opencode" → "oh-my-openagent"'
+        'Update your opencode.json plugin entry: "oh-my-opencode" → "para-hyang"'
       )
     })
 
@@ -173,7 +173,7 @@ describe("system check", () => {
       const legacyEntryIssue = result.issues.find((issue) => issue.title === "Using legacy package name")
       expect(legacyEntryIssue?.severity).toBe("warning")
       expect(legacyEntryIssue?.fix).toBe(
-        'Update your opencode.json plugin entry: "oh-my-opencode@3.0.0" → "oh-my-openagent@3.0.0"'
+        'Update your opencode.json plugin entry: "oh-my-opencode@3.0.0" → "para-hyang@3.0.0"'
       )
     })
 

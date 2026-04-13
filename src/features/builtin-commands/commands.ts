@@ -13,12 +13,12 @@ export interface LoadBuiltinCommandsOptions {
   useRegisteredAgents?: boolean
 }
 
-function resolveStartWorkAgent(options?: LoadBuiltinCommandsOptions): "atlas" | "sisyphus" {
+function resolveStartWorkAgent(options?: LoadBuiltinCommandsOptions): "aji-saka" | "ismaya" {
   if (options?.useRegisteredAgents) {
-    return isAgentRegistered("atlas") ? "atlas" : "sisyphus"
+    return isAgentRegistered("aji-saka") ? "aji-saka" : "ismaya"
   }
 
-  return "atlas"
+  return "aji-saka"
 }
 
 function createBuiltinCommandDefinitions(

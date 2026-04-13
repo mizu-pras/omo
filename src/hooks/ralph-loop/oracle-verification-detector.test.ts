@@ -7,12 +7,12 @@ import {
 } from "./oracle-verification-detector"
 import { ULTRAWORK_VERIFICATION_PROMISE } from "./constants"
 
-describe("parseOracleVerificationEvidence", () => {
-	test("#given valid oracle verification text #then should parse all fields", () => {
+	describe("parseOracleVerificationEvidence", () => {
+		test("#given valid ratu-kidul verification text #then should parse all fields", () => {
 		// #given
 		const text = `Task completed.
 
-Agent: oracle
+Agent: ratu-kidul
 
 <promise>VERIFIED</promise>
 
@@ -25,7 +25,7 @@ session_id: ses_oracle_123
 
 		// #then
 		expect(evidence).toBeDefined()
-		expect(evidence?.agent).toBe("oracle")
+		expect(evidence?.agent).toBe("ratu-kidul")
 		expect(evidence?.promise).toBe("VERIFIED")
 		expect(evidence?.sessionID).toBe("ses_oracle_123")
 	})
@@ -43,7 +43,7 @@ session_id: ses_oracle_123
 
 	test("#given text without promise tag #then should return undefined", () => {
 		// #given
-		const text = `Agent: oracle`
+		const text = `Agent: ratu-kidul`
 
 		// #when
 		const evidence = parseOracleVerificationEvidence(text)
@@ -67,7 +67,7 @@ session_id: ses_oracle_123
 
 	test("#given text with empty promise #then should return undefined", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>   </promise>`
 
@@ -80,7 +80,7 @@ session_id: ses_oracle_123
 
 	test("#given text without metadata #then should parse agent and promise only", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>VERIFIED</promise>`
 
@@ -89,14 +89,14 @@ session_id: ses_oracle_123
 
 		// #then
 		expect(evidence).toBeDefined()
-		expect(evidence?.agent).toBe("oracle")
+		expect(evidence?.agent).toBe("ratu-kidul")
 		expect(evidence?.promise).toBe("VERIFIED")
 		expect(evidence?.sessionID).toBeUndefined()
 	})
 
 	test("#given text with metadata but no session_id #then should parse agent and promise only", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>VERIFIED</promise>
 
@@ -109,7 +109,7 @@ other_field: value
 
 		// #then
 		expect(evidence).toBeDefined()
-		expect(evidence?.agent).toBe("oracle")
+		expect(evidence?.agent).toBe("ratu-kidul")
 		expect(evidence?.promise).toBe("VERIFIED")
 		expect(evidence?.sessionID).toBeUndefined()
 	})
@@ -138,7 +138,7 @@ other_field: value
 
 	test("#given agent with different casing #then should preserve original case", () => {
 		// #given
-		const text = `Agent: ORACLE
+		const text = `Agent: Ratu-Kidul
 
 <promise>VERIFIED</promise>`
 
@@ -147,14 +147,14 @@ other_field: value
 
 		// #then
 		expect(evidence).toBeDefined()
-		expect(evidence?.agent).toBe("ORACLE")
+		expect(evidence?.agent).toBe("Ratu-Kidul")
 	})
 })
 
-describe("isOracleVerified", () => {
-	test("#given valid oracle verification #then should return true", () => {
+	describe("isOracleVerified", () => {
+	test("#given valid ratu-kidul verification #then should return true", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>${ULTRAWORK_VERIFICATION_PROMISE}</promise>`
 
@@ -165,7 +165,7 @@ describe("isOracleVerified", () => {
 		expect(result).toBe(true)
 	})
 
-	test("#given non-oracle agent #then should return false", () => {
+	test("#given non-ratu-kidul agent #then should return false", () => {
 		// #given
 		const text = `Agent: sisyphus
 
@@ -180,7 +180,7 @@ describe("isOracleVerified", () => {
 
 	test("#given wrong promise #then should return false", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>DONE</promise>`
 
@@ -191,9 +191,9 @@ describe("isOracleVerified", () => {
 		expect(result).toBe(false)
 	})
 
-	test("#given oracle agent with different casing #then should return true", () => {
+	test("#given ratu-kidul agent with different casing #then should return true", () => {
 		// #given
-		const text = `Agent: ORACLE
+		const text = `Agent: Ratu-Kidul
 
 <promise>${ULTRAWORK_VERIFICATION_PROMISE}</promise>`
 
@@ -216,10 +216,10 @@ describe("isOracleVerified", () => {
 	})
 })
 
-describe("extractOracleSessionID", () => {
-	test("#given valid oracle verification with session_id #then should return session_id", () => {
+	describe("extractOracleSessionID", () => {
+		test("#given valid ratu-kidul verification with session_id #then should return session_id", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>${ULTRAWORK_VERIFICATION_PROMISE}</promise>
 
@@ -234,9 +234,9 @@ session_id: ses_oracle_123
 		expect(sessionID).toBe("ses_oracle_123")
 	})
 
-	test("#given valid oracle verification without session_id #then should return undefined", () => {
+	test("#given valid ratu-kidul verification without session_id #then should return undefined", () => {
 		// #given
-		const text = `Agent: oracle
+		const text = `Agent: ratu-kidul
 
 <promise>${ULTRAWORK_VERIFICATION_PROMISE}</promise>`
 
@@ -247,7 +247,7 @@ session_id: ses_oracle_123
 		expect(sessionID).toBeUndefined()
 	})
 
-	test("#given non-oracle agent #then should return undefined", () => {
+	test("#given non-ratu-kidul agent #then should return undefined", () => {
 		// #given
 		const text = `Agent: sisyphus
 
@@ -264,7 +264,7 @@ session_id: ses_sis_123
 		expect(sessionID).toBeUndefined()
 	})
 
-	test("#given non-oracle agent with different casing #then should return undefined", () => {
+	test("#given non-ratu-kidul agent with different casing #then should return undefined", () => {
 		// #given
 		const text = `Agent: SISYPHUS
 

@@ -320,7 +320,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then explore should use gpt-5-nano (Claude haiku not available)
-      expect(result.agents?.explore?.model).toBe("opencode/gpt-5-nano")
+      expect(result.agents?.nayagenggong?.model).toBe("opencode/gpt-5-nano")
     })
 
     test("explore uses Claude haiku when Claude available", () => {
@@ -331,7 +331,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then explore should use claude-haiku-4-5
-      expect(result.agents?.explore?.model).toBe("anthropic/claude-haiku-4-5")
+      expect(result.agents?.nayagenggong?.model).toBe("anthropic/claude-haiku-4-5")
     })
 
     test("explore uses Claude haiku regardless of isMax20 flag", () => {
@@ -342,19 +342,19 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then explore should use claude-haiku-4-5 (isMax20 doesn't affect explore)
-      expect(result.agents?.explore?.model).toBe("anthropic/claude-haiku-4-5")
+      expect(result.agents?.nayagenggong?.model).toBe("anthropic/claude-haiku-4-5")
     })
 
-    test("explore uses OpenAI model when only OpenAI available", () => {
+    test("explore falls back to gpt-5-nano when only OpenAI available", () => {
       // #given only OpenAI is available
       const config = createConfig({ hasOpenAI: true })
 
       // #when generateModelConfig is called
       const result = generateModelConfig(config)
 
-      // #then explore should use native OpenAI model
-      expect(result.agents?.explore?.model).toBe("openai/gpt-5.4")
-      expect(result.agents?.explore?.variant).toBe("medium")
+      // #then explore should use gpt-5-nano because its OpenAI-only path is not a native primary choice
+      expect(result.agents?.nayagenggong?.model).toBe("opencode/gpt-5-nano")
+      expect(result.agents?.nayagenggong?.variant).toBeUndefined()
     })
 
     test("explore uses gpt-5-mini when only Copilot available", () => {
@@ -365,7 +365,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then explore should use gpt-5-mini (Copilot fallback)
-      expect(result.agents?.explore?.model).toBe("github-copilot/gpt-5-mini")
+      expect(result.agents?.nayagenggong?.model).toBe("github-copilot/gpt-5-mini")
     })
   })
 
@@ -378,7 +378,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.sisyphus?.model).toBe("anthropic/claude-opus-4-6")
+      expect(result.agents?.ismaya?.model).toBe("anthropic/claude-opus-4-6")
     })
 
     test("Sisyphus is created when multiple fallback providers are available", () => {
@@ -395,7 +395,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.sisyphus?.model).toBe("anthropic/claude-opus-4-6")
+      expect(result.agents?.ismaya?.model).toBe("anthropic/claude-opus-4-6")
     })
 
     test("Sisyphus resolves to gpt-5.4 medium when only OpenAI is available", () => {
@@ -406,8 +406,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.sisyphus?.model).toBe("openai/gpt-5.4")
-      expect(result.agents?.sisyphus?.variant).toBe("medium")
+      expect(result.agents?.ismaya?.model).toBe("openai/gpt-5.4")
+      expect(result.agents?.ismaya?.variant).toBe("medium")
     })
   })
 
@@ -420,8 +420,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.atlas?.model).toBe("openai/gpt-5.4")
-      expect(result.agents?.atlas?.variant).toBe("medium")
+      expect(result.agents?.["aji-saka"]?.model).toBe("openai/gpt-5.4")
+      expect(result.agents?.["aji-saka"]?.variant).toBe("medium")
     })
 
     test("Metis resolves to OpenAI when only OpenAI is available", () => {
@@ -432,8 +432,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.metis?.model).toBe("openai/gpt-5.4")
-      expect(result.agents?.metis?.variant).toBe("high")
+      expect(result.agents?.jayabaya?.model).toBe("openai/gpt-5.4")
+      expect(result.agents?.jayabaya?.variant).toBe("high")
     })
 
     test("Sisyphus-Junior resolves to OpenAI when only OpenAI is available", () => {
@@ -444,8 +444,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.["sisyphus-junior"]?.model).toBe("openai/gpt-5.4")
-      expect(result.agents?.["sisyphus-junior"]?.variant).toBe("medium")
+      expect(result.agents?.cenil?.model).toBe("openai/gpt-5.4")
+      expect(result.agents?.cenil?.variant).toBe("medium")
     })
   })
 
@@ -458,8 +458,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.hephaestus?.model).toBe("openai/gpt-5.4")
-      expect(result.agents?.hephaestus?.variant).toBe("medium")
+      expect(result.agents?.togog?.model).toBe("openai/gpt-5.4")
+      expect(result.agents?.togog?.variant).toBe("medium")
     })
 
     test("Hephaestus falls back to Copilot GPT-5.4 when only Copilot is available", () => {
@@ -470,7 +470,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.hephaestus).toEqual({
+      expect(result.agents?.togog).toEqual({
         model: "github-copilot/gpt-5.4",
         variant: "medium",
       })
@@ -484,8 +484,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.hephaestus?.model).toBe("opencode/gpt-5.4")
-      expect(result.agents?.hephaestus?.variant).toBe("medium")
+      expect(result.agents?.togog?.model).toBe("opencode/gpt-5.4")
+      expect(result.agents?.togog?.variant).toBe("medium")
     })
 
     test("Hephaestus is omitted when only Claude is available (no required provider connected)", () => {
@@ -496,7 +496,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.hephaestus).toBeUndefined()
+      expect(result.agents?.togog).toBeUndefined()
     })
 
     test("Hephaestus is omitted when only Gemini is available (no required provider connected)", () => {
@@ -507,7 +507,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.hephaestus).toBeUndefined()
+      expect(result.agents?.togog).toBeUndefined()
     })
 
     test("Hephaestus is omitted when only ZAI is available (no required provider connected)", () => {
@@ -518,7 +518,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then
-      expect(result.agents?.hephaestus).toBeUndefined()
+      expect(result.agents?.togog).toBeUndefined()
     })
   })
 
@@ -534,7 +534,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then librarian should use ZAI_MODEL
-      expect(result.agents?.librarian?.model).toBe("zai-coding-plan/glm-4.7")
+      expect(result.agents?.pujangga?.model).toBe("zai-coding-plan/glm-4.7")
     })
 
     test("librarian is omitted when no librarian provider matches", () => {
@@ -545,7 +545,7 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then librarian should be omitted when its dedicated providers are unavailable
-      expect(result.agents?.librarian).toBeUndefined()
+      expect(result.agents?.pujangga).toBeUndefined()
     })
   })
 
@@ -558,9 +558,9 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then explore should have fallback_models from the remaining chain entries
-      expect(result.agents?.explore?.model).toBe("anthropic/claude-haiku-4-5")
-      expect(result.agents?.explore?.fallback_models).toBeDefined()
-      expect(result.agents?.explore?.fallback_models?.length).toBeGreaterThan(0)
+      expect(result.agents?.nayagenggong?.model).toBe("anthropic/claude-haiku-4-5")
+      expect(result.agents?.nayagenggong?.fallback_models).toBeDefined()
+      expect(result.agents?.nayagenggong?.fallback_models?.length).toBeGreaterThan(0)
     })
 
     test("explore omits fallback_models when only one provider matches chain entries", () => {
@@ -571,8 +571,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then explore should not have fallback_models (only one chain entry matches)
-      expect(result.agents?.explore?.model).toBe("anthropic/claude-haiku-4-5")
-      expect(result.agents?.explore?.fallback_models).toBeUndefined()
+      expect(result.agents?.nayagenggong?.model).toBe("anthropic/claude-haiku-4-5")
+      expect(result.agents?.nayagenggong?.fallback_models).toBeUndefined()
     })
 
     test("librarian includes fallback_models when opencode-go and Claude are both available", () => {
@@ -583,9 +583,9 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then librarian should have fallback_models
-      expect(result.agents?.librarian?.model).toBe("opencode-go/minimax-m2.7")
-      expect(result.agents?.librarian?.fallback_models).toBeDefined()
-      expect(result.agents?.librarian?.fallback_models?.length).toBeGreaterThan(0)
+      expect(result.agents?.pujangga?.model).toBe("opencode-go/minimax-m2.7")
+      expect(result.agents?.pujangga?.fallback_models).toBeDefined()
+      expect(result.agents?.pujangga?.fallback_models?.length).toBeGreaterThan(0)
     })
 
     test("librarian omits fallback_models when only one provider matches", () => {
@@ -596,8 +596,8 @@ describe("generateModelConfig", () => {
       const result = generateModelConfig(config)
 
       // #then librarian should not have fallback_models
-      expect(result.agents?.librarian?.model).toBe("opencode-go/minimax-m2.7")
-      expect(result.agents?.librarian?.fallback_models).toBeUndefined()
+      expect(result.agents?.pujangga?.model).toBe("opencode-go/minimax-m2.7")
+      expect(result.agents?.pujangga?.fallback_models).toBeUndefined()
     })
   })
 
@@ -611,7 +611,7 @@ describe("generateModelConfig", () => {
 
       // #then should include correct schema URL
       expect(result.$schema).toBe(
-        "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json"
+        "https://raw.githubusercontent.com/mizu-pras/omo/dev/assets/para-hyang.schema.json"
       )
     })
   })

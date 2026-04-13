@@ -1,6 +1,6 @@
 declare const require: (name: string) => any
 const { describe, expect, test } = require("bun:test")
-import { PROMETHEUS_GPT_SYSTEM_PROMPT } from "./prometheus/gpt"
+import { PROMETHEUS_GPT_SYSTEM_PROMPT } from "./dewi-sri/gpt"
 
 describe("PROMETHEUS_GPT_SYSTEM_PROMPT category guidance", () => {
 	test("#given recommended agent profile instructions #when reading category placeholder #then it must point planners at available categories rather than a free-form name", () => {

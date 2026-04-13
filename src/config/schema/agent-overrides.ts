@@ -58,20 +58,20 @@ export const AgentOverrideConfigSchema = z.object({
 export const AgentOverridesSchema = z.object({
   build: AgentOverrideConfigSchema.optional(),
   plan: AgentOverrideConfigSchema.optional(),
-  sisyphus: AgentOverrideConfigSchema.optional(),
-  hephaestus: AgentOverrideConfigSchema.extend({
+  ismaya: AgentOverrideConfigSchema.optional(),
+  togog: AgentOverrideConfigSchema.extend({
     allow_non_gpt_model: z.boolean().optional(),
   }).optional(),
-  "sisyphus-junior": AgentOverrideConfigSchema.optional(),
+  cenil: AgentOverrideConfigSchema.optional(),
   "OpenCode-Builder": AgentOverrideConfigSchema.optional(),
-  prometheus: AgentOverrideConfigSchema.optional(),
-  metis: AgentOverrideConfigSchema.optional(),
-  momus: AgentOverrideConfigSchema.optional(),
-  oracle: AgentOverrideConfigSchema.optional(),
-  librarian: AgentOverrideConfigSchema.optional(),
-  explore: AgentOverrideConfigSchema.optional(),
-  "multimodal-looker": AgentOverrideConfigSchema.optional(),
-  atlas: AgentOverrideConfigSchema.optional(),
+  "dewi-sri": AgentOverrideConfigSchema.optional(),
+  jayabaya: AgentOverrideConfigSchema.optional(),
+  sabdapalon: AgentOverrideConfigSchema.optional(),
+  "ratu-kidul": AgentOverrideConfigSchema.optional(),
+  pujangga: AgentOverrideConfigSchema.optional(),
+  nayagenggong: AgentOverrideConfigSchema.optional(),
+  surya: AgentOverrideConfigSchema.optional(),
+  "aji-saka": AgentOverrideConfigSchema.optional(),
 })
 
 export type AgentOverrideConfig = z.infer<typeof AgentOverrideConfigSchema>

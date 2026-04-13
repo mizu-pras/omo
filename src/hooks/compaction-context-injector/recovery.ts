@@ -2,11 +2,13 @@ import {
   resolveRegisteredAgentName,
   updateSessionAgent,
 } from "../../features/claude-code-session-state"
+import { normalizeAgentForPromptKey } from "../../shared/agent-display-names"
 import {
   getCompactionAgentConfigCheckpoint,
 } from "../../shared/compaction-agent-config-checkpoint"
 import { createInternalAgentTextPart } from "../../shared/internal-initiator-marker"
 import { log } from "../../shared/logger"
+import { AGENT_NAME_MAP } from "../../shared/migration/agent-names"
 import { setSessionModel } from "../../shared/session-model-state"
 import { setSessionTools } from "../../shared/session-tools-store"
 import {
@@ -21,6 +23,12 @@ import {
 import { AGENT_RECOVERY_PROMPT, NO_TEXT_TAIL_THRESHOLD, RECOVERY_COOLDOWN_MS, RECENT_COMPACTION_WINDOW_MS } from "./constants"
 import type { CompactionContextClient } from "./types"
 import type { TailMonitorState } from "./tail-monitor"
+
+function canonicalizeAgentName(agent: string): string {
+  const promptAgent = normalizeAgentForPromptKey(agent) ?? agent
+  const normalizedAgent = AGENT_NAME_MAP[promptAgent] ?? AGENT_NAME_MAP[promptAgent.toLowerCase()] ?? promptAgent
+  return normalizedAgent
+}
 
 export function createRecoveryLogic(
   ctx: CompactionContextClient | undefined,
@@ -69,7 +77,13 @@ export function createRecoveryLogic(
       checkpointWithAgent,
       currentPromptConfig,
     )
-    const launchAgent = resolveRegisteredAgentName(expectedPromptConfig.agent)
+    const launchAgent = canonicalizeAgentName(
+      resolveRegisteredAgentName(expectedPromptConfig.agent) ?? expectedPromptConfig.agent,
+    )
+    const expectedRecoveryPromptConfig = {
+      ...expectedPromptConfig,
+      ...(launchAgent ? { agent: launchAgent } : {}),
+    }
     const model = expectedPromptConfig.model
     const tools = expectedPromptConfig.tools
 
@@ -85,7 +99,7 @@ export function createRecoveryLogic(
         path: { id: sessionID },
         body: {
           noReply: true,
-          agent: launchAgent ?? expectedPromptConfig.agent,
+          agent: expectedRecoveryPromptConfig.agent,
           ...(model ? { model } : {}),
           ...(tools ? { tools } : {}),
           parts: [createInternalAgentTextPart(AGENT_RECOVERY_PROMPT)],
@@ -94,11 +108,11 @@ export function createRecoveryLogic(
       })
 
       const recoveredPromptConfig = await resolveLatestSessionPromptConfig(ctx, sessionID)
-      if (!isPromptConfigRecovered(recoveredPromptConfig, expectedPromptConfig)) {
+      if (!isPromptConfigRecovered(recoveredPromptConfig, expectedRecoveryPromptConfig)) {
         log(`[compaction-context-injector] Re-injected agent config but recovery is still incomplete`, {
           sessionID,
           reason,
-          agent: expectedPromptConfig.agent,
+          agent: expectedRecoveryPromptConfig.agent,
           model,
           hasTools: !!tools,
           recoveredPromptConfig,
@@ -106,7 +120,7 @@ export function createRecoveryLogic(
         return false
       }
 
-      updateSessionAgent(sessionID, expectedPromptConfig.agent)
+      updateSessionAgent(sessionID, expectedRecoveryPromptConfig.agent)
       if (model) {
         setSessionModel(sessionID, model)
       }
@@ -120,7 +134,7 @@ export function createRecoveryLogic(
       log(`[compaction-context-injector] Re-injected checkpointed agent config`, {
         sessionID,
         reason,
-        agent: expectedPromptConfig.agent,
+        agent: expectedRecoveryPromptConfig.agent,
         model,
       })
 

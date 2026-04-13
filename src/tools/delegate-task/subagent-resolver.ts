@@ -1,7 +1,7 @@
 import type { DelegateTaskArgs } from "./types"
 import type { ExecutorContext } from "./executor-types"
 import type { DelegatedModelConfig } from "./types"
-import { isPlanFamily } from "./constants"
+import { isPlanFamily, normalizePlanFamilyName } from "./constants"
 import { SISYPHUS_JUNIOR_AGENT } from "./sisyphus-junior-agent"
 import { normalizeModelFormat } from "../../shared/model-format-normalizer"
 import { AGENT_MODEL_REQUIREMENTS } from "../../shared/model-requirements"
@@ -14,9 +14,30 @@ import { getAvailableModelsForDelegateTask } from "./available-models"
 import type { FallbackEntry } from "../../shared/model-requirements"
 import { resolveModelForDelegateTask } from "./model-selection"
 import { fuzzyMatchModel } from "../../shared/model-availability"
-import type { CategoryConfig } from "../../config/schema"
+import type { AgentOverrideConfig, AgentOverrides, CategoryConfig } from "../../config/schema"
 
 type AgentMode = "subagent" | "primary" | "all" | undefined
+
+function getAgentOverride(
+  agentOverrides: AgentOverrides | undefined,
+  agentName: string,
+): AgentOverrideConfig | undefined {
+  if (!agentOverrides) {
+    return undefined
+  }
+
+  const overrides = agentOverrides as Record<string, AgentOverrideConfig | undefined>
+  const configKey = getAgentConfigKey(agentName)
+  const legacyKey = agentName.trim()
+  const displayName = getAgentDisplayName(configKey)
+
+  return overrides[configKey]
+    ?? overrides[legacyKey]
+    ?? overrides[displayName]
+    ?? Object.entries(overrides).find(([key]) => key.toLowerCase() === configKey.toLowerCase())?.[1]
+    ?? Object.entries(overrides).find(([key]) => key.toLowerCase() === legacyKey.toLowerCase())?.[1]
+    ?? Object.entries(overrides).find(([key]) => key.toLowerCase() === displayName.toLowerCase())?.[1]
+}
 
 function applyCategoryParams(
   base: DelegatedModelConfig,
@@ -49,7 +70,7 @@ export async function resolveSubagentExecution(
   }
 
   // Strip wrapping characters (backslashes, quotes) that LLMs sometimes add around agent names
-  // e.g. \hephaestus\ -> hephaestus, "oracle" -> oracle, 'explore' -> explore
+  // e.g. \togog\ -> togog, "ratu-kidul" -> ratu-kidul, 'nayagenggong' -> nayagenggong
   const agentName = args.subagent_type.trim().replace(/^[\\\/"']+|[\\\/"']+$/g, "").trim()
 
   if (agentName.toLowerCase() === SISYPHUS_JUNIOR_AGENT.toLowerCase()) {
@@ -62,11 +83,14 @@ Sisyphus-Junior is spawned automatically when you specify a category. Pick the a
     }
   }
 
-  if (isPlanFamily(agentName) && isPlanFamily(parentAgent)) {
+  const normalizedAgentName = normalizePlanFamilyName(agentName)
+  const normalizedParentAgent = normalizePlanFamilyName(parentAgent)
+
+  if (isPlanFamily(normalizedAgentName) && isPlanFamily(normalizedParentAgent)) {
     return {
       agentToUse: "",
       categoryModel: undefined,
-    error: `You are a plan-family agent (plan/prometheus). You cannot delegate to other plan-family agents via task.
+    error: `You are a plan-family agent (plan/dewi-sri). You cannot delegate to other plan-family agents via task.
 
 Create the work plan directly - that's your job as the planning agent.`,
     }
@@ -109,10 +133,9 @@ Create the work plan directly - that's your job as the planning agent.`,
 
     agentToUse = matchedAgent.name
 
-    const agentConfigKey = getAgentConfigKey(agentToUse)
-    const agentOverride = agentOverrides?.[agentConfigKey as keyof typeof agentOverrides]
-      ?? (agentOverrides ? Object.entries(agentOverrides).find(([key]) => key.toLowerCase() === agentConfigKey)?.[1] : undefined)
-    const agentRequirement = AGENT_MODEL_REQUIREMENTS[agentConfigKey]
+     const agentConfigKey = getAgentConfigKey(agentToUse)
+     const agentOverride = getAgentOverride(agentOverrides, agentToUse)
+     const agentRequirement = AGENT_MODEL_REQUIREMENTS[agentConfigKey]
     const agentCategoryConfig = agentOverride?.category
       ? userCategories?.[agentOverride.category]
       : undefined

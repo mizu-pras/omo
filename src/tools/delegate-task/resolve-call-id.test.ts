@@ -7,7 +7,7 @@ describe("resolveCallID", () => {
     return {
       sessionID: "ses_test",
       messageID: "msg_test",
-      agent: "sisyphus",
+      agent: "ismaya",
       abort: new AbortController().signal,
       ...overrides,
     }

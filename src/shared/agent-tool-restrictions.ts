@@ -1,3 +1,6 @@
+import { getAgentConfigKey } from "./agent-display-names"
+import { AGENT_NAME_MAP } from "./migration/agent-names"
+
 /**
  * Agent tool restrictions for session.prompt calls.
  * OpenCode SDK's session.prompt `tools` parameter expects boolean values.
@@ -12,46 +15,51 @@ const EXPLORATION_AGENT_DENYLIST: Record<string, boolean> = {
 }
 
 const AGENT_RESTRICTIONS: Record<string, Record<string, boolean>> = {
-  explore: EXPLORATION_AGENT_DENYLIST,
+  nayagenggong: EXPLORATION_AGENT_DENYLIST,
 
-  librarian: EXPLORATION_AGENT_DENYLIST,
+  pujangga: EXPLORATION_AGENT_DENYLIST,
 
-  oracle: {
+  "ratu-kidul": {
     write: false,
     edit: false,
     task: false,
     call_omo_agent: false,
   },
 
-  metis: {
+  jayabaya: {
     write: false,
     edit: false,
     task: false,
   },
 
-  momus: {
+  sabdapalon: {
     write: false,
     edit: false,
     task: false,
   },
 
-  "multimodal-looker": {
+  surya: {
     read: true,
   },
 
-  "sisyphus-junior": {
+  cenil: {
     task: false,
   },
 }
 
 export function getAgentToolRestrictions(agentName: string): Record<string, boolean> {
-  return AGENT_RESTRICTIONS[agentName]
-    ?? Object.entries(AGENT_RESTRICTIONS).find(([key]) => key.toLowerCase() === agentName.toLowerCase())?.[1]
+  const configKey = getAgentConfigKey(agentName)
+  const canonicalName = AGENT_NAME_MAP[configKey] ?? AGENT_NAME_MAP[configKey.toLowerCase()] ?? configKey
+
+  return AGENT_RESTRICTIONS[canonicalName]
+    ?? Object.entries(AGENT_RESTRICTIONS).find(([key]) => key.toLowerCase() === canonicalName.toLowerCase())?.[1]
     ?? {}
 }
 
 export function hasAgentToolRestrictions(agentName: string): boolean {
-  const restrictions = AGENT_RESTRICTIONS[agentName]
-    ?? Object.entries(AGENT_RESTRICTIONS).find(([key]) => key.toLowerCase() === agentName.toLowerCase())?.[1]
+  const configKey = getAgentConfigKey(agentName)
+  const canonicalName = AGENT_NAME_MAP[configKey] ?? AGENT_NAME_MAP[configKey.toLowerCase()] ?? configKey
+  const restrictions = AGENT_RESTRICTIONS[canonicalName]
+    ?? Object.entries(AGENT_RESTRICTIONS).find(([key]) => key.toLowerCase() === canonicalName.toLowerCase())?.[1]
   return restrictions !== undefined && Object.keys(restrictions).length > 0
 }

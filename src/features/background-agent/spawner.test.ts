@@ -352,7 +352,7 @@ describe("background-agent spawner fallback model promotion", () => {
       queuedAt: new Date(),
       description: "Test task",
       prompt: "Do the thing",
-      agent: "oracle",
+      agent: "ratu-kidul",
       parentSessionID: "parent-1",
       parentMessageID: "message-1",
       model: {
@@ -370,7 +370,7 @@ describe("background-agent spawner fallback model promotion", () => {
     const input = {
       description: "Test task",
       prompt: "Do the thing",
-      agent: "oracle",
+      agent: "ratu-kidul",
       parentSessionID: "parent-1",
       parentMessageID: "message-1",
       model: task.model,
@@ -426,7 +426,7 @@ describe("background-agent spawner fallback model promotion", () => {
     const task = createTask({
       description: "Test task",
       prompt: "Do work",
-      agent: "sisyphus-junior",
+      agent: "cenil",
       parentSessionID: "ses_parent",
       parentMessageID: "msg_parent",
       model: { providerID: "openai", modelID: "gpt-5.4", variant: "medium" },
@@ -459,7 +459,7 @@ describe("background-agent spawner fallback model promotion", () => {
 
     //#then
     expect(promptCalls).toHaveLength(1)
-    expect(promptCalls[0]?.body?.agent).toBe("sisyphus-junior")
+    expect(promptCalls[0]?.body?.agent).toBe("cenil")
     expect(promptCalls[0]?.body?.model).toEqual({
       providerID: "openai",
       modelID: "gpt-5.4",
@@ -518,6 +518,6 @@ describe("background-agent spawner fallback model promotion", () => {
 
     //#then
     expect(promptCalls).toHaveLength(1)
-    expect(promptCalls[0]?.body?.agent).toBe("sisyphus-junior")
+    expect(promptCalls[0]?.body?.agent).toBe("cenil")
   })
 })

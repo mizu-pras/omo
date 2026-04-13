@@ -1,8 +1,12 @@
+const { mkdtempSync, rmSync } = require("node:fs")
+const { tmpdir } = require("node:os")
+const { join } = require("node:path")
 const { afterEach, describe, expect, test } = require("bun:test")
 const { createToolExecuteBeforeHandler } = require("./tool-execute-before")
 const { createToolRegistry } = require("./tool-registry")
 const { builtinTools } = require("../tools")
 const { resetStorageClient } = require("../tools/session-manager/storage")
+const { writeState } = require("../hooks/ralph-loop/storage")
 
 describe("createToolExecuteBeforeHandler", () => {
   test("does not execute subagent question blocker hook for question tool", async () => {
@@ -101,7 +105,7 @@ describe("createToolExecuteBeforeHandler", () => {
       }
     }
 
-    test("sets subagent_type to sisyphus-junior when category is provided without subagent_type", async () => {
+    test("sets subagent_type to cenil when category is provided without subagent_type", async () => {
       //#given
       const ctx = createCtxWithSessionMessages()
       const handler = createToolExecuteBeforeHandler({ ctx, hooks: emptyHooks })
@@ -112,7 +116,7 @@ describe("createToolExecuteBeforeHandler", () => {
       await handler(input, output)
 
       //#then
-      expect(output.args.subagent_type).toBe("sisyphus-junior")
+      expect(output.args.subagent_type).toBe("cenil")
     })
 
     test("preserves existing subagent_type when explicitly provided", async () => {
@@ -129,26 +133,26 @@ describe("createToolExecuteBeforeHandler", () => {
       expect(output.args.subagent_type).toBe("plan")
     })
 
-    test("sets subagent_type to sisyphus-junior when category provided with different subagent_type", async () => {
+    test("sets subagent_type to cenil when category provided with different subagent_type", async () => {
       //#given
       const ctx = createCtxWithSessionMessages()
       const handler = createToolExecuteBeforeHandler({ ctx, hooks: emptyHooks })
       const input = { tool: "task", sessionID: "ses_123", callID: "call_1" }
-      const output = { args: { category: "quick", subagent_type: "oracle", description: "Test" } as Record<string, unknown> }
+      const output = { args: { category: "quick", subagent_type: "ratu-kidul", description: "Test" } as Record<string, unknown> }
 
       //#when
       await handler(input, output)
 
       //#then
-      expect(output.args.subagent_type).toBe("sisyphus-junior")
+      expect(output.args.subagent_type).toBe("cenil")
     })
 
     test("resolves subagent_type from session first message when session_id provided without subagent_type", async () => {
       //#given
       const ctx = createCtxWithSessionMessages([
         { info: { role: "user" } },
-        { info: { role: "assistant", agent: "explore" } },
-        { info: { role: "assistant", agent: "oracle" } },
+        { info: { role: "assistant", agent: "nayagenggong" } },
+        { info: { role: "assistant", agent: "ratu-kidul" } },
       ])
       const handler = createToolExecuteBeforeHandler({ ctx, hooks: emptyHooks })
       const input = { tool: "task", sessionID: "ses_123", callID: "call_1" }
@@ -158,7 +162,7 @@ describe("createToolExecuteBeforeHandler", () => {
       await handler(input, output)
 
       //#then
-      expect(output.args.subagent_type).toBe("explore")
+      expect(output.args.subagent_type).toBe("Nayagenggong")
     })
 
     test("falls back to 'continue' when session has no agent info", async () => {
@@ -183,13 +187,13 @@ describe("createToolExecuteBeforeHandler", () => {
       const ctx = createCtxWithSessionMessages()
       const handler = createToolExecuteBeforeHandler({ ctx, hooks: emptyHooks })
       const input = { tool: "task", sessionID: "ses_123", callID: "call_1" }
-      const output = { args: { session_id: "ses_abc123", subagent_type: "explore", description: "Continue explore" } as Record<string, unknown> }
+      const output = { args: { session_id: "ses_abc123", subagent_type: "nayagenggong", description: "Continue explore" } as Record<string, unknown> }
 
       //#when
       await handler(input, output)
 
       //#then
-      expect(output.args.subagent_type).toBe("explore")
+      expect(output.args.subagent_type).toBe("nayagenggong")
     })
 
     test("does not modify args for non-task tools", async () => {
@@ -211,13 +215,55 @@ describe("createToolExecuteBeforeHandler", () => {
       const ctx = createCtxWithSessionMessages()
       const handler = createToolExecuteBeforeHandler({ ctx, hooks: emptyHooks })
       const input = { tool: "task", sessionID: "ses_123", callID: "call_1" }
-      const output = { args: { subagent_type: "oracle", description: "Oracle task" } as Record<string, unknown> }
+      const output = { args: { subagent_type: "ratu-kidul", description: "Oracle task" } as Record<string, unknown> }
 
       //#when
       await handler(input, output)
 
       //#then
-      expect(output.args.subagent_type).toBe("oracle")
+      expect(output.args.subagent_type).toBe("ratu-kidul")
+    })
+
+    test("injects ULW oracle verification for legacy oracle subagent_type", async () => {
+      //#given
+      const directory = mkdtempSync(join(tmpdir(), "tool-execute-before-"))
+
+      try {
+        const ctx = {
+          directory,
+          client: {
+            session: {
+              messages: async () => ({ data: [] }),
+            },
+          },
+        }
+        writeState(directory, {
+          active: true,
+          iteration: 1,
+          completion_promise: "<promise>DONE</promise>",
+          started_at: new Date().toISOString(),
+          prompt: "Finish the ULW task",
+          session_id: "ses_ulw",
+          ultrawork: true,
+          verification_pending: true,
+        })
+        const handler = createToolExecuteBeforeHandler({ ctx, hooks: emptyHooks })
+        const input = { tool: "task", sessionID: "ses_ulw", callID: "call_ulw" }
+        const output = {
+          args: { subagent_type: "ratu-kidul", prompt: "Review the result" } as Record<string, unknown>,
+        }
+
+        //#when
+        await handler(input, output)
+
+        //#then
+        expect(output.args.run_in_background).toBe(false)
+        expect(typeof output.args.prompt).toBe("string")
+        expect(output.args.prompt).toContain("You are verifying the active ULTRAWORK loop result for this session.")
+        expect(output.args.prompt).toContain("Finish the ULW task")
+      } finally {
+        rmSync(directory, { recursive: true, force: true })
+      }
     })
   })
 })

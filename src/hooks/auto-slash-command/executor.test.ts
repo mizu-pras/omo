@@ -210,6 +210,6 @@ describe("auto-slash command executor plugin dispatch", () => {
 
     // then
     expect(result.success).toBe(true)
-    expect(result.replacementText).toContain("**Agent**: atlas")
+    expect(result.replacementText).toContain("**Agent**: aji-saka")
   })
 })
